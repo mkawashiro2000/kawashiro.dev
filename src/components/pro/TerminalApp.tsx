@@ -1,33 +1,34 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { Trie } from '../../terminal/utils/trie';
+import { HtopLive } from './HtopLive';
+import { printResumeToThermal } from '../../terminal/utils/webusb';
 
 export const TerminalApp: React.FC = () => {
   const [input, setInput] = useState('');
-  const [history, setHistory] = useState<string[]>([
+  
+  // CORRECCIÓN: El estado ahora soporta tanto strings (texto) como ReactNodes (htop)
+  const [history, setHistory] = useState<(string | React.ReactNode)[]>([
     'kawashiro.dev [Version 1.0.0-beta]',
     'Sistemas Homelab activos sobre Raspberry Pi OS Lite.',
     'Escribe "help" para desplegar la matriz de comandos.',
     ''
   ]);
   
-  // Variables para la navegación histórica
   const [historyPointer, setHistoryPointer] = useState<number>(-1);
   const commandArchive = useRef<string[]>([]);
-  
   const terminalEndRef = useRef<HTMLDivElement>(null);
   const toggleMode = useAppStore((state) => state.toggleMode);
 
-  // Inicialización estricta del árbol Trie con el léxico permitido
   const commandTrie = useMemo(() => {
     const trie = new Trie();
-    ['help', 'clear', 'casual', 'about', 'neofetch', 'print resume'].forEach(cmd => trie.insert(cmd));
+    ['help', 'clear', 'casual', 'about', 'neofetch', 'htop', 'print resume'].forEach(cmd => trie.insert(cmd));
     return trie;
   }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab') {
-      e.preventDefault(); // Evita que el navegador salte a otro nodo del DOM
+      e.preventDefault();
       const currentInput = input.trim().toLowerCase();
       if (!currentInput) return;
 
@@ -36,25 +37,21 @@ export const TerminalApp: React.FC = () => {
       if (completions.length === 1) {
         setInput(completions[0]);
       } else if (completions.length > 1) {
-        // Muestra las opciones si hay ambigüedad (ej. previene fallos si se añaden comandos similares)
         setHistory(prev => [...prev, `$ ${input}`, completions.join('    ')]);
       }
     } 
     else if (e.key === 'ArrowUp') {
-      e.preventDefault(); // Evita que el cursor salte al inicio del input
+      e.preventDefault();
       if (commandArchive.current.length === 0) return;
-      
       const newPointer = historyPointer === -1 
         ? commandArchive.current.length - 1 
         : Math.max(0, historyPointer - 1);
-        
       setHistoryPointer(newPointer);
       setInput(commandArchive.current[newPointer]);
     } 
     else if (e.key === 'ArrowDown') {
       e.preventDefault();
       if (historyPointer === -1) return;
-
       const newPointer = historyPointer + 1;
       if (newPointer >= commandArchive.current.length) {
         setHistoryPointer(-1);
@@ -71,7 +68,6 @@ export const TerminalApp: React.FC = () => {
     const commandLine = input.trim();
     if (!commandLine) return;
 
-    // Almacenar en el archivo histórico y reiniciar el puntero
     commandArchive.current.push(commandLine);
     setHistoryPointer(-1);
 
@@ -79,12 +75,20 @@ export const TerminalApp: React.FC = () => {
     const baseCommand = tokens[0].toLowerCase();
     const fullCommand = commandLine.toLowerCase();
 
-    let output: string[] = [`$ ${commandLine}`];
+    let output: (string | React.ReactNode)[] = [`$ ${commandLine}`];
 
-    // Lógica del despachador
     if (fullCommand === 'print resume') {
-       output.push('Inicializando protocolo ESC/POS vía WebUSB...', 'Esperando confirmación de hardware...');
-       // Aquí inyectaremos la lógica WebUSB posteriormente
+       output.push('Inicializando protocolo ESC/POS vía WebUSB...', 'Esperando intercepción de seguridad del navegador...');
+       
+       // Sincronizamos el historial actual antes de despachar la promesa de hardware
+       setHistory([...history, ...output]);
+       setInput('');
+       
+       // Invocamos la utilidad WebUSB pasando una función callback para reportar el progreso en vivo a la terminal
+       printResumeToThermal((msg) => {
+         setHistory(prev => [...prev, msg]);
+       });
+       return; 
     } else {
       switch (baseCommand) {
         case 'help':
@@ -95,6 +99,7 @@ export const TerminalApp: React.FC = () => {
             '  casual       - Interrumpir Modo PRO y transicionar a Business UI.',
             '  about        - Desplegar metadatos profesionales del desarrollador.',
             '  neofetch     - Inspeccionar telemetría estática de la arquitectura.',
+            '  htop         - Iniciar flujo SSE para monitorización remota ARM64.',
             '  print resume - [Hardware] Enviar CV a impresora térmica ESC/POS local.'
           );
           break;
@@ -133,6 +138,10 @@ export const TerminalApp: React.FC = () => {
             'Memory: 4096MB / 8192MB (50%)'
           );
           break;
+        case 'htop':
+          output.push('Abriendo canal asíncrono (Server-Sent Events) con el Edge Node...');
+          output.push(<HtopLive key={`htop-${Date.now()}`} />);
+          break;
         default:
           output.push(`sys: comando no encontrado: "${baseCommand}". Escribe "help".`);
       }
@@ -153,13 +162,18 @@ export const TerminalApp: React.FC = () => {
       <div className="flex-1 overflow-y-auto pr-2 z-10">
         {history.map((line, index) => (
           <div key={index} className="leading-relaxed min-h-[1.2rem]">
-            {line.startsWith('$') ? (
-              <span>
-                <span className="text-[var(--color-text-accent)]">➜ </span>
-                <span className="text-[var(--color-text-main)] font-bold">{line}</span>
-              </span>
+            {/* CORRECCIÓN: Comprobación estricta del tipo para renderizar texto o componentes (htop) */}
+            {typeof line === 'string' ? (
+              line.startsWith('$') ? (
+                <span>
+                  <span className="text-[var(--color-text-accent)]">➜ </span>
+                  <span className="text-[var(--color-text-main)] font-bold">{line}</span>
+                </span>
+              ) : (
+                <span className="text-[var(--color-text-main)] opacity-90 whitespace-pre-wrap">{line}</span>
+              )
             ) : (
-              <span className="text-[var(--color-text-main)] opacity-90">{line}</span>
+              <div className="my-2">{line}</div>
             )}
           </div>
         ))}

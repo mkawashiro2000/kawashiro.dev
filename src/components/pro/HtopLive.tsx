@@ -1,0 +1,85 @@
+import React, { useState, useEffect } from 'react';
+
+export const HtopLive: React.FC = () => {
+  const [metrics, setMetrics] = useState({
+    cpu: 0,
+    ram_percent: 0,
+    ram_mb: 0,
+    uptime: '0h 0m'
+  });
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Conexión unidireccional al backend. 
+    // En producción, esto apuntará a la ruta protegida por el túnel Cloudflare.
+    const eventSource = new EventSource('http://localhost:8000/api/v1/telemetry');
+
+    eventSource.addEventListener('telemetry', (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        setMetrics({
+          cpu: data.cpu_usage,
+          ram_percent: data.ram_usage,
+          ram_mb: data.ram_used_mb,
+          uptime: data.uptime,
+        });
+      } catch (err) {
+        console.error("Error parseando telemetría:", err);
+      }
+    });
+
+    eventSource.onerror = () => {
+      setError("Conexión con Edge API interrumpida. Reintentando...");
+      eventSource.close();
+    };
+
+    // Cleanup crítico: Cierra la conexión si el componente se desmonta o la terminal se limpia
+    return () => {
+      eventSource.close();
+    };
+  }, []);
+
+  // Utilidad para generar la barra ASCII: [||||||||  ]
+  const renderAsciiBar = (percent: number, width: number = 20) => {
+    const filledChars = Math.round((percent / 100) * width);
+    const emptyChars = width - filledChars;
+    const colorClass = percent > 85 ? 'text-red-500' : percent > 60 ? 'text-yellow-400' : 'text-[var(--color-text-main)]';
+    
+    return (
+      <span>
+        [<span className={colorClass}>{'|'.repeat(Math.max(0, filledChars))}</span>
+        <span className="opacity-30">{'.'.repeat(Math.max(0, emptyChars))}</span>]
+      </span>
+    );
+  };
+
+  if (error) {
+    return <div className="text-red-500 font-bold">{error}</div>;
+  }
+
+  return (
+    <div className="py-2 border border-dashed border-[var(--color-text-muted)] p-4 my-2 bg-black bg-opacity-20 rounded">
+      <div className="text-[var(--color-text-accent)] font-bold mb-2">EDGE NODE HEALTH (BCM2712 - ARM64)</div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <div className="flex justify-between w-64">
+            <span>CPU </span>
+            <span>{metrics.cpu.toFixed(1).padStart(4, '0')}%</span>
+          </div>
+          <div>{renderAsciiBar(metrics.cpu)}</div>
+        </div>
+        
+        <div>
+          <div className="flex justify-between w-64">
+            <span>MEM </span>
+            <span>{metrics.ram_mb}MB / 8192MB</span>
+          </div>
+          <div>{renderAsciiBar(metrics.ram_percent)}</div>
+        </div>
+      </div>
+      <div className="mt-3 text-xs opacity-70">
+        Uptime del microservicio: {metrics.uptime}
+      </div>
+    </div>
+  );
+};
