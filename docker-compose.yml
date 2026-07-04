@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  edge-api:
+    build: ./backend
+    container_name: kawashiro_edge_api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Zona horaria fijada para logs coherentes en República Dominicana
+      - TZ=America/Santo_Domingo
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # El túnel inverso de Cloudflare (Descomentar en despliegue de producción)
+  # cloudflared:
+  #   image: cloudflare/cloudflared:latest
+  #   container_name: kawashiro_zero_trust
+  #   restart: unless-stopped
+  #   command: tunnel run
+  #   environment:
+  #     - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
