@@ -1,0 +1,39 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+
+    {/* Script crítico de bloqueo: Sincroniza el DOM con Zustand localStorage antes del renderizado */}
+    <script is:inline>
+      (function() {
+        try {
+          const storage = localStorage.getItem('kawashiro-dev-storage');
+          if (storage) {
+            const parsed = JSON.parse(storage);
+            if (parsed?.state?.isProMode) {
+              document.documentElement.classList.add('pro-theme');
+            }
+          }
+        } catch (e) {
+          console.error("Error inicializando la topología CSS:", e);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

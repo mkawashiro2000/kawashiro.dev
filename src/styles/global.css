@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  /* Variables para el Modo Casual (Business UI) */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f9fafb;
+  --color-text-main: #111827;
+  --color-text-muted: #4b5563;
+  --color-text-accent: #2563eb; /* Azul corporativo */
+  
+  --font-sans: 'Geist', 'Inter', system-ui, sans-serif;
+  --font-mono: 'Fira Code', 'Inconsolata', monospace;
+
+  /* Animaciones heredadas por defecto */
+  --animate-crt-flicker: crt-flicker 0.15s infinite;
+}
+
+/* Mutación paramétrica para el Modo PRO (Terminal UI) mediante cascada pura */
+.pro-theme {
+  --color-bg-primary: #0a0a0a;
+  --color-bg-secondary: #121212;
+  --color-text-main: #00ff66; /* Verde fósforo clásico */
+  --color-text-muted: #008833;
+  --color-text-accent: #00fffc; /* Cian para comandos y variables */
+  
+  /* En el modo PRO, forzamos que todo herede la tipografía monoespaciada */
+  --font-sans: 'Fira Code', 'Inconsolata', monospace;
+}
+
+/* Keyframes nativos para los efectos analógicos del monitor CRT */
+@keyframes crt-flicker {
+  0% { opacity: 0.98; }
+  50% { opacity: 1; }
+  100% { opacity: 0.99; }
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-main);
+  font-family: var(--font-sans);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

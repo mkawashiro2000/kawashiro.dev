@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { TerminalApp } from '../components/pro/TerminalApp';
+---
+
+<Layout title="Mitsunori Kawashiro | Dev Ecosystem">
+  <main className="min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-300">
+    <div className="w-full max-w-4xl mb-6 text-center md:text-left">
+      <h1 className="text-3xl font-bold tracking-tight mb-2">
+        kawashiro<span className="text-[var(--color-text-accent)]">.dev</span>
+      </h1>
+      <p className="text-sm text-[var(--color-text-muted)]">
+        Ecosistema Arquitectónico Dual • Homelab Infrastructure
+      </p>
+    </div>
+
+    {/* Isla React cargada selectivamente en el cliente */}
+    <TerminalApp client:load />
+  </main>
+</Layout>
