@@ -1,43 +1,62 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { translations } from '../../i18n/translations';
+
+const i18nData = {
+  en: { back: translations.en.tools.back, ...translations.en.tools.sentiment },
+  es: { back: translations.es.tools.back, ...translations.es.tools.sentiment },
+  ja: { back: translations.ja.tools.back, ...translations.ja.tools.sentiment },
+};
+const t = i18nData.en;
 ---
 
-<Layout title="Detector de sentimientos | Mitsunori Kawashiro">
+<Layout title="Sentiment Detector | Mitsunori Kawashiro">
+  <script type="application/json" id="i18n-data" set:html={JSON.stringify(i18nData)} />
+
   <main class="min-h-screen w-full" style="color: var(--color-green500);">
     <div class="max-w-3xl mx-auto px-6 sm:px-8 py-16">
-      <a href="/" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">← Volver</a>
+      <div class="flex items-center justify-between mb-2">
+        <a href="/" data-i18n="back" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">{t.back}</a>
+        <div class="lang-switcher">
+          <button type="button" data-lang-btn="en" class="lang-pill">EN</button>
+          <button type="button" data-lang-btn="es" class="lang-pill">ES</button>
+          <button type="button" data-lang-btn="ja" class="lang-pill">JA</button>
+        </div>
+      </div>
 
-      <h1 class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">
-        Detector de sentimientos
+      <h1 data-i18n="title" class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">
+        {t.title}
       </h1>
-      <p class="text-lg opacity-70 mb-2 max-w-xl">
-        Analiza la impresión general de un texto en español usando un léxico de palabras positivas y negativas.
+      <p data-i18n="subtitle" class="text-lg opacity-70 mb-2 max-w-xl">
+        {t.subtitle}
       </p>
-      <p class="text-sm opacity-50 mb-10 max-w-xl">
-        El análisis corre en el backend (FastAPI) contra un diccionario de sentimiento, no en el navegador.
+      <p data-i18n="note" class="text-sm opacity-50 mb-10 max-w-xl">
+        {t.note}
       </p>
 
       <textarea
         id="input"
         rows="6"
-        placeholder="Escribe una opinión, reseña o comentario..."
+        data-i18n-placeholder="placeholder"
+        placeholder={t.placeholder}
         class="w-full rounded-3xl p-6 text-base sm:text-lg font-sans resize-none outline-none"
         style="background: var(--color-bg-secondary); color: var(--color-green500); border: 1px solid rgba(0,0,0,0.08);"
       ></textarea>
 
       <button
         id="analyze-btn"
+        data-i18n="button"
         class="mt-6 rounded-full px-8 py-3 font-semibold transition-transform hover:scale-105"
         style="background: var(--color-green500); color: var(--color-beige);"
       >
-        Analizar sentimiento
+        {t.button}
       </button>
 
       <p id="error-msg" class="mt-4 text-sm hidden" style="color: var(--color-rust);"></p>
 
       <div id="result" class="mt-10 hidden">
         <div id="verdict-card" class="rounded-3xl p-8 sm:p-10">
-          <span class="text-sm font-semibold uppercase tracking-widest opacity-70">Resultado</span>
+          <span data-i18n="result" class="text-sm font-semibold uppercase tracking-widest opacity-70">{t.result}</span>
           <h2 id="verdict-text" class="font-display text-4xl sm:text-5xl font-semibold mt-2"></h2>
         </div>
         <div class="grid grid-cols-2 gap-4 mt-4">
@@ -46,26 +65,36 @@ import Layout from '../../layouts/Layout.astro';
               <span id="stat-pos">0</span>
               <span class="text-lg opacity-60">(<span id="stat-pos-pct">0</span>%)</span>
             </p>
-            <p class="text-sm font-medium uppercase tracking-widest opacity-70 mt-1">Palabras positivas</p>
+            <p data-i18n="positiveWords" class="text-sm font-medium uppercase tracking-widest opacity-70 mt-1">{t.positiveWords}</p>
           </div>
           <div class="rounded-3xl p-6" style="background: var(--color-rust);">
             <p class="text-3xl font-display font-semibold">
               <span id="stat-neg">0</span>
               <span class="text-lg opacity-60">(<span id="stat-neg-pct">0</span>%)</span>
             </p>
-            <p class="text-sm font-medium uppercase tracking-widest opacity-70 mt-1">Palabras negativas</p>
+            <p data-i18n="negativeWords" class="text-sm font-medium uppercase tracking-widest opacity-70 mt-1">{t.negativeWords}</p>
           </div>
         </div>
-        <p class="text-sm opacity-50 mt-3">
-          Porcentajes calculados sobre las <span id="stat-total">0</span> palabras con carga emocional detectadas (de <span id="stat-wordcount">0</span> palabras totales).
-        </p>
+        <p id="total-note" class="text-sm opacity-50 mt-3"></p>
         <div id="words-detail" class="flex flex-wrap gap-2 mt-4"></div>
       </div>
     </div>
   </main>
+
+  <script src="/js/i18n.js" defer></script>
 </Layout>
 
 <script>
+  declare global {
+    interface Window {
+      __kawashiroI18n: {
+        getLocale: () => string;
+        getDict: () => any;
+        resolvePath: (obj: any, path: string) => any;
+      };
+    }
+  }
+
   const input = document.getElementById('input') as HTMLTextAreaElement;
   const btn = document.getElementById('analyze-btn') as HTMLButtonElement;
   const result = document.getElementById('result')!;
@@ -76,9 +105,16 @@ import Layout from '../../layouts/Layout.astro';
   const statNeg = document.getElementById('stat-neg')!;
   const statPosPct = document.getElementById('stat-pos-pct')!;
   const statNegPct = document.getElementById('stat-neg-pct')!;
-  const statTotal = document.getElementById('stat-total')!;
-  const statWordcount = document.getElementById('stat-wordcount')!;
+  const totalNote = document.getElementById('total-note')!;
   const wordsDetail = document.getElementById('words-detail')!;
+
+  let lastData: any = null;
+
+  function strings() {
+    const dict = window.__kawashiroI18n?.getDict?.();
+    const locale = window.__kawashiroI18n?.getLocale?.() ?? 'en';
+    return (dict && (dict[locale] || dict.en)) || null;
+  }
 
   function pill(text: string, bg: string) {
     const span = document.createElement('span');
@@ -88,13 +124,42 @@ import Layout from '../../layouts/Layout.astro';
     return span;
   }
 
+  function renderResult(data: any) {
+    const s = strings();
+    if (!s) return;
+
+    statPos.textContent = String(data.positive_count);
+    statNeg.textContent = String(data.negative_count);
+    statPosPct.textContent = String(data.positive_percentage);
+    statNegPct.textContent = String(data.negative_percentage);
+
+    let verdict = s.neutral;
+    let bg = 'var(--color-babyblue)';
+    if (data.verdict === 'positivo') { verdict = s.positive; bg = 'var(--color-mint)'; }
+    else if (data.verdict === 'negativo') { verdict = s.negative; bg = 'var(--color-rust)'; }
+
+    verdictText.textContent = verdict;
+    verdictCard.setAttribute('style', `background: ${bg}`);
+
+    totalNote.textContent = s.totalNote
+      .replace('{total}', String(data.sentiment_word_count))
+      .replace('{words}', String(data.word_count));
+
+    wordsDetail.innerHTML = '';
+    (data.positive_words as string[]).forEach((w) => wordsDetail.appendChild(pill(w, 'var(--color-mint)')));
+    (data.negative_words as string[]).forEach((w) => wordsDetail.appendChild(pill(w, 'var(--color-rust)')));
+
+    result.classList.remove('hidden');
+  }
+
   btn.addEventListener('click', async () => {
     const text = input.value.trim();
     if (!text) return;
 
+    const s = strings();
     errorMsg.classList.add('hidden');
     btn.disabled = true;
-    btn.textContent = 'Analizando...';
+    if (s) btn.textContent = s.analyzing;
 
     try {
       const res = await fetch('/api/v1/sentiment', {
@@ -103,35 +168,22 @@ import Layout from '../../layouts/Layout.astro';
         body: JSON.stringify({ text }),
       });
 
-      if (!res.ok) throw new Error(`API respondió ${res.status}`);
-      const data = await res.json();
-
-      statPos.textContent = String(data.positive_count);
-      statNeg.textContent = String(data.negative_count);
-      statPosPct.textContent = String(data.positive_percentage);
-      statNegPct.textContent = String(data.negative_percentage);
-      statTotal.textContent = String(data.sentiment_word_count);
-      statWordcount.textContent = String(data.word_count);
-
-      let verdict = 'Neutral';
-      let bg = 'var(--color-babyblue)';
-      if (data.verdict === 'positivo') { verdict = 'Positivo 🙂'; bg = 'var(--color-mint)'; }
-      else if (data.verdict === 'negativo') { verdict = 'Negativo 🙁'; bg = 'var(--color-rust)'; }
-
-      verdictText.textContent = verdict;
-      verdictCard.setAttribute('style', `background: ${bg}`);
-
-      wordsDetail.innerHTML = '';
-      (data.positive_words as string[]).forEach((w) => wordsDetail.appendChild(pill(w, 'var(--color-mint)')));
-      (data.negative_words as string[]).forEach((w) => wordsDetail.appendChild(pill(w, 'var(--color-rust)')));
-
-      result.classList.remove('hidden');
+      if (!res.ok) throw new Error(`API responded ${res.status}`);
+      lastData = await res.json();
+      renderResult(lastData);
     } catch (err) {
-      errorMsg.textContent = 'No se pudo conectar con la API de análisis. Verifica que el backend esté activo.';
+      const s2 = strings();
+      errorMsg.textContent = s2 ? s2.error : 'Request failed.';
       errorMsg.classList.remove('hidden');
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Analizar sentimiento';
+      const s3 = strings();
+      if (s3) btn.textContent = s3.button;
     }
+  });
+
+  // Si el usuario cambia de idioma después de ver un resultado, lo re-renderizamos.
+  document.addEventListener('kawashiro:localechange', () => {
+    if (lastData) renderResult(lastData);
   });
 </script>

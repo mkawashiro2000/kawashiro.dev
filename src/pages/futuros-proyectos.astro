@@ -1,90 +1,70 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { translations } from '../i18n/translations';
 
 type FutureProject = {
+  key: 'cognitostrat' | 'foresightflow' | 'precisionag' | 'tempoprice';
   name: string;
   logo: string;
-  tagline: string;
-  description: string;
   bg: string;
 };
 
 const projects: FutureProject[] = [
-  {
-    name: 'CognitoStrat',
-    logo: '/img/proyectos/cognitostrat.png',
-    tagline: 'Detección y respuesta inteligente a la desinformación',
-    description:
-      'Plataforma de detección y respuesta inteligente a noticias falsas y desinformación personalizada. ' +
-      'Combina procesamiento de lenguaje natural para verificación de hechos en tiempo real, monitoreo continuo ' +
-      'de fuentes de noticias y redes sociales, y un motor de puntuación de credibilidad que estima el nivel de ' +
-      'exposición de cada usuario a contenido manipulado. El objetivo es alertar de forma temprana y personalizada, ' +
-      'antes de que la desinformación se propague masivamente.',
-    bg: 'var(--color-babyblue)',
-  },
-  {
-    name: 'ForesightFlow',
-    logo: '/img/proyectos/foresightflow.png',
-    tagline: 'Análisis cuantitativo y predictivo para Forex',
-    description:
-      'Sistema híbrido de análisis cuantitativo y predictivo para el mercado Forex. Une modelos estadísticos de ' +
-      'series de tiempo con aprendizaje automático para generar señales de entrada y salida, un motor de backtesting ' +
-      'contra datos históricos, y un panel de gestión de riesgo que calcula exposición y drawdown en tiempo real. ' +
-      'Pensado como apoyo a la toma de decisiones, no como caja negra: cada señal viene con su justificación estadística.',
-    bg: 'var(--color-yellow)',
-  },
-  {
-    name: 'PrecisionAg AI',
-    logo: '/img/proyectos/precisionag-ai.png',
-    tagline: 'Analítica avanzada para agricultura de precisión',
-    description:
-      'Plataforma digital inteligente diseñada para optimizar al máximo la productividad, rentabilidad y ' +
-      'sostenibilidad de los cultivos mediante el uso de datos reales y analítica avanzada. Integra datos ' +
-      'satelitales, sensores de suelo y clima para predecir rendimiento por parcela, optimizar el uso de agua y ' +
-      'fertilizantes, y medir el impacto ambiental de cada decisión agronómica a lo largo de la temporada.',
-    bg: 'var(--color-mint)',
-  },
-  {
-    name: 'TempoPrice',
-    logo: '/img/proyectos/tempoprice.png',
-    tagline: 'Optimización de inventario basada en el tiempo',
-    description:
-      'Sistema inteligente enfocado en el análisis de datos y optimización de inventario basado en el factor ' +
-      'tiempo. Pronostica demanda mediante series temporales, ajusta precios dinámicamente según estacionalidad y ' +
-      'caducidad del producto, y recalcula puntos de reorden para reducir tanto el sobrestock como el quiebre de ' +
-      'inventario a lo largo del ciclo de vida de cada producto.',
-    bg: 'var(--color-rust)',
-  },
+  { key: 'cognitostrat', name: 'CognitoStrat', logo: '/img/proyectos/cognitostrat.png', bg: 'var(--color-babyblue)' },
+  { key: 'foresightflow', name: 'ForesightFlow', logo: '/img/proyectos/foresightflow.png', bg: 'var(--color-yellow)' },
+  { key: 'precisionag', name: 'PrecisionAg AI', logo: '/img/proyectos/precisionag-ai.png', bg: 'var(--color-mint)' },
+  { key: 'tempoprice', name: 'TempoPrice', logo: '/img/proyectos/tempoprice.png', bg: 'var(--color-rust)' },
 ];
+
+const i18nData = {
+  en: { back: translations.en.tools.back, ...translations.en.futureProjects },
+  es: { back: translations.es.tools.back, ...translations.es.futureProjects },
+  ja: { back: translations.ja.tools.back, ...translations.ja.futureProjects },
+};
+const t = i18nData.en;
 ---
 
-<Layout title="Futuros proyectos | Mitsunori Kawashiro">
+<Layout title="Future projects | Mitsunori Kawashiro">
+  <script type="application/json" id="i18n-data" set:html={JSON.stringify(i18nData)} />
+
   <main class="min-h-screen w-full" style="color: var(--color-green500);">
     <div class="max-w-[1100px] mx-auto px-6 sm:px-8 py-16">
-      <a href="/" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">← Volver</a>
+      <div class="flex items-center justify-between mb-2">
+        <a href="/" data-i18n="back" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">{t.back}</a>
+        <div class="lang-switcher">
+          <button type="button" data-lang-btn="en" class="lang-pill">EN</button>
+          <button type="button" data-lang-btn="es" class="lang-pill">ES</button>
+          <button type="button" data-lang-btn="ja" class="lang-pill">JA</button>
+        </div>
+      </div>
 
-      <h1 class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">
-        Futuros proyectos
+      <h1 data-i18n="title" class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">
+        {t.title}
       </h1>
-      <p class="text-lg opacity-70 mb-14 max-w-2xl">
-        Ideas y sistemas en fase de concepción. Todavía no están construidos, pero ya tienen nombre,
-        identidad visual y una hipótesis clara de a qué problema atacan.
+      <p data-i18n="subtitle" class="text-lg opacity-70 mb-14 max-w-2xl">
+        {t.subtitle}
       </p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {projects.map((p) => (
           <div class="rounded-[32px] p-8 sm:p-10 flex flex-col" style={`background: ${p.bg}`}>
             <div class="flex items-start justify-between gap-4 mb-6">
-              <img src={p.logo} alt={`Logo de ${p.name}`} class="h-10 sm:h-12 w-auto object-contain object-left" />
-              <span class="shrink-0 text-xs font-semibold uppercase tracking-widest rounded-full px-3 py-1.5 bg-white/60">
-                Próximamente
+              <img src={p.logo} alt={`${p.name} logo`} class="h-10 sm:h-12 w-auto object-contain object-left" />
+              <span data-i18n="comingSoon" class="shrink-0 text-xs font-semibold uppercase tracking-widest rounded-full px-3 py-1.5 bg-white/60">
+                {t.comingSoon}
               </span>
             </div>
-            <p class="text-sm font-semibold uppercase tracking-widest opacity-70 mb-2">{p.tagline}</p>
-            <p class="text-base leading-relaxed opacity-85">{p.description}</p>
+            <p data-i18n={`items.${p.key}.tagline`} class="text-sm font-semibold uppercase tracking-widest opacity-70 mb-2">
+              {t.items[p.key].tagline}
+            </p>
+            <p data-i18n={`items.${p.key}.desc`} class="text-base leading-relaxed opacity-85">
+              {t.items[p.key].desc}
+            </p>
           </div>
         ))}
       </div>
     </div>
   </main>
+
+  <script src="/js/i18n.js" defer></script>
 </Layout>

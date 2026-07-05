@@ -78,6 +78,28 @@ body {
   to { opacity: 1; transform: translate(-50%, 0); }
 }
 
+/* Selector de idioma (páginas estáticas sin React) */
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.25rem;
+  background: rgba(0, 0, 0, 0.06);
+}
+.lang-pill {
+  border-radius: 9999px;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.6;
+  transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+}
+.lang-pill[data-active="true"] {
+  opacity: 1;
+  background: var(--color-green500);
+  color: var(--color-beige);
+}
+
 /* Añadir al final de src/styles/global.css */
 
 .glitch-text {

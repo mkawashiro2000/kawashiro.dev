@@ -1,41 +1,61 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { translations } from '../../i18n/translations';
+
+const i18nData = {
+  en: { back: translations.en.tools.back, ...translations.en.tools.tokenizer },
+  es: { back: translations.es.tools.back, ...translations.es.tools.tokenizer },
+  ja: { back: translations.ja.tools.back, ...translations.ja.tools.tokenizer },
+};
+const t = i18nData.en;
 ---
 
-<Layout title="Tokenizer y Lemmatizador | Mitsunori Kawashiro">
+<Layout title="Tokenizer & Lemmatizer | Mitsunori Kawashiro">
+  <script type="application/json" id="i18n-data" set:html={JSON.stringify(i18nData)} />
+
   <main class="min-h-screen w-full" style="color: var(--color-green500);">
     <div class="max-w-3xl mx-auto px-6 sm:px-8 py-16">
-      <a href="/" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">← Volver</a>
+      <div class="flex items-center justify-between mb-2">
+        <a href="/" data-i18n="back" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">{t.back}</a>
+        <div class="lang-switcher">
+          <button type="button" data-lang-btn="en" class="lang-pill">EN</button>
+          <button type="button" data-lang-btn="es" class="lang-pill">ES</button>
+          <button type="button" data-lang-btn="ja" class="lang-pill">JA</button>
+        </div>
+      </div>
 
-      <h1 class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">
-        Tokenizer y Lemmatizador
+      <h1 data-i18n="title" class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">
+        {t.title}
       </h1>
-      <p class="text-lg opacity-70 mb-3 max-w-xl">
-        Divide un texto en tokens (palabras y signos) y reduce cada palabra a una forma base aproximada mediante reglas heurísticas en español.
+      <p data-i18n="subtitle" class="text-lg opacity-70 mb-3 max-w-xl">
+        {t.subtitle}
       </p>
-      <p class="text-sm opacity-50 mb-10 max-w-xl">
-        Nota: esta es una reconstrucción simplificada basada en reglas, no usa un modelo de lenguaje ni el diccionario completo de NLTK.
+      <p data-i18n="note" class="text-sm opacity-50 mb-10 max-w-xl">
+        {t.note}
       </p>
 
       <textarea
         id="input"
         rows="6"
-        placeholder="Escribe una frase en español..."
+        data-i18n-placeholder="placeholder"
+        placeholder={t.placeholder}
         class="w-full rounded-3xl p-6 text-base sm:text-lg font-sans resize-none outline-none"
         style="background: var(--color-bg-secondary); color: var(--color-green500); border: 1px solid rgba(0,0,0,0.08);"
       ></textarea>
 
       <div class="mt-10">
-        <span class="text-sm font-semibold uppercase tracking-widest opacity-70">Tokens</span>
+        <span data-i18n="tokensLabel" class="text-sm font-semibold uppercase tracking-widest opacity-70">{t.tokensLabel}</span>
         <div id="tokens" class="flex flex-wrap gap-2 mt-4"></div>
       </div>
 
       <div class="mt-10">
-        <span class="text-sm font-semibold uppercase tracking-widest opacity-70">Lema aproximado</span>
+        <span data-i18n="lemmasLabel" class="text-sm font-semibold uppercase tracking-widest opacity-70">{t.lemmasLabel}</span>
         <div id="lemmas" class="flex flex-wrap gap-2 mt-4"></div>
       </div>
     </div>
   </main>
+
+  <script src="/js/i18n.js" defer></script>
 </Layout>
 
 <script>

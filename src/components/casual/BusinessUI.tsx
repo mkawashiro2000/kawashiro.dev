@@ -1,5 +1,7 @@
 import React from 'react';
 import { useAppStore } from '../../store/useAppStore';
+import { getTranslation } from '../../i18n/translations';
+import { LanguageSwitcher } from '../shared/LanguageSwitcher';
 
 /* Estrella decorativa de 4 puntas (estilo Sean Halpin) */
 const Star: React.FC<{ className?: string }> = ({ className }) => (
@@ -46,6 +48,8 @@ type Card = {
 
 export const BusinessUI: React.FC = () => {
   const toggleMode = useAppStore((state) => state.toggleMode);
+  const locale = useAppStore((state) => state.locale);
+  const t = getTranslation(locale);
 
   const handleTransition = () => {
     document.documentElement.classList.add('pro-theme');
@@ -58,9 +62,9 @@ export const BusinessUI: React.FC = () => {
 
   const workCards: Card[] = [
     {
-      category: 'AgriTech · Gestión',
+      category: t.cards.agrobalance.category,
       title: 'AgroBalance',
-      desc: 'Sistema integral de gestión agrotecnológica y financiera operado de forma local, diseñado para profesionalizar la producción agrícola. Le da al productor control milimétrico sobre lo que ocurre en la tierra y en el bolsillo.',
+      desc: t.cards.agrobalance.desc,
       bg: 'var(--color-rust)',
       fg: darkGreen,
       col: '1 / 15',
@@ -68,27 +72,27 @@ export const BusinessUI: React.FC = () => {
       logo: '/img/proyectos/agrobalance.png',
     },
     {
-      category: 'Sistema · Interactivo',
-      title: 'Terminal PRO',
-      desc: 'Entra al emulador de línea de comandos: UNIX, telemetría real del servidor y scripts en vivo.',
+      category: t.cards.terminalPro.category,
+      title: t.cards.terminalPro.title,
+      desc: t.cards.terminalPro.desc,
       bg: 'var(--color-green500)',
       fg: beige,
       col: '15 / 27',
       onClick: handleTransition,
     },
     {
-      category: 'Data Science · NLP',
-      title: 'Detector de sentimientos',
-      desc: 'Analiza opiniones en texto usando una colección de palabras positivas y negativas para determinar la impresión general.',
+      category: t.cards.sentiment.category,
+      title: t.cards.sentiment.title,
+      desc: t.cards.sentiment.desc,
       bg: 'var(--color-mint)',
       fg: darkGreen,
       col: '1 / 13',
       href: '/proyectos/detector-sentimientos',
     },
     {
-      category: 'Data Science · NLP',
-      title: 'Tokenizer y Lemmatizador',
-      desc: 'Procesamiento de lenguaje natural en español: divide el texto en tokens y los reduce a una forma base aproximada.',
+      category: t.cards.tokenizer.category,
+      title: t.cards.tokenizer.title,
+      desc: t.cards.tokenizer.desc,
       bg: 'var(--color-babyblue)',
       fg: darkGreen,
       col: '13 / 27',
@@ -97,10 +101,10 @@ export const BusinessUI: React.FC = () => {
   ];
 
   const skillGroups: { label: string; items: string[]; bg: string }[] = [
-    { label: 'Frontend', items: ['JavaScript', 'TypeScript', 'TailwindCSS', 'Astro', 'SCSS'], bg: 'var(--color-lilac)' },
-    { label: 'Backend', items: ['Node.js', 'Bun', 'Deno', 'Supabase', 'Resend'], bg: 'var(--color-pink)' },
-    { label: 'Data science', items: ['Python', 'NumPy', 'Pandas', 'Scikit-learn', 'TensorFlow', 'Keras'], bg: 'var(--color-yellow)' },
-    { label: 'Databases & DevOps', items: ['PostgreSQL', 'MongoDB', 'Redis', 'AWS', 'Docker', 'GitHub'], bg: 'var(--color-mint)' },
+    { label: t.skills.groups.frontend, items: ['JavaScript', 'TypeScript', 'TailwindCSS', 'Astro', 'SCSS'], bg: 'var(--color-lilac)' },
+    { label: t.skills.groups.backend, items: ['Node.js', 'Bun', 'Deno', 'Supabase', 'Resend'], bg: 'var(--color-pink)' },
+    { label: t.skills.groups.dataScience, items: ['Python', 'NumPy', 'Pandas', 'Scikit-learn', 'TensorFlow', 'Keras'], bg: 'var(--color-yellow)' },
+    { label: t.skills.groups.databases, items: ['PostgreSQL', 'MongoDB', 'Redis', 'AWS', 'Docker', 'GitHub'], bg: 'var(--color-mint)' },
   ];
 
   const socials = [
@@ -123,7 +127,7 @@ export const BusinessUI: React.FC = () => {
           {c.logo ? (
             <img
               src={c.logo}
-              alt={`Logo de ${c.title}`}
+              alt={`${c.title} logo`}
               className="h-16 sm:h-20 w-auto object-contain object-left mb-4"
             />
           ) : (
@@ -169,16 +173,17 @@ export const BusinessUI: React.FC = () => {
         <a href="/" className="font-display text-2xl font-semibold tracking-tight" style={{ color: green }}>
           kawashiro<span className="opacity-50">.dev</span>
         </a>
-        <div className="flex items-center gap-6 text-sm font-medium">
-          <a href="/proyectos" className="hidden sm:inline hover:opacity-60 transition-opacity">Proyectos</a>
-          <a href="/futuros-proyectos" className="hidden sm:inline hover:opacity-60 transition-opacity">Futuros Proyectos</a>
-          <a href="mailto:contact@kawashiro.dev" className="hidden sm:inline hover:opacity-60 transition-opacity">Contacto</a>
+        <div className="flex items-center gap-4 sm:gap-6 text-sm font-medium">
+          <a href="/proyectos" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.projects}</a>
+          <a href="/futuros-proyectos" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.futureProjects}</a>
+          <a href="mailto:contact@kawashiro.dev" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.contact}</a>
+          <LanguageSwitcher />
           <button
             onClick={handleTransition}
             className="rounded-full px-5 py-2 font-semibold transition-transform hover:scale-105"
             style={{ backgroundColor: green, color: beige }}
           >
-            Terminal ↗
+            {t.nav.terminal} ↗
           </button>
         </div>
       </nav>
@@ -187,11 +192,20 @@ export const BusinessUI: React.FC = () => {
       <header className="max-w-[1300px] mx-auto px-6 sm:px-8 pt-16 pb-10 sm:pt-28 sm:pb-16 text-center">
         <h1 className="font-display font-semibold leading-[0.92] tracking-[-0.02em]">
           <span className="relative inline-block text-[clamp(3rem,11vw,10rem)]">
-            Hola. Soy Mitsunori.
+            {(() => {
+              const [before, after] = t.hero.line1.split('{name}');
+              return (
+                <>
+                  {before}
+                  <span style={{ whiteSpace: 'nowrap' }}>{t.hero.name}</span>
+                  {after}
+                </>
+              );
+            })()}
             <Star className="star-twinkle absolute w-8 h-8 sm:w-12 sm:h-12 -right-6 -top-2 sm:-right-10" />
           </span>
           <span className="relative block text-[clamp(3rem,11vw,10rem)]">
-            Data Developer.
+            {t.hero.line2}
             <Star className="star-twinkle delay absolute w-6 h-6 sm:w-10 sm:h-10 -left-4 bottom-2 sm:-left-8" />
           </span>
         </h1>
@@ -199,8 +213,7 @@ export const BusinessUI: React.FC = () => {
           className="mx-auto mt-8 max-w-2xl text-lg sm:text-2xl leading-snug"
           style={{ color: 'var(--color-text-muted)' }}
         >
-          Full Stack (Back-end/Data) Developer. Construyo con datos, analítica
-          y aplicaciones web. Desde Pennsylvania, USA 🇺🇸
+          {t.hero.bio}
         </p>
       </header>
 
@@ -214,11 +227,10 @@ export const BusinessUI: React.FC = () => {
       {/* STACK & SKILLS */}
       <section className="max-w-[1300px] mx-auto px-6 sm:px-8 pt-24 sm:pt-36 pb-10 text-center">
         <h2 className="font-display font-semibold text-[clamp(2.5rem,8vw,7rem)] leading-none tracking-tight">
-          Mi stack.
+          {t.skills.heading}
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-lg sm:text-xl" style={{ color: 'var(--color-text-muted)' }}>
-          Herramientas e intereses: cloud computing, ciencia de datos, machine
-          learning y desarrollo web.
+          {t.skills.subtitle}
         </p>
       </section>
 
@@ -255,7 +267,7 @@ export const BusinessUI: React.FC = () => {
           className="group inline-flex font-display font-semibold text-[clamp(3rem,12vw,11rem)] leading-none tracking-tight transition-transform hover:scale-[1.02]"
           style={{ color: green }}
         >
-          <span className="transition-transform duration-500 group-hover:-translate-y-2">¿Hablamos?</span>
+          <span className="transition-transform duration-500 group-hover:-translate-y-2">{t.cta.heading}</span>
         </a>
       </section>
 
@@ -263,9 +275,9 @@ export const BusinessUI: React.FC = () => {
       <footer className="border-t" style={{ borderColor: 'rgba(0,0,0,0.1)' }}>
         <div className="max-w-[1300px] mx-auto px-6 sm:px-8 py-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
           <div>
-            <p className="font-display text-2xl font-semibold">Mitsunori Kawashiro</p>
+            <p className="font-display text-2xl font-semibold">{t.footer.name}</p>
             <p className="mt-1 text-sm" style={{ color: 'var(--color-text-muted)' }}>
-              Full Stack (Back-end/Data) Developer · Pennsylvania, USA
+              {t.footer.role}
             </p>
           </div>
           <div className="flex items-center gap-4">

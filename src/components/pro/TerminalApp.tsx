@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAppStore } from '../../store/useAppStore';
+import { getTranslation } from '../../i18n/translations';
 import { Trie } from '../../terminal/utils/trie';
 import { HtopLive } from './HtopLive';
 import { printResumeToThermal } from '../../terminal/utils/webusb';
@@ -7,15 +8,12 @@ import { DgiiSignerMock } from './DgiiSignerMock';
 
 export const TerminalApp: React.FC = () => {
   const [input, setInput] = useState('');
-  
+  const locale = useAppStore((state) => state.locale);
+  const t = getTranslation(locale).terminal;
+
   // El historial soporta texto estricto y nodos de React para HtopLive y DgiiSignerMock
-  const [history, setHistory] = useState<(string | React.ReactNode)[]>([
-    'kawashiro.dev [Version 1.0.0-beta]',
-    'Sistemas Homelab activos sobre Raspberry Pi OS Lite.',
-    'Escribe "help" para desplegar la matriz de comandos.',
-    ''
-  ]);
-  
+  const [history, setHistory] = useState<(string | React.ReactNode)[]>(t.boot);
+
   const [historyPointer, setHistoryPointer] = useState<number>(-1);
   const [isMinimized, setIsMinimized] = useState(false);
   const commandArchive = useRef<string[]>([]);
@@ -133,38 +131,28 @@ export const TerminalApp: React.FC = () => {
     let output: (string | React.ReactNode)[] = [`$ ${commandLine}`];
 
     if (fullCommand === 'print resume') {
-       output.push('Inicializando protocolo ESC/POS vía WebUSB...', 'Esperando intercepción de seguridad del navegador...');
-       
+       output.push(t.printInit, t.printWaiting);
+
        // Sincronizamos el historial actual antes de despachar la promesa de hardware
        setHistory([...history, ...output]);
        setInput('');
-       
+
        // Invocamos la utilidad WebUSB pasando una función callback
        printResumeToThermal((msg) => {
          setHistory(prev => [...prev, msg]);
        });
-       return; 
+       return;
     } else {
       switch (baseCommand) {
         case 'help':
-          output.push(
-            'Comandos disponibles:',
-            '  help          - Desplegar este menú de ayuda estructurado.',
-            '  clear         - Limpiar el búfer del DOM de la terminal.',
-            '  casual        - Interrumpir Modo PRO y transicionar a Business UI.',
-            '  about         - Desplegar metadatos profesionales del desarrollador.',
-            '  neofetch      - Inspeccionar telemetría estática de la arquitectura.',
-            '  htop          - Iniciar flujo SSE para monitorización remota ARM64.',
-            '  print resume  - [Hardware] Enviar CV a impresora térmica ESC/POS local.',
-            '  cat [archivo] - Concatenar e imprimir archivos (ej. cat dgii-xml-signer.md)'
-          );
+          output.push(...t.helpLines);
           break;
         case 'clear':
           setHistory([]);
           setInput('');
           return;
         case 'casual':
-          output.push('Sincronizando estado global... Transicionando a Business UI.');
+          output.push(t.casualTransition);
           setHistory([...history, ...output]);
           setTimeout(() => {
             document.documentElement.classList.remove('pro-theme');
@@ -173,45 +161,27 @@ export const TerminalApp: React.FC = () => {
           setInput('');
           return;
         case 'about':
-          output.push(
-            'Mitsunori Kawashiro',
-            '--------------------------',
-            'Perfil: Full Stack (Back-end/Data) Developer',
-            'Ubicación: Pennsylvania, USA',
-            'Core: Python, TypeScript, Node.js, Astro, PostgreSQL.',
-            'Data Science: NumPy, Pandas, Scikit-learn, TensorFlow.',
-            'Contacto: contact@kawashiro.dev'
-          );
+          output.push(...t.aboutLines);
           break;
         case 'neofetch':
-          output.push(
-            'mk@kawashiro.dev',
-            '----------------',
-            'OS: Raspberry Pi OS Lite (Debian Bookworm)',
-            'Kernel: Linux 6.1.0-v8-16k aarch64',
-            'Uptime: 14 days, 2 hours, 43 mins',
-            'Shell: zsh (simulado / react-island)',
-            'Terminal: WebUSB Terminal v4',
-            'CPU: BCM2712 (ARM Cortex-A76 @ 2.4GHz)',
-            'Memory: 4096MB / 8192MB (50%)'
-          );
+          output.push(...t.neofetchLines);
           break;
         case 'htop':
-          output.push('Abriendo canal asíncrono (Server-Sent Events) con el Edge Node...');
+          output.push(t.htopOpening);
           output.push(<HtopLive key={`htop-${Date.now()}`} />);
           break;
         case 'cat':
           if (args[0] === 'dgii-xml-signer.md') {
-            output.push('Leyendo archivo desde el volumen de almacenamiento...');
+            output.push(t.catReading);
             output.push(<DgiiSignerMock key={`dgii-${Date.now()}`} />);
           } else if (args.length === 0) {
-            output.push('cat: falta el operando de archivo. Ejemplo: cat dgii-xml-signer.md');
+            output.push(t.catMissingArg);
           } else {
-            output.push(`cat: ${args.join(' ')}: No existe el archivo o el directorio`);
+            output.push(t.catNotFound(args.join(' ')));
           }
           break;
         default:
-          output.push(`sys: comando no encontrado: "${baseCommand}". Escribe "help".`);
+          output.push(t.commandNotFound(baseCommand));
       }
     }
 
@@ -251,7 +221,7 @@ export const TerminalApp: React.FC = () => {
             <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#28c840' }} />
           </span>
           mk@kawashiro.dev — -zsh
-          <span style={{ color: C.faint }}>· clic para restaurar</span>
+          <span style={{ color: C.faint }}>{t.dockRestoreHint}</span>
         </button>
       )}
 
@@ -273,8 +243,8 @@ export const TerminalApp: React.FC = () => {
           <div className="group flex items-center gap-2">
             <button
               type="button"
-              aria-label="Cerrar terminal"
-              title="Cerrar (volver a casual)"
+              aria-label={t.closeLabel}
+              title={t.closeTitle}
               onClick={(e) => { e.stopPropagation(); handleClose(); }}
               className="w-3.5 h-3.5 rounded-full flex items-center justify-center leading-none text-[9px] font-bold text-black/60"
               style={{ backgroundColor: '#ff5f57' }}
@@ -283,8 +253,8 @@ export const TerminalApp: React.FC = () => {
             </button>
             <button
               type="button"
-              aria-label="Minimizar terminal"
-              title="Minimizar"
+              aria-label={t.minimizeLabel}
+              title={t.minimizeTitle}
               onClick={(e) => { e.stopPropagation(); handleMinimize(); }}
               className="w-3.5 h-3.5 rounded-full flex items-center justify-center leading-none text-[10px] font-bold text-black/60"
               style={{ backgroundColor: '#febc2e' }}
@@ -293,8 +263,8 @@ export const TerminalApp: React.FC = () => {
             </button>
             <button
               type="button"
-              aria-label="Pantalla completa"
-              title="Pantalla completa"
+              aria-label={t.fullscreenLabel}
+              title={t.fullscreenTitle}
               onClick={(e) => { e.stopPropagation(); handleFullscreen(); }}
               className="w-3.5 h-3.5 rounded-full flex items-center justify-center leading-none text-[8px] font-bold text-black/60"
               style={{ backgroundColor: '#28c840' }}

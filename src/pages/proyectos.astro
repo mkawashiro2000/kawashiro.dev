@@ -1,10 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { translations } from '../i18n/translations';
 
 type Project = {
-  name: string;
-  category: string;
-  description: string;
+  key: 'tokenizer' | 'sentiment' | 'wordCounter';
   href: string;
   bg: string;
 };
@@ -12,43 +11,38 @@ type Project = {
 // Orden: el primero del arreglo es el más reciente: los nuevos se añaden
 // al principio de esta lista y los anteriores van bajando automáticamente.
 const projects: Project[] = [
-  {
-    name: 'Tokenizer y Lemmatizador',
-    category: 'Data Science · NLP',
-    description:
-      'Procesamiento de lenguaje natural en español: divide el texto en tokens y los reduce a una forma base aproximada.',
-    href: '/proyectos/tokenizer-lemmatizador',
-    bg: 'var(--color-babyblue)',
-  },
-  {
-    name: 'Detector de sentimientos',
-    category: 'Data Science · NLP',
-    description:
-      'Analiza opiniones en texto usando un diccionario léxico de palabras positivas y negativas, con backend en FastAPI.',
-    href: '/proyectos/detector-sentimientos',
-    bg: 'var(--color-mint)',
-  },
-  {
-    name: 'Contador de palabras',
-    category: 'Data Science · NLP',
-    description:
-      'Analizador de texto que identifica y cuenta palabras completas, números, dígitos individuales y caracteres especiales.',
-    href: '/proyectos/contador-palabras',
-    bg: 'var(--color-rust)',
-  },
+  { key: 'tokenizer', href: '/proyectos/tokenizer-lemmatizador', bg: 'var(--color-babyblue)' },
+  { key: 'sentiment', href: '/proyectos/detector-sentimientos', bg: 'var(--color-mint)' },
+  { key: 'wordCounter', href: '/proyectos/contador-palabras', bg: 'var(--color-rust)' },
 ];
+
+const i18nData = {
+  en: { back: translations.en.tools.back, ...translations.en.proyectos },
+  es: { back: translations.es.tools.back, ...translations.es.proyectos },
+  ja: { back: translations.ja.tools.back, ...translations.ja.proyectos },
+};
+const t = i18nData.en;
 ---
 
-<Layout title="Proyectos | Mitsunori Kawashiro">
+<Layout title="Projects | Mitsunori Kawashiro">
+  <script type="application/json" id="i18n-data" set:html={JSON.stringify(i18nData)} />
+
   <main class="min-h-screen w-full" style="color: var(--color-green500);">
     <div class="max-w-3xl mx-auto px-6 sm:px-8 py-16">
-      <a href="/" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">← Volver</a>
+      <div class="flex items-center justify-between mb-2">
+        <a href="/" data-i18n="back" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">{t.back}</a>
+        <div class="lang-switcher">
+          <button type="button" data-lang-btn="en" class="lang-pill">EN</button>
+          <button type="button" data-lang-btn="es" class="lang-pill">ES</button>
+          <button type="button" data-lang-btn="ja" class="lang-pill">JA</button>
+        </div>
+      </div>
 
-      <h1 class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">
-        Proyectos
+      <h1 data-i18n="title" class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">
+        {t.title}
       </h1>
-      <p class="text-lg opacity-70 mb-14 max-w-xl">
-        Todos los proyectos, del más reciente al más antiguo.
+      <p data-i18n="subtitle" class="text-lg opacity-70 mb-14 max-w-xl">
+        {t.subtitle}
       </p>
 
       <div class="flex flex-col gap-5">
@@ -59,18 +53,26 @@ const projects: Project[] = [
             style={`background: ${p.bg}`}
           >
             {i === 0 && (
-              <span class="sm:order-last shrink-0 text-xs font-semibold uppercase tracking-widest rounded-full px-3 py-1.5 bg-white/60 self-start sm:self-center">
-                Más reciente
+              <span data-i18n="mostRecent" class="sm:order-last shrink-0 text-xs font-semibold uppercase tracking-widest rounded-full px-3 py-1.5 bg-white/60 self-start sm:self-center">
+                {t.mostRecent}
               </span>
             )}
             <div class="flex-1">
-              <span class="text-[13px] font-semibold uppercase tracking-[0.2em] opacity-70">{p.category}</span>
-              <h2 class="font-display text-2xl sm:text-3xl font-semibold mt-1">{p.name}</h2>
-              <p class="mt-2 text-base opacity-80 max-w-xl">{p.description}</p>
+              <span class="text-[13px] font-semibold uppercase tracking-[0.2em] opacity-70">
+                Data Science · NLP
+              </span>
+              <h2 data-i18n={`items.${p.key}.name`} class="font-display text-2xl sm:text-3xl font-semibold mt-1">
+                {t.items[p.key].name}
+              </h2>
+              <p data-i18n={`items.${p.key}.desc`} class="mt-2 text-base opacity-80 max-w-xl">
+                {t.items[p.key].desc}
+              </p>
             </div>
           </a>
         ))}
       </div>
     </div>
   </main>
+
+  <script src="/js/i18n.js" defer></script>
 </Layout>

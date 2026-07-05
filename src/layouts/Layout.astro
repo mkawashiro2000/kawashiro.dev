@@ -8,7 +8,7 @@ import '../styles/global.css';
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -33,6 +33,10 @@ import '../styles/global.css';
             const parsed = JSON.parse(storage);
             if (parsed?.state?.isProMode) {
               document.documentElement.classList.add('pro-theme');
+            }
+            const locale = parsed?.state?.locale;
+            if (locale === 'en' || locale === 'es' || locale === 'ja') {
+              document.documentElement.lang = locale;
             }
           }
         } catch (e) {
