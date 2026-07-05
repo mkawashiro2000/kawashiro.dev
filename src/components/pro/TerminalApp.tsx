@@ -17,9 +17,61 @@ export const TerminalApp: React.FC = () => {
   ]);
   
   const [historyPointer, setHistoryPointer] = useState<number>(-1);
+  const [isMinimized, setIsMinimized] = useState(false);
   const commandArchive = useRef<string[]>([]);
   const terminalEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const toggleMode = useAppStore((state) => state.toggleMode);
+
+  // 🔴 Cerrar: salir del Modo PRO y volver a Business UI
+  const handleClose = () => {
+    if (document.fullscreenElement) document.exitFullscreen?.();
+    document.documentElement.classList.remove('pro-theme');
+    toggleMode();
+  };
+
+  // 🟢 Maximizar: fullscreen real del navegador (Fullscreen API)
+  const handleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+    inputRef.current?.focus();
+  };
+
+  // 🟡 Minimizar: el navegador no puede minimizarse; simulamos "guardar al dock"
+  const handleMinimize = () => setIsMinimized(true);
+  const handleRestore = () => {
+    setIsMinimized(false);
+    setTimeout(() => inputRef.current?.focus(), 50);
+  };
+
+  // Paleta realista (Catppuccin Mocha)
+  const C = {
+    base: '#1e1e2e',
+    bar: '#181825',
+    crust: '#11111b',
+    text: '#cdd6f4',
+    muted: '#a6adc8',
+    faint: '#6c7086',
+    green: '#a6e3a1',
+    blue: '#89b4fa',
+    mauve: '#cba6f7',
+    red: '#f38ba8',
+    yellow: '#f9e2af',
+    teal: '#94e2d5',
+  };
+
+  // Prompt realista: mk@kawashiro:~$
+  const Prompt = () => (
+    <>
+      <span style={{ color: C.green }}>mk@kawashiro</span>
+      <span style={{ color: C.faint }}>:</span>
+      <span style={{ color: C.blue }}>~</span>
+      <span style={{ color: C.mauve }}> $ </span>
+    </>
+  );
 
   // Inicialización estricta del árbol Trie con todo el léxico permitido
   const commandTrie = useMemo(() => {
@@ -169,46 +221,131 @@ export const TerminalApp: React.FC = () => {
     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [history]);
 
-  return (
-    <div className="w-full max-w-4xl mx-auto bg-[var(--color-bg-secondary)] border border-[var(--color-text-muted)] rounded-lg shadow-2xl p-4 font-mono text-sm min-h-[450px] flex flex-col justify-between relative overflow-hidden animate-crt-flicker">
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.15)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] bg-[length:100%_4px,3px_100%]"></div>
-      
-      <div className="flex-1 overflow-y-auto pr-2 z-10">
-        {history.map((line, index) => (
-          <div key={index} className="leading-relaxed min-h-[1.2rem]">
-            {typeof line === 'string' ? (
-              line.startsWith('$') ? (
-                <span>
-                  <span className="text-[var(--color-text-accent)]">➜ </span>
-                  <span className="text-[var(--color-text-main)] font-bold">{line}</span>
-                </span>
-              ) : (
-                <span className="text-[var(--color-text-main)] opacity-90 whitespace-pre-wrap">{line}</span>
-              )
-            ) : (
-              <div className="my-2">{line}</div>
-            )}
-          </div>
-        ))}
-        <div ref={terminalEndRef} />
-      </div>
+  // Color de las líneas de salida según su naturaleza (errores en rojo, etc.)
+  const lineColor = (line: string): string => {
+    if (/^(cat:|sys:|.*no encontrado|.*No existe)/i.test(line)) return C.red;
+    if (/^\[OK\]|completada|activos/i.test(line)) return C.green;
+    if (/^\[ERROR\]|\[ABORTADO\]/i.test(line)) return C.red;
+    if (/^-{3,}|^={3,}/.test(line)) return C.faint;
+    return C.text;
+  };
 
-      <form onSubmit={executeCommand} className="flex items-center gap-2 mt-4 pt-2 border-t border-[var(--color-text-muted)] border-opacity-30 z-10">
-        <span className="text-[var(--color-text-accent)] font-bold">➜ ~</span>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="flex-1 bg-transparent border-none outline-none text-[var(--color-text-main)] font-mono caret-[var(--color-text-accent)] focus:ring-0 p-0"
-          autoFocus
-          placeholder="Escribe un comando..."
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="off"
-          spellCheck="false"
-        />
-      </form>
+  return (
+    <div
+      onClick={() => inputRef.current?.focus()}
+      className="relative w-full h-[100dvh] overflow-hidden"
+      style={{ backgroundColor: C.crust }}
+    >
+      {/* Píldora del dock cuando la ventana está minimizada */}
+      {isMinimized && (
+        <button
+          onClick={(e) => { e.stopPropagation(); handleRestore(); }}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl font-mono text-sm animate-[fadeUp_0.3s_ease-out]"
+          style={{ backgroundColor: C.bar, color: C.text, border: `1px solid ${C.crust}` }}
+        >
+          <span className="flex gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#ff5f57' }} />
+            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#febc2e' }} />
+            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#28c840' }} />
+          </span>
+          mk@kawashiro.dev — -zsh
+          <span style={{ color: C.faint }}>· clic para restaurar</span>
+        </button>
+      )}
+
+      <div
+        className="w-full h-full flex flex-col overflow-hidden font-mono text-[13px] sm:text-sm transition-all duration-500 ease-in-out"
+        style={{
+          backgroundColor: C.base,
+          transform: isMinimized ? 'scale(0.1) translateY(60vh)' : 'scale(1) translateY(0)',
+          transformOrigin: 'bottom center',
+          opacity: isMinimized ? 0 : 1,
+          pointerEvents: isMinimized ? 'none' : 'auto',
+        }}
+      >
+        {/* Barra de título estilo macOS */}
+        <div
+          className="flex items-center px-4 py-2.5 select-none shrink-0"
+          style={{ backgroundColor: C.bar, borderBottom: `1px solid ${C.crust}` }}
+        >
+          <div className="group flex items-center gap-2">
+            <button
+              type="button"
+              aria-label="Cerrar terminal"
+              title="Cerrar (volver a casual)"
+              onClick={(e) => { e.stopPropagation(); handleClose(); }}
+              className="w-3.5 h-3.5 rounded-full flex items-center justify-center leading-none text-[9px] font-bold text-black/60"
+              style={{ backgroundColor: '#ff5f57' }}
+            >
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity">✕</span>
+            </button>
+            <button
+              type="button"
+              aria-label="Minimizar terminal"
+              title="Minimizar"
+              onClick={(e) => { e.stopPropagation(); handleMinimize(); }}
+              className="w-3.5 h-3.5 rounded-full flex items-center justify-center leading-none text-[10px] font-bold text-black/60"
+              style={{ backgroundColor: '#febc2e' }}
+            >
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity">−</span>
+            </button>
+            <button
+              type="button"
+              aria-label="Pantalla completa"
+              title="Pantalla completa"
+              onClick={(e) => { e.stopPropagation(); handleFullscreen(); }}
+              className="w-3.5 h-3.5 rounded-full flex items-center justify-center leading-none text-[8px] font-bold text-black/60"
+              style={{ backgroundColor: '#28c840' }}
+            >
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity">⤢</span>
+            </button>
+          </div>
+          <div className="flex-1 text-center text-xs tracking-wide" style={{ color: C.faint }}>
+            mk@kawashiro.dev — -zsh — 132×34
+          </div>
+          <div className="w-14" />
+        </div>
+
+        {/* Cuerpo de la terminal */}
+        <div className="flex-1 overflow-y-auto px-5 py-4 leading-relaxed" style={{ color: C.text }}>
+          {history.map((line, index) => (
+            <div key={index} className="min-h-[1.25rem] whitespace-pre-wrap break-words">
+              {typeof line === 'string' ? (
+                line.startsWith('$ ') ? (
+                  <span>
+                    <Prompt />
+                    <span style={{ color: C.text }}>{line.slice(2)}</span>
+                  </span>
+                ) : (
+                  <span style={{ color: lineColor(line) }}>{line}</span>
+                )
+              ) : (
+                <div className="my-2">{line}</div>
+              )}
+            </div>
+          ))}
+          <div ref={terminalEndRef} />
+
+          {/* Línea de entrada activa (inline, como una terminal real) */}
+          <form onSubmit={executeCommand} className="flex items-center min-h-[1.25rem]">
+            <Prompt />
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="flex-1 bg-transparent border-none outline-none font-mono focus:ring-0 p-0"
+              style={{ color: C.text, caretColor: C.text }}
+              autoFocus
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
+            />
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

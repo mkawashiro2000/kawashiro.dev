@@ -4,19 +4,7 @@ import { PortfolioEcosystem } from '../components/shared/PortfolioEcosystem';
 ---
 
 <Layout title="Mitsunori Kawashiro | Dev Ecosystem">
-  <main class="min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-300">
-    <div class="w-full max-w-4xl mb-6 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between">
-      <div>
-        <h1 class="text-3xl font-bold tracking-tight mb-1">
-          {/* Aplicación de CSS Puro para distorsión temporal de alta eficiencia */}
-          <span class="glitch-text" data-text="kawashiro">kawashiro</span><span class="text-[var(--color-text-accent)]">.dev</span>
-        </h1>
-        <p class="text-sm text-[var(--color-text-muted)] mt-1 font-mono uppercase tracking-widest opacity-80">
-          Dual-Mode Architecture // Zero Trust Edge
-        </p>
-      </div>
-    </div>
-
+  <main class="min-h-screen w-full transition-colors duration-300">
     {/* Orquestador Cinemático y Lógico cargado en el cliente */}
     <PortfolioEcosystem client:load />
   </main>

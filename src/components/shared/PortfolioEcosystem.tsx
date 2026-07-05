@@ -11,7 +11,7 @@ export const PortfolioEcosystem: React.FC = () => {
   // Evitar Mismatches de Hidratación: No renderizamos la geometría compleja 
   // hasta que Zustand haya leído el localStorage en el montaje del cliente.
   if (!_hasHydrated) {
-    return <div className="min-h-[450px] w-full max-w-4xl mx-auto" />; 
+    return <div className="min-h-screen w-full" />;
   }
 
   // Parámetros físicos del resorte (Oscilador Armónico Amortiguado)
@@ -46,6 +46,7 @@ export const PortfolioEcosystem: React.FC = () => {
               exit={{ rotateX: 90, opacity: 0 }}
               transition={springPhysics}
               style={{ transformOrigin: "bottom center" }}
+              className="w-full"
             >
               <TerminalApp />
             </m.div>

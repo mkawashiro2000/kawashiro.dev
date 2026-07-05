@@ -1,14 +1,31 @@
 @import "tailwindcss";
 
 @theme {
-  /* Variables para el Modo Casual (Business UI) */
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f9fafb;
-  --color-text-main: #111827;
-  --color-text-muted: #4b5563;
-  --color-text-accent: #2563eb; /* Azul corporativo */
-  
-  --font-sans: 'Geist', 'Inter', system-ui, sans-serif;
+  /* Modo Casual (Business UI) — paleta cálida beige/verde estilo editorial */
+  --color-bg-primary: hsl(36, 31%, 90%);   /* Beige de fondo */
+  --color-bg-secondary: hsl(36, 31%, 86%);
+  --color-text-main: hsl(172, 95%, 18%);   /* Verde profundo (green500) */
+  --color-text-muted: hsl(171, 15%, 35%);  /* green600 */
+  --color-text-accent: hsl(172, 95%, 18%);
+
+  /* Verdes de la escala */
+  --color-green300: hsl(159, 42%, 88%);
+  --color-green400: hsl(160, 52%, 71%);
+  --color-green500: hsl(172, 95%, 18%);
+  --color-green700: hsl(171, 11%, 24%);
+  --color-green800: hsl(158, 23%, 18%);
+  --color-beige: hsl(36, 31%, 90%);
+
+  /* Pasteles para las tarjetas del bento */
+  --color-mint: hsl(172, 45%, 75%);
+  --color-lilac: hsl(227, 65%, 87%);
+  --color-rust: hsl(22, 62%, 76%);
+  --color-babyblue: hsl(206, 84%, 86%);
+  --color-pink: hsl(284, 61%, 74%);
+  --color-yellow: hsl(36, 97%, 70%);
+
+  --font-sans: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Fredoka', 'Hanken Grotesk', sans-serif;
   --font-mono: 'Fira Code', 'Inconsolata', monospace;
 
   /* Animaciones heredadas por defecto */
@@ -16,13 +33,14 @@
 }
 
 /* Mutación paramétrica para el Modo PRO (Terminal UI) mediante cascada pura */
+/* Paleta realista tipo terminal moderna (Catppuccin Mocha) */
 .pro-theme {
-  --color-bg-primary: #0a0a0a;
-  --color-bg-secondary: #121212;
-  --color-text-main: #00ff66; /* Verde fósforo clásico */
-  --color-text-muted: #008833;
-  --color-text-accent: #00fffc; /* Cian para comandos y variables */
-  
+  --color-bg-primary: #181825;   /* Mantle (fondo de página) */
+  --color-bg-secondary: #1e1e2e; /* Base (fondo de la terminal) */
+  --color-text-main: #cdd6f4;    /* Texto blanco suave */
+  --color-text-muted: #a6adc8;   /* Subtexto */
+  --color-text-accent: #89b4fa;  /* Azul apagado */
+
   /* En el modo PRO, forzamos que todo herede la tipografía monoespaciada */
   --font-sans: 'Fira Code', 'Inconsolata', monospace;
 }
@@ -39,6 +57,25 @@ body {
   color: var(--color-text-main);
   font-family: var(--font-sans);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Estrellas decorativas del hero (Sean Halpin style) */
+@keyframes twinkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
+  50% { transform: scale(1.15) rotate(20deg); opacity: 1; }
+}
+.star-twinkle { animation: twinkle 4s ease-in-out infinite; }
+.star-twinkle.delay { animation-delay: 1.2s; }
+
+/* Bento: cada tarjeta define su span en el grid de 26 columnas (solo desktop) */
+@media (min-width: 1024px) {
+  .bento-card { grid-column: var(--col); }
+}
+
+/* Píldora del dock (terminal minimizada) */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translate(-50%, 1rem); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 /* Añadir al final de src/styles/global.css */
