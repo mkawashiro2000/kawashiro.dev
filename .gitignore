@@ -1,0 +1,25 @@
+# Dependencias
+node_modules/
+backend/__pycache__/
+**/__pycache__/
+*.pyc
+
+# Build de Astro
+dist/
+.astro/
+
+# Herramientas de Claude Code (worktrees, scratch)
+.claude/
+
+# Entorno
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db

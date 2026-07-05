@@ -10,9 +10,10 @@ export const HtopLive: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Conexión unidireccional al backend. 
-    // En producción, esto apuntará a la ruta protegida por el túnel Cloudflare.
-    const eventSource = new EventSource('http://localhost:8000/api/v1/telemetry');
+    // Conexión unidireccional al backend mediante ruta relativa.
+    // - En dev: el proxy de Vite reenvía /api -> http://localhost:8000 (ver astro.config.mjs).
+    // - En prod: nginx reenvía /api -> edge-api:8000, protegido por el túnel Cloudflare.
+    const eventSource = new EventSource('/api/v1/telemetry');
 
     eventSource.addEventListener('telemetry', (event) => {
       try {

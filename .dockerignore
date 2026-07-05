@@ -1,0 +1,10 @@
+node_modules
+dist
+.astro
+.git
+.gitignore
+*.log
+.env
+.env.*
+backend
+.claude

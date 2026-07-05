@@ -1,22 +1,54 @@
-version: '3.8'
+networks:
+  zero_trust_net:
+    driver: bridge
 
 services:
-  edge-api:
-    build: ./backend
-    container_name: kawashiro_edge_api
+  # 1. El Portafolio Dual (Modo Casual y PRO UI) — nginx sirve el estático de
+  #    Astro y hace proxy de /api (SSE) hacia edge-api dentro de la red interna.
+  frontend:
+    build: .
+    container_name: kawashiro_frontend
     restart: unless-stopped
     ports:
-      - "8000:8000"
-    environment:
-      # Zona horaria fijada para logs coherentes en República Dominicana
-      - TZ=America/Santo_Domingo
+      # Acceso local mientras no haya dominio. En producción, Cloudflare lee el
+      # puerto 80 por la red interna; este mapeo al host puede eliminarse.
+      - "8181:80"
+    depends_on:
+      - edge-api
+    networks:
+      - zero_trust_net
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
 
-  # El túnel inverso de Cloudflare (Descomentar en despliegue de producción)
+  # 2. El Microservicio de Telemetría (FastAPI). Sin puerto al host: solo se
+  #    alcanza vía el proxy /api de nginx (o el túnel Cloudflare en producción).
+  edge-api:
+    build: ./backend
+    container_name: kawashiro_edge_api
+    restart: unless-stopped
+    expose:
+      - "8000"
+    # Para desarrollo con `npm run dev` (:4321), descomenta este mapeo: el proxy
+    # Vite reenvía /api -> localhost:8000 y el comando htop recibe telemetría.
+    # ports:
+    #   - "8000:8000"
+    environment:
+      # Zona horaria fijada para logs coherentes en República Dominicana
+      - TZ=America/Santo_Domingo
+    networks:
+      - zero_trust_net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # 3. El Agente Perimetral de Cloudflare (Zero Trust).
+  #    DESCOMENTAR al recuperar el dominio y generar un nuevo TUNNEL_TOKEN.
+  #    Con el proxy /api de nginx, el túnel solo necesita apuntar a frontend:80.
   # cloudflared:
   #   image: cloudflare/cloudflared:latest
   #   container_name: kawashiro_zero_trust
@@ -24,3 +56,7 @@ services:
   #   command: tunnel run
   #   environment:
   #     - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+  #   depends_on:
+  #     - frontend
+  #   networks:
+  #     - zero_trust_net
