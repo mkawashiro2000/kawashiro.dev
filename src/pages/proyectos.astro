@@ -1,0 +1,76 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+type Project = {
+  name: string;
+  category: string;
+  description: string;
+  href: string;
+  bg: string;
+};
+
+// Orden: el primero del arreglo es el más reciente: los nuevos se añaden
+// al principio de esta lista y los anteriores van bajando automáticamente.
+const projects: Project[] = [
+  {
+    name: 'Tokenizer y Lemmatizador',
+    category: 'Data Science · NLP',
+    description:
+      'Procesamiento de lenguaje natural en español: divide el texto en tokens y los reduce a una forma base aproximada.',
+    href: '/proyectos/tokenizer-lemmatizador',
+    bg: 'var(--color-babyblue)',
+  },
+  {
+    name: 'Detector de sentimientos',
+    category: 'Data Science · NLP',
+    description:
+      'Analiza opiniones en texto usando un diccionario léxico de palabras positivas y negativas, con backend en FastAPI.',
+    href: '/proyectos/detector-sentimientos',
+    bg: 'var(--color-mint)',
+  },
+  {
+    name: 'Contador de palabras',
+    category: 'Data Science · NLP',
+    description:
+      'Analizador de texto que identifica y cuenta palabras completas, números, dígitos individuales y caracteres especiales.',
+    href: '/proyectos/contador-palabras',
+    bg: 'var(--color-rust)',
+  },
+];
+---
+
+<Layout title="Proyectos | Mitsunori Kawashiro">
+  <main class="min-h-screen w-full" style="color: var(--color-green500);">
+    <div class="max-w-3xl mx-auto px-6 sm:px-8 py-16">
+      <a href="/" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">← Volver</a>
+
+      <h1 class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">
+        Proyectos
+      </h1>
+      <p class="text-lg opacity-70 mb-14 max-w-xl">
+        Todos los proyectos, del más reciente al más antiguo.
+      </p>
+
+      <div class="flex flex-col gap-5">
+        {projects.map((p, i) => (
+          <a
+            href={p.href}
+            class="group rounded-[32px] p-8 sm:p-10 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 transition-transform hover:-translate-y-1"
+            style={`background: ${p.bg}`}
+          >
+            {i === 0 && (
+              <span class="sm:order-last shrink-0 text-xs font-semibold uppercase tracking-widest rounded-full px-3 py-1.5 bg-white/60 self-start sm:self-center">
+                Más reciente
+              </span>
+            )}
+            <div class="flex-1">
+              <span class="text-[13px] font-semibold uppercase tracking-[0.2em] opacity-70">{p.category}</span>
+              <h2 class="font-display text-2xl sm:text-3xl font-semibold mt-1">{p.name}</h2>
+              <p class="mt-2 text-base opacity-80 max-w-xl">{p.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+</Layout>

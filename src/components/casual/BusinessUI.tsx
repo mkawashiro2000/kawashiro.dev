@@ -14,9 +14,21 @@ const GithubMark = () => (
     <path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.39 1.24-3.23-.13-.3-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.92 1.23 3.23 0 4.62-2.81 5.64-5.49 5.94.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 24 12.5C24 5.87 18.63.5 12 .5Z" />
   </svg>
 );
-const LinkedinMark = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6" aria-hidden="true">
-    <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0Z" />
+const XMark = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true">
+    <path d="M18.9 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.65h2.039L6.486 3.24H4.298Z" />
+  </svg>
+);
+const WhatsappMark = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z" />
+    <path d="M20.52 3.449C12.831-3.984.106 1.407.101 11.893a11.94 11.94 0 0 0 1.599 5.945L0 24l6.335-1.652a11.9 11.9 0 0 0 5.723 1.457h.005c9.784 0 15.902-10.632 11.043-19.088A11.86 11.86 0 0 0 20.52 3.449ZM12.063 21.785h-.004a9.92 9.92 0 0 1-5.061-1.386l-.362-.215-3.759.981 1.004-3.667-.236-.375a9.9 9.9 0 0 1-1.523-5.276c.004-5.469 4.457-9.92 9.945-9.92a9.87 9.87 0 0 1 7.02 2.909 9.9 9.9 0 0 1 2.897 7.021c-.003 5.469-4.456 9.928-9.921 9.928Z" />
+  </svg>
+);
+const MailMark = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" aria-hidden="true">
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="m22 6-10 7L2 6" />
   </svg>
 );
 
@@ -29,6 +41,7 @@ type Card = {
   col: string; // grid-column en el grid de 26 (solo lg)
   onClick?: () => void;
   href?: string;
+  logo?: string;
 };
 
 export const BusinessUI: React.FC = () => {
@@ -45,12 +58,14 @@ export const BusinessUI: React.FC = () => {
 
   const workCards: Card[] = [
     {
-      category: 'Fiscal Tech · DGII',
-      title: 'Lex32 e-CF',
-      desc: 'Facturación electrónica bajo la Ley 32-23. Criptografía X.509 y canonicalización XML para comprobantes de alta concurrencia.',
+      category: 'AgriTech · Gestión',
+      title: 'AgroBalance',
+      desc: 'Sistema integral de gestión agrotecnológica y financiera operado de forma local, diseñado para profesionalizar la producción agrícola. Le da al productor control milimétrico sobre lo que ocurre en la tierra y en el bolsillo.',
       bg: 'var(--color-rust)',
       fg: darkGreen,
       col: '1 / 15',
+      href: 'https://agrobalancerd.com',
+      logo: '/img/proyectos/agrobalance.png',
     },
     {
       category: 'Sistema · Interactivo',
@@ -62,45 +77,37 @@ export const BusinessUI: React.FC = () => {
       onClick: handleTransition,
     },
     {
-      category: 'Fintech · Agrícola',
-      title: 'AgroBalance',
-      desc: 'Contabilidad B2B para rastrear ciclos de cultivo, proyectar rentabilidad y liquidar entre socios productores.',
+      category: 'Data Science · NLP',
+      title: 'Detector de sentimientos',
+      desc: 'Analiza opiniones en texto usando una colección de palabras positivas y negativas para determinar la impresión general.',
       bg: 'var(--color-mint)',
       fg: darkGreen,
       col: '1 / 13',
+      href: '/proyectos/detector-sentimientos',
     },
     {
-      category: 'Operaciones · Logística',
-      title: 'Batista Hub & Cargo',
-      desc: 'Dirección de una red de courier y distribución perimetral: cadena de suministro y puntos B2C/B2B a nivel nacional.',
+      category: 'Data Science · NLP',
+      title: 'Tokenizer y Lemmatizador',
+      desc: 'Procesamiento de lenguaje natural en español: divide el texto en tokens y los reduce a una forma base aproximada.',
       bg: 'var(--color-babyblue)',
       fg: darkGreen,
       col: '13 / 27',
+      href: '/proyectos/tokenizer-lemmatizador',
     },
   ];
 
-  const wipCards: Card[] = [
-    {
-      category: 'Homelab · Edge',
-      title: 'ARM64 Telemetry',
-      desc: 'Microservicio FastAPI que transmite CPU/RAM en vivo por Server-Sent Events desde una Raspberry Pi.',
-      bg: 'var(--color-lilac)',
-      fg: darkGreen,
-      col: '1 / 14',
-    },
-    {
-      category: 'Infra · Zero Trust',
-      title: 'Cloudflare Tunnels',
-      desc: 'Infraestructura sin port-forwarding: túneles salientes encriptados que absorben ataques sin exponer IPs.',
-      bg: 'var(--color-pink)',
-      fg: darkGreen,
-      col: '14 / 27',
-    },
+  const skillGroups: { label: string; items: string[]; bg: string }[] = [
+    { label: 'Frontend', items: ['JavaScript', 'TypeScript', 'TailwindCSS', 'Astro', 'SCSS'], bg: 'var(--color-lilac)' },
+    { label: 'Backend', items: ['Node.js', 'Bun', 'Deno', 'Supabase', 'Resend'], bg: 'var(--color-pink)' },
+    { label: 'Data science', items: ['Python', 'NumPy', 'Pandas', 'Scikit-learn', 'TensorFlow', 'Keras'], bg: 'var(--color-yellow)' },
+    { label: 'Databases & DevOps', items: ['PostgreSQL', 'MongoDB', 'Redis', 'AWS', 'Docker', 'GitHub'], bg: 'var(--color-mint)' },
   ];
 
   const socials = [
-    { label: 'GitHub', icon: <GithubMark />, href: 'https://github.com/mkawashiro2000' },
-    { label: 'LinkedIn', icon: <LinkedinMark />, href: '#' },
+    { label: 'GitHub', icon: <GithubMark />, href: 'https://github.com/kawashiro-dev' },
+    { label: 'X (Twitter)', icon: <XMark />, href: 'https://x.com/kawashiro_dev' },
+    { label: 'WhatsApp', icon: <WhatsappMark />, href: 'https://wa.me/14848347133' },
+    { label: 'Email', icon: <MailMark />, href: 'mailto:contact@kawashiro.dev' },
   ];
 
   const renderCard = (c: Card, i: number) => {
@@ -113,12 +120,20 @@ export const BusinessUI: React.FC = () => {
           {c.category}
         </span>
         <div className="mt-auto pt-10">
-          <h3
-            className="font-display text-4xl sm:text-5xl font-semibold leading-[0.95] tracking-tight"
-            style={{ color: c.fg }}
-          >
-            {c.title}
-          </h3>
+          {c.logo ? (
+            <img
+              src={c.logo}
+              alt={`Logo de ${c.title}`}
+              className="h-16 sm:h-20 w-auto object-contain object-left mb-4"
+            />
+          ) : (
+            <h3
+              className="font-display text-4xl sm:text-5xl font-semibold leading-[0.95] tracking-tight"
+              style={{ color: c.fg }}
+            >
+              {c.title}
+            </h3>
+          )}
           <p className="mt-4 text-base sm:text-lg max-w-md leading-snug" style={{ color: c.fg, opacity: 0.85 }}>
             {c.desc}
           </p>
@@ -155,8 +170,9 @@ export const BusinessUI: React.FC = () => {
           kawashiro<span className="opacity-50">.dev</span>
         </a>
         <div className="flex items-center gap-6 text-sm font-medium">
-          <a href="#work" className="hidden sm:inline hover:opacity-60 transition-opacity">Trabajo</a>
-          <a href="mailto:hola@kawashiro.dev" className="hidden sm:inline hover:opacity-60 transition-opacity">Contacto</a>
+          <a href="/proyectos" className="hidden sm:inline hover:opacity-60 transition-opacity">Proyectos</a>
+          <a href="/futuros-proyectos" className="hidden sm:inline hover:opacity-60 transition-opacity">Futuros Proyectos</a>
+          <a href="mailto:contact@kawashiro.dev" className="hidden sm:inline hover:opacity-60 transition-opacity">Contacto</a>
           <button
             onClick={handleTransition}
             className="rounded-full px-5 py-2 font-semibold transition-transform hover:scale-105"
@@ -175,7 +191,7 @@ export const BusinessUI: React.FC = () => {
             <Star className="star-twinkle absolute w-8 h-8 sm:w-12 sm:h-12 -right-6 -top-2 sm:-right-10" />
           </span>
           <span className="relative block text-[clamp(3rem,11vw,10rem)]">
-            Ingeniero.
+            Data Developer.
             <Star className="star-twinkle delay absolute w-6 h-6 sm:w-10 sm:h-10 -left-4 bottom-2 sm:-left-8" />
           </span>
         </h1>
@@ -183,8 +199,8 @@ export const BusinessUI: React.FC = () => {
           className="mx-auto mt-8 max-w-2xl text-lg sm:text-2xl leading-snug"
           style={{ color: 'var(--color-text-muted)' }}
         >
-          Construyo sistemas fiscales, plataformas B2B e infraestructura de borde
-          autogestionada. Desde Santo Domingo, República Dominicana 🇩🇴
+          Full Stack (Back-end/Data) Developer. Construyo con datos, analítica
+          y aplicaciones web. Desde Pennsylvania, USA 🇺🇸
         </p>
       </header>
 
@@ -195,27 +211,47 @@ export const BusinessUI: React.FC = () => {
         </div>
       </section>
 
-      {/* IN PROGRESS */}
+      {/* STACK & SKILLS */}
       <section className="max-w-[1300px] mx-auto px-6 sm:px-8 pt-24 sm:pt-36 pb-10 text-center">
         <h2 className="font-display font-semibold text-[clamp(2.5rem,8vw,7rem)] leading-none tracking-tight">
-          En progreso.
+          Mi stack.
         </h2>
         <p className="mx-auto mt-6 max-w-xl text-lg sm:text-xl" style={{ color: 'var(--color-text-muted)' }}>
-          Proyectos de infraestructura en distintos estados de diseño y desarrollo,
-          desde el homelab hasta producción.
+          Herramientas e intereses: cloud computing, ciencia de datos, machine
+          learning y desarrollo web.
         </p>
       </section>
 
-      <section className="max-w-[1300px] mx-auto px-6 sm:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[repeat(26,minmax(0,1fr))] gap-5 sm:gap-6">
-          {wipCards.map(renderCard)}
+      <section className="max-w-[1300px] mx-auto px-6 sm:px-8 pb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+          {skillGroups.map((g, i) => (
+            <div
+              key={i}
+              className="rounded-[32px] p-8 sm:p-10 flex flex-col"
+              style={{ backgroundColor: g.bg, color: darkGreen }}
+            >
+              <span className="text-[13px] font-semibold uppercase tracking-[0.2em] opacity-80">
+                {g.label}
+              </span>
+              <div className="flex flex-wrap gap-2 mt-5">
+                {g.items.map((item, j) => (
+                  <span
+                    key={j}
+                    className="text-sm font-medium rounded-full px-3.5 py-1.5 bg-white/50"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* MEGA CTA */}
       <section className="max-w-[1300px] mx-auto px-6 sm:px-8 py-28 sm:py-40 text-center">
         <a
-          href="mailto:hola@kawashiro.dev"
+          href="mailto:contact@kawashiro.dev"
           className="group inline-flex font-display font-semibold text-[clamp(3rem,12vw,11rem)] leading-none tracking-tight transition-transform hover:scale-[1.02]"
           style={{ color: green }}
         >
@@ -229,7 +265,7 @@ export const BusinessUI: React.FC = () => {
           <div>
             <p className="font-display text-2xl font-semibold">Mitsunori Kawashiro</p>
             <p className="mt-1 text-sm" style={{ color: 'var(--color-text-muted)' }}>
-              Hecho con Astro, React y FastAPI · Servido desde una Raspberry Pi
+              Full Stack (Back-end/Data) Developer · Pennsylvania, USA
             </p>
           </div>
           <div className="flex items-center gap-4">

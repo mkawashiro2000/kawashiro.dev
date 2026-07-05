@@ -1,0 +1,68 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Contador de palabras | Mitsunori Kawashiro">
+  <main class="min-h-screen w-full" style="color: var(--color-green500);">
+    <div class="max-w-3xl mx-auto px-6 sm:px-8 py-16">
+      <a href="/" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">← Volver</a>
+
+      <h1 class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">
+        Contador de palabras
+      </h1>
+      <p class="text-lg opacity-70 mb-10 max-w-xl">
+        Pega o escribe un texto para analizar su composición: palabras, caracteres, dígitos y símbolos especiales.
+      </p>
+
+      <textarea
+        id="input"
+        rows="8"
+        placeholder="Escribe o pega tu texto aquí..."
+        class="w-full rounded-3xl p-6 text-base sm:text-lg font-sans resize-none outline-none focus:ring-2"
+        style="background: var(--color-bg-secondary); color: var(--color-green500); border: 1px solid rgba(0,0,0,0.08);"
+      ></textarea>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
+        <div class="rounded-3xl p-6" style="background: var(--color-mint);">
+          <p class="text-3xl font-display font-semibold" id="stat-words">0</p>
+          <p class="text-sm font-medium uppercase tracking-widest opacity-70 mt-1">Palabras</p>
+        </div>
+        <div class="rounded-3xl p-6" style="background: var(--color-babyblue);">
+          <p class="text-3xl font-display font-semibold" id="stat-chars">0</p>
+          <p class="text-sm font-medium uppercase tracking-widest opacity-70 mt-1">Caracteres</p>
+        </div>
+        <div class="rounded-3xl p-6" style="background: var(--color-yellow);">
+          <p class="text-3xl font-display font-semibold" id="stat-digits">0</p>
+          <p class="text-sm font-medium uppercase tracking-widest opacity-70 mt-1">Dígitos</p>
+        </div>
+        <div class="rounded-3xl p-6" style="background: var(--color-rust);">
+          <p class="text-3xl font-display font-semibold" id="stat-special">0</p>
+          <p class="text-sm font-medium uppercase tracking-widest opacity-70 mt-1">Especiales</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const input = document.getElementById('input') as HTMLTextAreaElement;
+  const statWords = document.getElementById('stat-words')!;
+  const statChars = document.getElementById('stat-chars')!;
+  const statDigits = document.getElementById('stat-digits')!;
+  const statSpecial = document.getElementById('stat-special')!;
+
+  function analyze() {
+    const text = input.value;
+    const words = text.trim().length ? text.trim().split(/\s+/) : [];
+    const digits = (text.match(/[0-9]/g) || []).length;
+    const special = (text.match(/[^a-zA-ZÀ-ÿ0-9\s]/g) || []).length;
+
+    statWords.textContent = String(words.length);
+    statChars.textContent = String(text.length);
+    statDigits.textContent = String(digits);
+    statSpecial.textContent = String(special);
+  }
+
+  input.addEventListener('input', analyze);
+  analyze();
+</script>

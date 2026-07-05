@@ -174,11 +174,13 @@ export const TerminalApp: React.FC = () => {
           return;
         case 'about':
           output.push(
-            'Mitsunori Kawashiro Batista',
+            'Mitsunori Kawashiro',
             '--------------------------',
-            'Perfil: Full Stack Developer, Data Scientist & Emprendedor',
-            'Core: Python (FastAPI), AWS, Docker, Next.js, TypeScript.',
-            'Proyectos Activos: Lex32 (Facturación Fiscal DGII), AgroBalance.'
+            'Perfil: Full Stack (Back-end/Data) Developer',
+            'Ubicación: Pennsylvania, USA',
+            'Core: Python, TypeScript, Node.js, Astro, PostgreSQL.',
+            'Data Science: NumPy, Pandas, Scikit-learn, TensorFlow.',
+            'Contacto: contact@kawashiro.dev'
           );
           break;
         case 'neofetch':

@@ -1,0 +1,99 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Tokenizer y Lemmatizador | Mitsunori Kawashiro">
+  <main class="min-h-screen w-full" style="color: var(--color-green500);">
+    <div class="max-w-3xl mx-auto px-6 sm:px-8 py-16">
+      <a href="/" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">← Volver</a>
+
+      <h1 class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">
+        Tokenizer y Lemmatizador
+      </h1>
+      <p class="text-lg opacity-70 mb-3 max-w-xl">
+        Divide un texto en tokens (palabras y signos) y reduce cada palabra a una forma base aproximada mediante reglas heurísticas en español.
+      </p>
+      <p class="text-sm opacity-50 mb-10 max-w-xl">
+        Nota: esta es una reconstrucción simplificada basada en reglas, no usa un modelo de lenguaje ni el diccionario completo de NLTK.
+      </p>
+
+      <textarea
+        id="input"
+        rows="6"
+        placeholder="Escribe una frase en español..."
+        class="w-full rounded-3xl p-6 text-base sm:text-lg font-sans resize-none outline-none"
+        style="background: var(--color-bg-secondary); color: var(--color-green500); border: 1px solid rgba(0,0,0,0.08);"
+      ></textarea>
+
+      <div class="mt-10">
+        <span class="text-sm font-semibold uppercase tracking-widest opacity-70">Tokens</span>
+        <div id="tokens" class="flex flex-wrap gap-2 mt-4"></div>
+      </div>
+
+      <div class="mt-10">
+        <span class="text-sm font-semibold uppercase tracking-widest opacity-70">Lema aproximado</span>
+        <div id="lemmas" class="flex flex-wrap gap-2 mt-4"></div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const input = document.getElementById('input') as HTMLTextAreaElement;
+  const tokensEl = document.getElementById('tokens')!;
+  const lemmasEl = document.getElementById('lemmas')!;
+
+  function tokenize(text: string): string[] {
+    // Separa palabras y signos de puntuación como tokens independientes
+    return text.match(/[a-zà-ÿ]+|[0-9]+|[^\sa-zà-ÿ0-9]/gi) || [];
+  }
+
+  // Lematizador heurístico: reglas de sufijos comunes del español (simplificado)
+  function lemmatize(word: string): string {
+    let w = word.toLowerCase();
+    if (!/^[a-zà-ÿ]+$/.test(w) || w.length < 4) return w;
+
+    const rules: [RegExp, string][] = [
+      [/ándose$|iéndose$/, ''],
+      [/ando$|iendo$/, 'ar'],
+      [/aciones$/, 'ación'],
+      [/amente$/, ''],
+      [/[aei]ría$|[aei]rían$/, 'r'],
+      [/aron$|ieron$/, 'ar'],
+      [/aba$|ábamos$/, 'ar'],
+      [/(ar|er|ir)ía$/, '$1'],
+      [/es$/, ''],
+      [/s$/, ''],
+      [/as$|os$/, 'o'],
+    ];
+
+    for (const [pattern, replacement] of rules) {
+      if (pattern.test(w)) {
+        return w.replace(pattern, replacement);
+      }
+    }
+    return w;
+  }
+
+  function pill(text: string, bg: string) {
+    const span = document.createElement('span');
+    span.textContent = text;
+    span.className = 'text-sm font-medium rounded-full px-3.5 py-1.5';
+    span.style.background = bg;
+    return span;
+  }
+
+  function analyze() {
+    const tokens = tokenize(input.value);
+    tokensEl.innerHTML = '';
+    lemmasEl.innerHTML = '';
+
+    const colors = ['var(--color-mint)', 'var(--color-babyblue)', 'var(--color-lilac)', 'var(--color-yellow)'];
+    tokens.forEach((t, i) => tokensEl.appendChild(pill(t, colors[i % colors.length])));
+
+    const words = tokens.filter((t) => /^[a-zà-ÿ]+$/i.test(t));
+    words.forEach((w, i) => lemmasEl.appendChild(pill(`${w} → ${lemmatize(w)}`, colors[i % colors.length])));
+  }
+
+  input.addEventListener('input', analyze);
+</script>
