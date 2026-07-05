@@ -3,11 +3,12 @@ import { useAppStore } from '../../store/useAppStore';
 import { Trie } from '../../terminal/utils/trie';
 import { HtopLive } from './HtopLive';
 import { printResumeToThermal } from '../../terminal/utils/webusb';
+import { DgiiSignerMock } from './DgiiSignerMock';
 
 export const TerminalApp: React.FC = () => {
   const [input, setInput] = useState('');
   
-  // CORRECCIÓN: El estado ahora soporta tanto strings (texto) como ReactNodes (htop)
+  // El historial soporta texto estricto y nodos de React para HtopLive y DgiiSignerMock
   const [history, setHistory] = useState<(string | React.ReactNode)[]>([
     'kawashiro.dev [Version 1.0.0-beta]',
     'Sistemas Homelab activos sobre Raspberry Pi OS Lite.',
@@ -20,9 +21,10 @@ export const TerminalApp: React.FC = () => {
   const terminalEndRef = useRef<HTMLDivElement>(null);
   const toggleMode = useAppStore((state) => state.toggleMode);
 
+  // Inicialización estricta del árbol Trie con todo el léxico permitido
   const commandTrie = useMemo(() => {
     const trie = new Trie();
-    ['help', 'clear', 'casual', 'about', 'neofetch', 'htop', 'print resume'].forEach(cmd => trie.insert(cmd));
+    ['help', 'clear', 'casual', 'about', 'neofetch', 'htop', 'print resume', 'cat dgii-xml-signer.md'].forEach(cmd => trie.insert(cmd));
     return trie;
   }, []);
 
@@ -73,6 +75,7 @@ export const TerminalApp: React.FC = () => {
 
     const tokens = commandLine.split(' ');
     const baseCommand = tokens[0].toLowerCase();
+    const args = tokens.slice(1);
     const fullCommand = commandLine.toLowerCase();
 
     let output: (string | React.ReactNode)[] = [`$ ${commandLine}`];
@@ -84,7 +87,7 @@ export const TerminalApp: React.FC = () => {
        setHistory([...history, ...output]);
        setInput('');
        
-       // Invocamos la utilidad WebUSB pasando una función callback para reportar el progreso en vivo a la terminal
+       // Invocamos la utilidad WebUSB pasando una función callback
        printResumeToThermal((msg) => {
          setHistory(prev => [...prev, msg]);
        });
@@ -94,13 +97,14 @@ export const TerminalApp: React.FC = () => {
         case 'help':
           output.push(
             'Comandos disponibles:',
-            '  help         - Desplegar este menú de ayuda estructurado.',
-            '  clear        - Limpiar el búfer del DOM de la terminal.',
-            '  casual       - Interrumpir Modo PRO y transicionar a Business UI.',
-            '  about        - Desplegar metadatos profesionales del desarrollador.',
-            '  neofetch     - Inspeccionar telemetría estática de la arquitectura.',
-            '  htop         - Iniciar flujo SSE para monitorización remota ARM64.',
-            '  print resume - [Hardware] Enviar CV a impresora térmica ESC/POS local.'
+            '  help          - Desplegar este menú de ayuda estructurado.',
+            '  clear         - Limpiar el búfer del DOM de la terminal.',
+            '  casual        - Interrumpir Modo PRO y transicionar a Business UI.',
+            '  about         - Desplegar metadatos profesionales del desarrollador.',
+            '  neofetch      - Inspeccionar telemetría estática de la arquitectura.',
+            '  htop          - Iniciar flujo SSE para monitorización remota ARM64.',
+            '  print resume  - [Hardware] Enviar CV a impresora térmica ESC/POS local.',
+            '  cat [archivo] - Concatenar e imprimir archivos (ej. cat dgii-xml-signer.md)'
           );
           break;
         case 'clear':
@@ -120,7 +124,7 @@ export const TerminalApp: React.FC = () => {
           output.push(
             'Mitsunori Kawashiro Batista',
             '--------------------------',
-            'Perfil: Full Stack Developer, Software Engineer & Emprendedor.',
+            'Perfil: Full Stack Developer, Data Scientist & Emprendedor',
             'Core: Python (FastAPI), AWS, Docker, Next.js, TypeScript.',
             'Proyectos Activos: Lex32 (Facturación Fiscal DGII), AgroBalance.'
           );
@@ -142,6 +146,16 @@ export const TerminalApp: React.FC = () => {
           output.push('Abriendo canal asíncrono (Server-Sent Events) con el Edge Node...');
           output.push(<HtopLive key={`htop-${Date.now()}`} />);
           break;
+        case 'cat':
+          if (args[0] === 'dgii-xml-signer.md') {
+            output.push('Leyendo archivo desde el volumen de almacenamiento...');
+            output.push(<DgiiSignerMock key={`dgii-${Date.now()}`} />);
+          } else if (args.length === 0) {
+            output.push('cat: falta el operando de archivo. Ejemplo: cat dgii-xml-signer.md');
+          } else {
+            output.push(`cat: ${args.join(' ')}: No existe el archivo o el directorio`);
+          }
+          break;
         default:
           output.push(`sys: comando no encontrado: "${baseCommand}". Escribe "help".`);
       }
@@ -162,7 +176,6 @@ export const TerminalApp: React.FC = () => {
       <div className="flex-1 overflow-y-auto pr-2 z-10">
         {history.map((line, index) => (
           <div key={index} className="leading-relaxed min-h-[1.2rem]">
-            {/* CORRECCIÓN: Comprobación estricta del tipo para renderizar texto o componentes (htop) */}
             {typeof line === 'string' ? (
               line.startsWith('$') ? (
                 <span>
