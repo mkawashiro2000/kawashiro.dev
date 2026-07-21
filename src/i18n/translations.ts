@@ -18,7 +18,7 @@ export const translations = {
       line1: "Hi. I'm {name}.",
       name: 'Mitsunori',
       line2: 'Data Developer.',
-      bio: 'Full Stack (Back-end/Data) Developer. I build with data, analytics, and web applications. From Pennsylvania, USA 🇺🇸',
+      bio: 'Full Stack (Back-end/Data) Developer. I build with data, analytics, and web applications. From Constanza, Dom. Rep. 🇩🇴',
     },
     cards: {
       agrobalance: {
@@ -56,7 +56,7 @@ export const translations = {
     },
     footer: {
       name: 'Mitsunori Kawashiro',
-      role: 'Full Stack (Back-end/Data) Developer · Pennsylvania, USA',
+      role: 'Full Stack (Back-end/Data) Developer · Constanza, Dom. Rep.',
     },
     proyectos: {
       title: 'Projects',
@@ -157,7 +157,7 @@ export const translations = {
         'Mitsunori Kawashiro',
         '--------------------------',
         'Profile: Full Stack (Back-end/Data) Developer',
-        'Location: Pennsylvania, USA',
+        'Location: Constanza, Dom. Rep.',
         'Core: Python, TypeScript, Node.js, Astro, PostgreSQL.',
         'Data Science: NumPy, Pandas, Scikit-learn, TensorFlow.',
         'Contact: contact@kawashiro.dev',
@@ -200,7 +200,7 @@ export const translations = {
       line1: 'Hola. Soy {name}.',
       name: 'Mitsunori',
       line2: 'Data Developer.',
-      bio: 'Full Stack (Back-end/Data) Developer. Construyo con datos, analítica y aplicaciones web. Desde Pennsylvania, USA 🇺🇸',
+      bio: 'Full Stack (Back-end/Data) Developer. Construyo con datos, analítica y aplicaciones web. Desde Constanza, Rep. Dom. 🇩🇴',
     },
     cards: {
       agrobalance: {
@@ -238,7 +238,7 @@ export const translations = {
     },
     footer: {
       name: 'Mitsunori Kawashiro',
-      role: 'Full Stack (Back-end/Data) Developer · Pennsylvania, USA',
+      role: 'Full Stack (Back-end/Data) Developer · Constanza, Rep. Dom.',
     },
     proyectos: {
       title: 'Proyectos',
@@ -339,7 +339,7 @@ export const translations = {
         'Mitsunori Kawashiro',
         '--------------------------',
         'Perfil: Full Stack (Back-end/Data) Developer',
-        'Ubicación: Pennsylvania, USA',
+        'Ubicación: Constanza, Rep. Dom.',
         'Core: Python, TypeScript, Node.js, Astro, PostgreSQL.',
         'Data Science: NumPy, Pandas, Scikit-learn, TensorFlow.',
         'Contacto: contact@kawashiro.dev',
@@ -382,7 +382,7 @@ export const translations = {
       line1: 'こんにちは。{name}です。',
       name: '光典',
       line2: 'データ開発者。',
-      bio: 'フルスタック(バックエンド/データ)デベロッパー。データ、分析、Webアプリケーションを構築しています。アメリカ・ペンシルベニア州より 🇺🇸',
+      bio: 'フルスタック(バックエンド/データ)デベロッパー。データ、分析、Webアプリケーションを構築しています。ドミニカ共和国・コンスタンサより 🇩🇴',
     },
     cards: {
       agrobalance: {
@@ -420,7 +420,7 @@ export const translations = {
     },
     footer: {
       name: '川代 光典',
-      role: 'フルスタック(バックエンド/データ)デベロッパー · アメリカ・ペンシルベニア州',
+      role: 'フルスタック(バックエンド/データ)デベロッパー · ドミニカ共和国・コンスタンサ',
     },
     proyectos: {
       title: 'プロジェクト',
@@ -521,7 +521,7 @@ export const translations = {
         '川代 光典',
         '--------------------------',
         'プロフィール: フルスタック(バックエンド/データ)デベロッパー',
-        '所在地: アメリカ・ペンシルベニア州',
+        '所在地: ドミニカ共和国・コンスタンサ',
         'コア技術: Python, TypeScript, Node.js, Astro, PostgreSQL.',
         'データサイエンス: NumPy, Pandas, Scikit-learn, TensorFlow.',
         '連絡先: contact@kawashiro.dev',
