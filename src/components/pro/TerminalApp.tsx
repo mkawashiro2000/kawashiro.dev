@@ -5,6 +5,7 @@ import { Trie } from '../../terminal/utils/trie';
 import { HtopLive } from './HtopLive';
 import { printResumeToThermal } from '../../terminal/utils/webusb';
 import { openPrintableResume } from '../../terminal/utils/resume';
+import { listProjects, catProject, PROJECT_FILES } from '../../terminal/utils/projects';
 
 export const TerminalApp: React.FC = () => {
   const [input, setInput] = useState('');
@@ -74,7 +75,8 @@ export const TerminalApp: React.FC = () => {
   // Inicialización estricta del árbol Trie con todo el léxico permitido
   const commandTrie = useMemo(() => {
     const trie = new Trie();
-    ['help', 'clear', 'casual', 'about', 'neofetch', 'htop', 'print resume'].forEach(cmd => trie.insert(cmd));
+    ['help', 'clear', 'casual', 'about', 'neofetch', 'htop', 'print resume', 'ls'].forEach(cmd => trie.insert(cmd));
+    PROJECT_FILES.forEach(f => trie.insert(`cat ${f.filename}`));
     return trie;
   }, []);
 
@@ -176,6 +178,22 @@ export const TerminalApp: React.FC = () => {
           output.push(t.htopOpening);
           output.push(<HtopLive key={`htop-${Date.now()}`} />);
           break;
+        case 'ls':
+          output.push(...listProjects());
+          break;
+        case 'cat': {
+          if (args.length === 0) {
+            output.push(t.catMissingArg);
+            break;
+          }
+          const fileLines = catProject(args[0], locale);
+          if (fileLines) {
+            output.push(...fileLines);
+          } else {
+            output.push(t.catNotFound(args.join(' ')));
+          }
+          break;
+        }
         default:
           output.push(t.commandNotFound(baseCommand));
       }
