@@ -27,7 +27,7 @@ export const translations = {
       },
       kampit: {
         category: 'E-commerce · Rentals',
-        desc: 'Camping gear rental platform: pick your dates, build your kit, and confirm via WhatsApp in three frictionless steps. Tents, camping equipment and everything you need for the outdoors, with real-time availability per date range.',
+        desc: 'Innovative digital camping-gear rental platform, built to radically optimize and simplify the booking experience through an intuitive, completely friction-free three-step system. By integrating an advanced real-time availability engine that synchronizes the inventory of tents and specialized accessories against specific date ranges, users can assemble personalized kits with total precision and safety, with no risk of overbooking. The architecture completes the workflow by connecting the customer\'s selection seamlessly through WhatsApp, guaranteeing immediate, direct order confirmation that significantly reduces abandonment rates and ensures highly efficient operational management for outdoor adventures.',
       },
       lubesync: {
         category: 'SaaS · Management',
@@ -247,7 +247,7 @@ export const translations = {
       },
       kampit: {
         category: 'E-commerce · Alquileres',
-        desc: 'Plataforma de renta de equipo de campamento: elige tus fechas, arma tu kit y confirma por WhatsApp en tres pasos sin fricción. Carpas, equipo de camping y todo lo necesario para la aventura, con disponibilidad en tiempo real por rango de fechas.',
+        desc: 'Innovadora plataforma digital de alquiler de equipos de campamento ha sido desarrollada para optimizar y simplificar radicalmente la experiencia de reserva mediante un sistema intuitivo de tres pasos completamente libre de fricción. Al integrar un motor avanzado de disponibilidad en tiempo real que sincroniza el inventario de casas de campaña y accesorios especializados en función de rangos de fechas específicos, los usuarios pueden armar kits personalizados con total precisión y seguridad sin riesgo de sobreventa. Además, la arquitectura del sistema culmina el flujo de trabajo conectando la selección del cliente de forma fluida a través de WhatsApp, garantizando una confirmación de pedido inmediata y directa que reduce significativamente la tasa de abandono y asegura una gestión operativa altamente eficiente para las aventuras al aire libre.',
       },
       lubesync: {
         category: 'SaaS · Gestión',
@@ -467,7 +467,7 @@ export const translations = {
       },
       kampit: {
         category: 'Eコマース・レンタル',
-        desc: 'キャンプ用品レンタルプラットフォーム:日程を選び、キットを組み、WhatsAppで確認 — 摩擦のない3ステップ。テントやキャンプ用品など、アウトドアに必要なすべてを日付範囲ごとのリアルタイム在庫で提供。',
+        desc: '予約体験を根本から最適化・簡素化するために開発された、革新的なキャンプ用品レンタルのデジタルプラットフォーム。摩擦のない直感的な3ステップシステムを採用。特定の日付範囲に応じてテントや専用アクセサリーの在庫を同期する高度なリアルタイム在庫エンジンを統合し、ユーザーはオーバーブッキングの心配なく、正確かつ安全にパーソナライズされたキットを組むことができます。さらに、システムのアーキテクチャは顧客の選択をWhatsAppへスムーズに接続してワークフローを完結させ、即時かつダイレクトな注文確認を保証。離脱率を大幅に削減し、アウトドアアドベンチャーのための極めて効率的な運営管理を実現します。',
       },
       lubesync: {
         category: 'SaaS・管理',
