@@ -220,7 +220,16 @@ export const TerminalApp: React.FC = () => {
       output.push(opened ? t.printDone : t.printBlocked);
     } else if (baseCommand === 'sudo') {
       // Easter egg obligatorio: todo dev lo intenta tarde o temprano
-      if (/^sudo\s+rm\s+-[a-z]*r[a-z]*\s+\/\s*$/.test(fullCommand) || fullCommand.startsWith('sudo rm -rf /')) {
+      if (/^sudo\s+apt(-get)?\s+update\s*$/.test(fullCommand)) {
+        output.push(
+          'Hit:1 http://deb.debian.org/debian bookworm InRelease',
+          'Get:2 http://archive.raspberrypi.com/debian bookworm InRelease [23.6 kB]',
+          'Fetched 23.6 kB in 1s (18.4 kB/s)',
+          'Reading package lists... Done',
+          'W: An essential multimedia dependency is missing. Resolving...',
+        );
+        setTimeout(() => window.open('https://www.youtube.com/shorts/deosbgGLnVA', '_blank', 'noopener'), 1200);
+      } else if (/^sudo\s+rm\s+-[a-z]*r[a-z]*\s+\/\s*$/.test(fullCommand) || fullCommand.startsWith('sudo rm -rf /')) {
         output.push(
           'rm: descending into /home/mk/projects...',
           'rm: descending into /var/lib/dreams...',
