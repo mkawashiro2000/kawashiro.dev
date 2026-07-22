@@ -81,13 +81,14 @@ export const BusinessUI: React.FC = () => {
       onClick: handleTransition,
     },
     {
-      category: t.cards.sentiment.category,
-      title: t.cards.sentiment.title,
-      desc: t.cards.sentiment.desc,
+      category: t.cards.lubesync.category,
+      title: 'LubeSyncRD',
+      desc: t.cards.lubesync.desc,
       bg: 'var(--color-mint)',
       fg: darkGreen,
       col: '1 / 13',
-      href: '/proyectos/detector-sentimientos',
+      href: 'https://lubesyncrd.pages.dev',
+      logo: '/img/proyectos/lubesync.webp',
     },
     {
       category: t.cards.tokenizer.category,

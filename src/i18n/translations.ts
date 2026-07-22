@@ -25,6 +25,10 @@ export const translations = {
         category: 'AgriTech · Management',
         desc: 'Comprehensive agrotechnological and financial management system operated locally, designed to professionalize agricultural production. It gives producers precise control over what happens on the land and in their pocket.',
       },
+      lubesync: {
+        category: 'SaaS · Management',
+        desc: 'Customer service management platform for auto repair and lube shops: service tracking, customer reminders, and workshop operations in one place.',
+      },
       terminalPro: {
         category: 'System · Interactive',
         title: 'Terminal PRO',
@@ -207,6 +211,10 @@ export const translations = {
         category: 'AgriTech · Gestión',
         desc: 'Sistema integral de gestión agrotecnológica y financiera operado de forma local, diseñado para profesionalizar la producción agrícola. Le da al productor control milimétrico sobre lo que ocurre en la tierra y en el bolsillo.',
       },
+      lubesync: {
+        category: 'SaaS · Gestión',
+        desc: 'Plataforma de gestión de servicio al cliente para talleres: seguimiento de servicios, recordatorios a clientes y operación del taller en un solo lugar.',
+      },
       terminalPro: {
         category: 'Sistema · Interactivo',
         title: 'Terminal PRO',
@@ -388,6 +396,10 @@ export const translations = {
       agrobalance: {
         category: 'アグリテック・管理',
         desc: '農業生産の専門化を目的とした、ローカルで稼働する総合的な農業技術・財務管理システム。生産者に土地と資金の両面で緻密な管理を提供します。',
+      },
+      lubesync: {
+        category: 'SaaS・管理',
+        desc: '自動車整備工場向けの顧客サービス管理プラットフォーム:サービス履歴の追跡、顧客へのリマインダー、工場運営を一元管理。',
       },
       terminalPro: {
         category: 'システム・インタラクティブ',
