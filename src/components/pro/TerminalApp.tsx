@@ -11,7 +11,7 @@ export const TerminalApp: React.FC = () => {
   const locale = useAppStore((state) => state.locale);
   const t = getTranslation(locale).terminal;
 
-  // El historial soporta texto estricto y nodos de React para HtopLive y DgiiSignerMock
+  // El historial soporta texto estricto y nodos de React para HtopLive
   const [history, setHistory] = useState<(string | React.ReactNode)[]>(t.boot);
 
   const [historyPointer, setHistoryPointer] = useState<number>(-1);
