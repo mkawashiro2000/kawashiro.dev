@@ -29,7 +29,7 @@ interface ResumeCopy {
 const COPY: Record<Locale, ResumeCopy> = {
   en: {
     role: 'Full Stack (Back-end/Data) Developer',
-    location: 'Tireo, Constanza, La Vega, Dominican Republic',
+    location: 'La Vega, Constanza, Dominican Republic',
     profileLabel: 'Professional Profile',
     profile:
       'Results-driven Full Stack Developer and Data Science student specializing in back-end architecture, data engineering, and secure edge deployments. Proven expertise in building comprehensive web applications, concurrent ASGI architectures, and automated data pipelines. Adept at designing robust database schemas and managing containerized, self-hosted ARM64 infrastructure (Raspberry Pi OS Lite) to deliver highly optimized, locally operated, and cloud-integrated solutions. Passionate about translating complex operational and financial needs into scalable, high-performance software.',
@@ -83,7 +83,7 @@ const COPY: Record<Locale, ResumeCopy> = {
   },
   es: {
     role: 'Full Stack (Back-end/Data) Developer',
-    location: 'Tireo, Constanza, La Vega, República Dominicana',
+    location: 'La Vega, Constanza, República Dominicana',
     profileLabel: 'Perfil Profesional',
     profile:
       'Desarrollador Full Stack orientado a resultados y estudiante de Data Science, especializado en arquitectura back-end, ingeniería de datos y despliegues edge seguros. Experiencia comprobada construyendo aplicaciones web integrales, arquitecturas ASGI concurrentes y pipelines de datos automatizados. Hábil en el diseño de esquemas de bases de datos robustos y en la gestión de infraestructura ARM64 autogestionada y contenerizada (Raspberry Pi OS Lite) para entregar soluciones altamente optimizadas, operadas localmente e integradas a la nube. Apasionado por traducir necesidades operativas y financieras complejas en software escalable y de alto rendimiento.',
@@ -137,7 +137,7 @@ const COPY: Record<Locale, ResumeCopy> = {
   },
   ja: {
     role: 'フルスタック(バックエンド/データ)デベロッパー',
-    location: 'ドミニカ共和国 ラ・ベガ州 コンスタンサ ティレオ',
+    location: 'ドミニカ共和国 ラ・ベガ州 コンスタンサ',
     profileLabel: '職務プロフィール',
     profile:
       '成果志向のフルスタック開発者・データサイエンス専攻。バックエンドアーキテクチャ、データエンジニアリング、セキュアなエッジデプロイを専門とする。総合的なWebアプリケーション、並行ASGIアーキテクチャ、自動データパイプラインの構築に実績あり。堅牢なデータベーススキーマの設計や、コンテナ化されたセルフホストARM64インフラ(Raspberry Pi OS Lite)の運用に長け、高度に最適化されたローカル運用・クラウド統合ソリューションを提供。複雑な業務・財務ニーズをスケーラブルで高性能なソフトウェアへ変換することに情熱を注ぐ。',
