@@ -35,6 +35,11 @@ services:
     # Vite reenvía /api -> localhost:8000 y el comando htop recibe telemetría.
     # ports:
     #   - "8000:8000"
+    # DNS explícito: el resolver del host es local-only e inaccesible desde
+    # el contenedor; sin esto la llamada a Open-Meteo (weather) no resuelve.
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
     environment:
       # Zona horaria fijada para logs coherentes en República Dominicana
       - TZ=America/Santo_Domingo
