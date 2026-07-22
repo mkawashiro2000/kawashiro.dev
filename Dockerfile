@@ -18,7 +18,7 @@ RUN npm run build
 # ---------------------------------------------------------------------------
 # Etapa 2: Servido estático de alto rendimiento con nginx (imagen efímera).
 # ---------------------------------------------------------------------------
-FROM nginx:1.27-alpine AS runner
+FROM nginx:1.31-alpine AS runner
 
 # Configuración: sirve el sitio y reenvía /api (SSE) al microservicio edge-api.
 COPY nginx.conf /etc/nginx/conf.d/default.conf
