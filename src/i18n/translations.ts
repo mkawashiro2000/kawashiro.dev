@@ -27,7 +27,7 @@ export const translations = {
       },
       lubesync: {
         category: 'SaaS · Management',
-        desc: 'Customer service management platform for auto repair and lube shops: service tracking, customer reminders, and workshop operations in one place.',
+        desc: 'Comprehensive management platform for auto shops, designed to centralize and optimize every key area of your business in a single, highly efficient digital tool. By unifying detailed real-time tracking of every service order, automated reminders that keep communication with your customers flowing, and full control of daily operations, this solution transforms how your team works. Through an intuitive interface you can drastically reduce administrative workload, minimize coordination errors, and guarantee a transparent workflow — not only increasing your shop\'s profitability and productivity, but also raising quality standards, customer satisfaction, and loyalty by centralizing all your operational needs in one place.',
       },
       terminalPro: {
         category: 'System · Interactive',
@@ -213,7 +213,7 @@ export const translations = {
       },
       lubesync: {
         category: 'SaaS · Gestión',
-        desc: 'Plataforma de gestión de servicio al cliente para talleres: seguimiento de servicios, recordatorios a clientes y operación del taller en un solo lugar.',
+        desc: 'Plataforma integral de gestión para talleres, está diseñada para centralizar y optimizar todas las áreas clave de su negocio en una sola herramienta digital de alta eficiencia. Al unificar el seguimiento detallado de cada orden de servicio en tiempo real, la emisión automatizada de recordatorios para mantener una comunicación fluida con sus usuarios y el control absoluto de la operación diaria, esta solución le permite transformar la dinámica de trabajo de su equipo. A través de una interfaz intuitiva, usted podrá reducir drásticamente la carga administrativa, minimizar los errores de coordinación y garantizar un flujo de trabajo transparente, logrando así no solo incrementar la rentabilidad y productividad de su taller, sino también elevar significativamente los estándares de calidad, la satisfacción y la fidelización de sus clientes al centralizar todas sus necesidades operativas en un solo lugar.',
       },
       terminalPro: {
         category: 'Sistema · Interactivo',
@@ -399,7 +399,7 @@ export const translations = {
       },
       lubesync: {
         category: 'SaaS・管理',
-        desc: '自動車整備工場向けの顧客サービス管理プラットフォーム:サービス履歴の追跡、顧客へのリマインダー、工場運営を一元管理。',
+        desc: '整備工場向けの総合管理プラットフォーム。ビジネスの重要領域を一つの高効率なデジタルツールに集約・最適化します。各サービスオーダーのリアルタイム追跡、顧客との円滑なコミュニケーションを保つ自動リマインダー、日々のオペレーションの完全な管理を統合し、チームの働き方を変革。直感的なインターフェースにより、管理業務の負担を大幅に削減し、連携ミスを最小化し、透明性の高いワークフローを実現。工場の収益性と生産性を高めるだけでなく、品質基準、顧客満足度、リピート率の向上にもつながります。',
       },
       terminalPro: {
         category: 'システム・インタラクティブ',
