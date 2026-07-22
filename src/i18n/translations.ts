@@ -18,7 +18,7 @@ export const translations = {
       line1: "Hi. I'm {name}.",
       name: 'Mitsunori',
       line2: 'Data Developer.',
-      bio: 'Full Stack (Back-end/Data) Developer. I build with data, analytics, and web applications. From Constanza, Dom. Rep. 🇩🇴',
+      bio: 'Full Stack (Back-end/Data) Developer. I build with data, analytics, and web applications. From Constanza, Dom. Rep. 🇩🇴',
     },
     cards: {
       agrobalance: {
@@ -200,7 +200,7 @@ export const translations = {
       line1: 'Hola. Soy {name}.',
       name: 'Mitsunori',
       line2: 'Data Developer.',
-      bio: 'Full Stack (Back-end/Data) Developer. Construyo con datos, analítica y aplicaciones web. Desde Constanza, Rep. Dom. 🇩🇴',
+      bio: 'Full Stack (Back-end/Data) Developer. Construyo con datos, analítica y aplicaciones web. Desde Constanza, Rep. Dom. 🇩🇴',
     },
     cards: {
       agrobalance: {
@@ -382,7 +382,7 @@ export const translations = {
       line1: 'こんにちは。{name}です。',
       name: '光典',
       line2: 'データ開発者。',
-      bio: 'フルスタック(バックエンド/データ)デベロッパー。データ、分析、Webアプリケーションを構築しています。ドミニカ共和国・コンスタンサより 🇩🇴',
+      bio: 'フルスタック(バックエンド/データ)デベロッパー。データ、分析、Webアプリケーションを構築しています。ドミニカ共和国・コンスタンサより 🇩🇴',
     },
     cards: {
       agrobalance: {
