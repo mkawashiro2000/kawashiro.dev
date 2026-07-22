@@ -23,7 +23,7 @@ export const translations = {
     cards: {
       agrobalance: {
         category: 'AgriTech · Management',
-        desc: 'Comprehensive agrotechnological and financial management system operated locally, designed to professionalize agricultural production. It gives producers precise control over what happens on the land and in their pocket.',
+        desc: 'Comprehensive agrotechnological and financial management system, operated from your computer or phone to guarantee the stability and total confidentiality of your information, meticulously designed to professionalize and transform modern agricultural production. By fusing technological innovation with traditional field practices, this robust platform gives producers a unified environment with precise, real-time control over every agronomic process — optimizing crop yields, planning resource use, and maximizing operational efficiency. At the same time, its powerful administrative core translates everything that happens on the land into precise, actionable economic metrics, enabling rigorous analysis of operating costs, budgets, and profit margins — ensuring that every strategic and technical decision made in the field is reflected directly, securely, and positively in the farmer\'s pocket, consolidating a truly competitive, sustainable, and profitable agribusiness.',
       },
       lubesync: {
         category: 'SaaS · Management',
@@ -209,7 +209,7 @@ export const translations = {
     cards: {
       agrobalance: {
         category: 'AgriTech · Gestión',
-        desc: 'Sistema integral de gestión agrotecnológica y financiera operado de forma local, diseñado para profesionalizar la producción agrícola. Le da al productor control milimétrico sobre lo que ocurre en la tierra y en el bolsillo.',
+        desc: 'Sistema integral de gestión agrotecnológica y financiera, operado desde la computadora o celular para garantizar la estabilidad y total confidencialidad de su información, ha sido meticulosamente diseñado con el objetivo de profesionalizar y transformar el panorama de la producción agrícola moderna. Al fusionar la innovación tecnológica con las prácticas de campo tradicionales, esta robusta plataforma proporciona al productor un entorno unificado que le otorga un control milimétrico y en tiempo real sobre todos los procesos agronómicos, permitiendo optimizar el rendimiento de los cultivos, planificar el uso de recursos y maximizar la eficiencia operativa. Simultáneamente, su potente núcleo administrativo traduce toda la actividad de la tierra en métricas económicas precisas y accionables, facilitando un análisis riguroso de los costos operativos, presupuestos y márgenes de ganancia, asegurando así que cada decisión estratégica y técnica tomada en el campo se refleje de manera directa, segura y positiva en el bolsillo del agricultor, consolidando una agroempresa verdaderamente competitiva, sostenible y rentable.',
       },
       lubesync: {
         category: 'SaaS · Gestión',
@@ -395,7 +395,7 @@ export const translations = {
     cards: {
       agrobalance: {
         category: 'アグリテック・管理',
-        desc: '農業生産の専門化を目的とした、ローカルで稼働する総合的な農業技術・財務管理システム。生産者に土地と資金の両面で緻密な管理を提供します。',
+        desc: 'パソコンやスマートフォンから操作でき、情報の安定性と完全な機密性を保証する総合的な農業技術・財務管理システム。現代の農業生産を専門化・変革することを目指して緻密に設計されています。技術革新と伝統的な農作業の実践を融合し、生産者にすべての農学的プロセスをリアルタイムで精密に管理できる統合環境を提供。作物の収量最適化、資源計画、業務効率の最大化を実現します。同時に、強力な管理コアが農地での活動を正確で実用的な経済指標に変換し、運営コスト・予算・利益率の厳密な分析を支援。畑での戦略的・技術的な意思決定が、直接的かつ安全に農家の収益へ反映され、真に競争力があり持続可能で収益性の高いアグリビジネスを実現します。',
       },
       lubesync: {
         category: 'SaaS・管理',
