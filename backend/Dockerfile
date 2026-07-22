@@ -10,8 +10,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Principio de mínimo privilegio: el servicio corre como usuario sin shell
-RUN useradd --system --no-create-home --shell /usr/sbin/nologin edgeapi
+# Principio de mínimo privilegio: el servicio corre como usuario sin shell.
+# /data es el punto de montaje del volumen del guestbook (propiedad de edgeapi).
+RUN useradd --system --no-create-home --shell /usr/sbin/nologin edgeapi && \
+    mkdir -p /data && chown edgeapi:edgeapi /data
 USER edgeapi
 
 # Exponer el puerto del microservicio

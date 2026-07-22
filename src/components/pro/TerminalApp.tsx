@@ -10,6 +10,9 @@ import { CodeBlock } from './CodeBlock';
 import { printResumeToThermal } from '../../terminal/utils/webusb';
 import { openPrintableResume } from '../../terminal/utils/resume';
 import { listProjects, catProject, resolveOpenTarget, PROJECT_FILES } from '../../terminal/utils/projects';
+import { cowsay, fortune } from '../../terminal/utils/fun';
+import { TypingTest } from './TypingTest';
+import { GuestbookLive } from './GuestbookLive';
 
 // Secuencia de arranque estilo systemd: puro teatro, pero teatro de calidad
 const BOOT_SEQUENCE = [
@@ -130,7 +133,7 @@ export const TerminalApp: React.FC = () => {
   // Inicialización estricta del árbol Trie con todo el léxico permitido
   const commandTrie = useMemo(() => {
     const trie = new Trie();
-    ['help', 'clear', 'casual', 'about', 'neofetch', 'htop', 'print resume', 'ls', 'weather', 'matrix', 'open', 'exit'].forEach(cmd => trie.insert(cmd));
+    ['help', 'clear', 'casual', 'about', 'neofetch', 'htop', 'print resume', 'ls', 'weather', 'matrix', 'open', 'exit', 'history', 'cowsay', 'fortune', 'whoami', 'date', 'echo', 'pwd', 'uname', 'guestbook', 'typing'].forEach(cmd => trie.insert(cmd));
     PROJECT_FILES.forEach(f => trie.insert(`cat ${f.filename}`));
     return trie;
   }, []);
@@ -187,18 +190,21 @@ export const TerminalApp: React.FC = () => {
     }
   };
 
-  const executeCommand = (e: React.FormEvent) => {
-    e.preventDefault();
-    const commandLine = input.trim();
+  const runCommand = (raw: string) => {
+    const commandLine = raw.trim();
     if (!commandLine) return;
 
     commandArchive.current.push(commandLine);
     setHistoryPointer(-1);
 
     const tokens = commandLine.split(' ');
-    const baseCommand = tokens[0].toLowerCase();
+    let baseCommand = tokens[0].toLowerCase();
     const args = tokens.slice(1);
     const fullCommand = commandLine.toLowerCase();
+
+    // Aliases de cortesía para dedos entrenados en otras shells
+    if (baseCommand === 'cls') baseCommand = 'clear';
+    if (baseCommand === 'll') baseCommand = 'ls';
 
     // Eco inmediato del comando; la salida entra con cadencia de typewriter
     setHistory((prev) => [...prev, promptEcho(commandLine)]);
@@ -232,14 +238,9 @@ export const TerminalApp: React.FC = () => {
           'W: An essential multimedia dependency was missing. Resolved. ▶',
         );
       } else if (/^sudo\s+rm\s+-[a-z]*r/.test(fullCommand)) {
-        output.push(
-          'rm: descending into /home/mk/projects...',
-          'rm: descending into /var/lib/dreams...',
-          '[ABORTADO] Protective instincts engaged.',
-          'Nice try. This incident will be reported to /dev/null. 🍓',
-        );
+        output.push(...t.rmDrama);
       } else {
-        output.push(`${sessionUser} is not in the sudoers file. This incident will be reported.`);
+        output.push(t.sudoDenied(sessionUser));
       }
     } else if (baseCommand === 'ssh') {
       // Sesión simulada: handshake teatral y prompt de invitado
@@ -251,8 +252,7 @@ export const TerminalApp: React.FC = () => {
           'Negotiating cipher (chacha20-poly1305@openssh.com)...',
           "guest@kawashiro.dev's password: ********",
           '',
-          'Welcome to kawashiro.dev — restricted guest shell.',
-          'Type "exit" to disconnect.',
+          ...t.sshWelcome,
         );
         setTimeout(() => setSessionUser('guest'), 400);
       }
@@ -319,6 +319,75 @@ export const TerminalApp: React.FC = () => {
         case 'ls':
           output.push(...listProjects());
           break;
+        case 'history':
+          output.push(
+            ...commandArchive.current.map((cmd, i) => `  ${String(i + 1).padStart(3)}  ${cmd}`),
+          );
+          break;
+        case 'whoami':
+          output.push(sessionUser === 'guest' ? 'guest (restricted shell)' : 'mk — but you can call me Mitsunori.');
+          break;
+        case 'date':
+          output.push(new Date().toString());
+          break;
+        case 'pwd':
+          output.push(sessionUser === 'guest' ? '/home/guest' : '/home/mk');
+          break;
+        case 'uname':
+          output.push('Linux kawashiro 6.18-rpt-rpi-v8 aarch64 GNU/Linux (BCM2711, self-hosted)');
+          break;
+        case 'echo':
+          output.push(args.join(' ') || '');
+          break;
+        case 'fortune':
+          // Egg compuesto: fortune | cowsay
+          if (args.join(' ').replace(/\s/g, '') === '|cowsay') {
+            output.push(...cowsay(fortune()));
+          } else {
+            output.push(fortune());
+          }
+          break;
+        case 'cowsay':
+          output.push(...cowsay(args.join(' ')));
+          break;
+        case 'guestbook': {
+          if (args[0] === 'sign') {
+            const message = args.slice(1).join(' ').trim();
+            if (message.length < 2) {
+              output.push('guestbook: usage: guestbook sign <message>');
+              break;
+            }
+            fetch('/api/v1/guestbook', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: sessionUser === 'guest' ? 'guest' : 'visitor', message }),
+            })
+              .then((r) => r.json())
+              .then((d) => {
+                if (d.ok) {
+                  queueLines([`[  OK  ] Signature recorded: "${d.message}"`, '']);
+                } else {
+                  queueLines([`guestbook: ${d.detail ?? 'error'}`, '']);
+                }
+              })
+              .catch(() => queueLines(['guestbook: Edge API unreachable.', '']));
+            output.push('Writing to /data/guestbook.db...');
+          } else {
+            output.push(<GuestbookLive key={`gb-${Date.now()}`} />);
+          }
+          break;
+        }
+        case 'typing':
+          output.push(
+            <TypingTest
+              key={`typing-${Date.now()}`}
+              onExit={() => {
+                queueLines(['[  OK  ] Shell focus restored.', '']);
+                setTimeout(() => inputRef.current?.focus(), 50);
+              }}
+            />,
+          );
+          break;
         case 'cat': {
           if (args.length === 0) {
             output.push(t.catMissingArg);
@@ -339,6 +408,11 @@ export const TerminalApp: React.FC = () => {
     }
 
     queueLines([...output, '']);
+  };
+
+  const executeCommand = (e: React.FormEvent) => {
+    e.preventDefault();
+    runCommand(input);
   };
 
   useEffect(() => {
@@ -461,6 +535,24 @@ export const TerminalApp: React.FC = () => {
             </div>
           ))}
           <div ref={terminalEndRef} />
+
+          {/* Chips táctiles: en pantallas pequeñas escribir comandos es un suplicio */}
+          <div className="sm:hidden flex flex-wrap gap-2 my-2">
+            {['help', 'neofetch', 'htop', 'weather', 'ls', 'matrix'].map((cmd) => (
+              <button
+                key={cmd}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  runCommand(cmd);
+                }}
+                className="px-3 py-1 rounded-full text-xs font-mono"
+                style={{ backgroundColor: C.bar, color: C.teal, border: `1px solid ${C.crust}` }}
+              >
+                {cmd}
+              </button>
+            ))}
+          </div>
 
           {/* Línea de entrada activa (inline, como una terminal real) */}
           <form onSubmit={executeCommand} className="flex items-center min-h-[1.25rem]">

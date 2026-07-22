@@ -24,8 +24,8 @@
   --color-pink: hsl(284, 61%, 74%);
   --color-yellow: hsl(36, 97%, 70%);
 
-  --font-sans: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: 'Fredoka', 'Hanken Grotesk', sans-serif;
+  --font-sans: 'Hanken Grotesk Variable', 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Fredoka Variable', 'Fredoka', 'Hanken Grotesk Variable', sans-serif;
   --font-mono: 'Fira Code', 'Inconsolata', monospace;
 
   /* Animaciones heredadas por defecto */

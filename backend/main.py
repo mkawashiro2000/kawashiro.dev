@@ -1,7 +1,10 @@
 import asyncio
 import json
+import os
 import platform
 import re
+import sqlite3
+import threading
 import urllib.request
 import psutil
 import time
@@ -149,6 +152,75 @@ async def weather():
             if _weather_cache["data"] is None:
                 return {"error": "weather-unavailable"}
     return _weather_cache["data"]
+
+
+# --- Guestbook: libro de visitas persistente (SQLite en volumen /data) ------
+GUESTBOOK_DB = os.environ.get("GUESTBOOK_DB", "/data/guestbook.db")
+_db_lock = threading.Lock()
+_gb_last_post: dict[str, float] = {}  # rate limit en memoria por IP
+
+# Caracteres imprimibles únicamente; colapsa espacios repetidos
+_SANITIZE_RE = re.compile(r"[\x00-\x1f\x7f]")
+
+
+def _gb_conn() -> sqlite3.Connection:
+    os.makedirs(os.path.dirname(GUESTBOOK_DB), exist_ok=True)
+    conn = sqlite3.connect(GUESTBOOK_DB)
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS entries ("
+        " id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        " name TEXT NOT NULL,"
+        " message TEXT NOT NULL,"
+        " ts INTEGER NOT NULL)"
+    )
+    return conn
+
+
+class GuestbookEntry(BaseModel):
+    name: str = "visitor"
+    message: str
+
+
+@app.get("/api/v1/guestbook")
+async def guestbook_list():
+    def read():
+        with _db_lock, _gb_conn() as conn:
+            rows = conn.execute(
+                "SELECT name, message, ts FROM entries ORDER BY id DESC LIMIT 20"
+            ).fetchall()
+        return [{"name": n, "message": m, "ts": ts} for n, m, ts in rows]
+
+    return {"entries": await asyncio.to_thread(read)}
+
+
+@app.post("/api/v1/guestbook")
+async def guestbook_sign(payload: GuestbookEntry, request: Request):
+    ip = (request.headers.get("x-forwarded-for") or (request.client.host if request.client else "?")).split(",")[0].strip()
+
+    # Rate limit: una firma por IP por minuto
+    now = time.time()
+    if now - _gb_last_post.get(ip, 0) < 60:
+        return {"error": "rate-limited", "detail": "One signature per minute. Patience, traveler."}
+
+    name = _SANITIZE_RE.sub("", payload.name).strip()[:24] or "visitor"
+    message = " ".join(_SANITIZE_RE.sub("", payload.message).split())[:140]
+    if len(message) < 2:
+        return {"error": "too-short", "detail": "Message must have at least 2 characters."}
+
+    def write():
+        with _db_lock, _gb_conn() as conn:
+            conn.execute(
+                "INSERT INTO entries (name, message, ts) VALUES (?, ?, ?)",
+                (name, message, int(now)),
+            )
+            # Retener solo las últimas 500 firmas
+            conn.execute(
+                "DELETE FROM entries WHERE id NOT IN (SELECT id FROM entries ORDER BY id DESC LIMIT 500)"
+            )
+
+    await asyncio.to_thread(write)
+    _gb_last_post[ip] = now
+    return {"ok": True, "name": name, "message": message}
 
 
 class SentimentRequest(BaseModel):

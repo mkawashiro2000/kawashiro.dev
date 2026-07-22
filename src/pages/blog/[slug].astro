@@ -1,0 +1,71 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout title={`${post.data.title} | Mitsunori Kawashiro`} description={post.data.description}>
+  <main class="min-h-screen w-full" style="color: var(--color-green500);">
+    <article class="max-w-3xl mx-auto px-6 sm:px-8 py-16">
+      <a href="/blog" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">← Blog</a>
+
+      <time class="block mt-8 text-[13px] font-semibold uppercase tracking-[0.2em] opacity-70">
+        {post.data.pubDate.toISOString().slice(0, 10)}
+      </time>
+      <h1 class="font-display font-semibold text-3xl sm:text-5xl tracking-tight mt-2 mb-8 leading-tight">
+        {post.data.title}
+      </h1>
+
+      <div class="prose-blog">
+        <Content />
+      </div>
+    </article>
+  </main>
+
+  <style is:global>
+    /* Tipografía del cuerpo del post, coherente con la paleta del sitio */
+    .prose-blog {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      opacity: 0.9;
+    }
+    .prose-blog h2 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1.6rem;
+      margin: 2.2rem 0 0.8rem;
+    }
+    .prose-blog p { margin: 1rem 0; }
+    .prose-blog ul, .prose-blog ol { margin: 1rem 0; padding-left: 1.4rem; }
+    .prose-blog li { margin: 0.4rem 0; }
+    .prose-blog ol { list-style: decimal; }
+    .prose-blog ul { list-style: disc; }
+    .prose-blog code {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.9em;
+      background: rgba(0, 0, 0, 0.08);
+      padding: 0.15em 0.4em;
+      border-radius: 6px;
+    }
+    .prose-blog pre {
+      background: #1e1e2e;
+      color: #cdd6f4;
+      padding: 1.2rem 1.4rem;
+      border-radius: 16px;
+      overflow-x: auto;
+      margin: 1.4rem 0;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+    .prose-blog pre code { background: none; padding: 0; }
+    .prose-blog strong { font-weight: 700; }
+    .prose-blog a { text-decoration: underline; }
+  </style>
+</Layout>

@@ -2,6 +2,7 @@ import React from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { getTranslation } from '../../i18n/translations';
 import { LanguageSwitcher } from '../shared/LanguageSwitcher';
+import { openPrintableResume } from '../../terminal/utils/resume';
 
 /* Estrella decorativa de 4 puntas (estilo Sean Halpin) */
 const Star: React.FC<{ className?: string }> = ({ className }) => (
@@ -56,6 +57,22 @@ export const BusinessUI: React.FC = () => {
     document.documentElement.classList.add('pro-theme');
     toggleMode();
   };
+
+  // Código Konami (↑↑↓↓←→←→BA): teletransporte directo a la terminal
+  React.useEffect(() => {
+    const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let progress = 0;
+    const onKey = (e: KeyboardEvent) => {
+      progress = e.key === KONAMI[progress] ? progress + 1 : e.key === KONAMI[0] ? 1 : 0;
+      if (progress === KONAMI.length) {
+        progress = 0;
+        handleTransition();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const green = 'var(--color-green500)';
   const beige = 'var(--color-beige)';
@@ -190,6 +207,7 @@ export const BusinessUI: React.FC = () => {
         <div className="flex items-center gap-4 sm:gap-6 text-sm font-medium">
           <a href="/proyectos" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.projects}</a>
           <a href="/futuros-proyectos" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.futureProjects}</a>
+          <a href="/blog" className="hidden sm:inline hover:opacity-60 transition-opacity">Blog</a>
           <a href="mailto:mkawashiro01@gmail.com" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.contact}</a>
           <LanguageSwitcher />
           <button
@@ -295,6 +313,14 @@ export const BusinessUI: React.FC = () => {
             </p>
           </div>
           <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => openPrintableResume(locale)}
+              className="px-5 py-2.5 rounded-full text-sm font-semibold transition-transform hover:scale-105"
+              style={{ backgroundColor: green, color: beige }}
+            >
+              {t.footer.downloadCv}
+            </button>
             {socials.map((s, i) => (
               <a
                 key={i}

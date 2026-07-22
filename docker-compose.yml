@@ -43,6 +43,9 @@ services:
     environment:
       # Zona horaria fijada para logs coherentes en República Dominicana
       - TZ=America/Santo_Domingo
+    # Persistencia del guestbook (SQLite) entre despliegues
+    volumes:
+      - edge_data:/data
     # Autocuración: si /health deja de responder, Docker reinicia el servicio
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"]
@@ -78,3 +81,27 @@ services:
       - frontend
     networks:
       - zero_trust_net
+    # Watchtower solo actualiza contenedores con esta etiqueta
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+
+  # 4. Actualizador automático de imágenes externas (solo cloudflared).
+  #    Las imágenes propias (frontend/edge-api) se reconstruyen en cada deploy.
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: kawashiro_watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    dns:
+      - 1.1.1.1
+    environment:
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_CLEANUP=true
+      # Un chequeo diario es suficiente para un túnel
+      - WATCHTOWER_POLL_INTERVAL=86400
+    networks:
+      - zero_trust_net
+
+volumes:
+  edge_data:

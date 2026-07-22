@@ -62,12 +62,21 @@ export const translations = {
     footer: {
       name: 'Mitsunori Kawashiro',
       role: 'Full Stack (Back-end/Data) Developer · Constanza, Dom. Rep.',
+      downloadCv: 'Download CV',
     },
     proyectos: {
       title: 'Projects',
       subtitle: 'All projects, from the most recent to the oldest.',
       mostRecent: 'Most recent',
       items: {
+        agrobalance: {
+          name: 'AgroBalance',
+          desc: 'Agrotechnological and financial management system for agricultural producers. Case study.',
+        },
+        lubesync: {
+          name: 'LubeSyncRD',
+          desc: 'Customer service and operations management platform for auto repair shops. Case study.',
+        },
         tokenizer: {
           name: 'Tokenizer & Lemmatizer',
           desc: 'Natural language processing in Spanish: splits text into tokens and reduces them to an approximate base form.',
@@ -159,6 +168,9 @@ export const translations = {
         '  weather       - Live weather at the server\'s real location.',
         '  open [proj]   - Open a project in a new browser tab.',
         '  matrix        - Follow the white rabbit.',
+        '  typing        - Typing speed test (WPM & accuracy).',
+        '  guestbook     - Read or sign the visitor guestbook.',
+        '  fortune       - A pseudo-random pearl of wisdom.',
         '  print resume  - Open printable resume (print or save as PDF).',
       ],
       casualTransition: 'Syncing global state... Transitioning to Business UI.',
@@ -190,6 +202,14 @@ export const translations = {
       printBlocked: '[ERROR] Pop-up blocked. Allow pop-ups for this site and try again.',
       catMissingArg: 'cat: missing file operand. Try "ls" to see available files.',
       catNotFound: (file: string) => `cat: ${file}: No such file or directory`,
+      sudoDenied: (user: string) => `${user} is not in the sudoers file. This incident will be reported.`,
+      rmDrama: [
+        'rm: descending into /home/mk/projects...',
+        'rm: descending into /var/lib/dreams...',
+        '[ABORTADO] Protective instincts engaged.',
+        'Nice try. This incident will be reported to /dev/null. 🍓',
+      ],
+      sshWelcome: ['Welcome to kawashiro.dev — restricted guest shell.', 'Type "exit" to disconnect.'],
       openUsage: 'usage: open <project> — try "ls" to see what\'s available.',
       openDone: (url: string) => `Opening ${url} in a new tab...`,
       openNotFound: (q: string) => `open: ${q}: unknown project. Try "ls".`,
@@ -258,12 +278,21 @@ export const translations = {
     footer: {
       name: 'Mitsunori Kawashiro',
       role: 'Full Stack (Back-end/Data) Developer · Constanza, Rep. Dom.',
+      downloadCv: 'Descargar CV',
     },
     proyectos: {
       title: 'Proyectos',
       subtitle: 'Todos los proyectos, del más reciente al más antiguo.',
       mostRecent: 'Más reciente',
       items: {
+        agrobalance: {
+          name: 'AgroBalance',
+          desc: 'Sistema de gestión agrotecnológica y financiera para productores agrícolas. Case study.',
+        },
+        lubesync: {
+          name: 'LubeSyncRD',
+          desc: 'Plataforma de gestión de servicio al cliente y operaciones para talleres. Case study.',
+        },
         tokenizer: {
           name: 'Tokenizer y Lemmatizador',
           desc: 'Procesamiento de lenguaje natural en español: divide el texto en tokens y los reduce a una forma base aproximada.',
@@ -355,6 +384,9 @@ export const translations = {
         '  weather       - Clima en vivo en la ubicación real del servidor.',
         '  open [proy]   - Abrir un proyecto en una pestaña nueva.',
         '  matrix        - Sigue al conejo blanco.',
+        '  typing        - Test de velocidad de escritura (WPM y precisión).',
+        '  guestbook     - Leer o firmar el libro de visitas.',
+        '  fortune       - Una perla de sabiduría pseudoaleatoria.',
         '  print resume  - Abrir CV imprimible (imprimir o guardar como PDF).',
       ],
       casualTransition: 'Sincronizando estado global... Transicionando a Business UI.',
@@ -386,6 +418,14 @@ export const translations = {
       printBlocked: '[ERROR] Ventana emergente bloqueada. Permite pop-ups para este sitio e intenta de nuevo.',
       catMissingArg: 'cat: falta el operando de archivo. Usa "ls" para ver los archivos disponibles.',
       catNotFound: (file: string) => `cat: ${file}: No existe el archivo o el directorio`,
+      sudoDenied: (user: string) => `${user} no está en el archivo sudoers. Este incidente será reportado.`,
+      rmDrama: [
+        'rm: descendiendo a /home/mk/projects...',
+        'rm: descendiendo a /var/lib/sueños...',
+        '[ABORTADO] Instinto de protección activado.',
+        'Buen intento. Este incidente será reportado a /dev/null. 🍓',
+      ],
+      sshWelcome: ['Bienvenido a kawashiro.dev — shell de invitado restringida.', 'Escribe "exit" para desconectar.'],
       openUsage: 'uso: open <proyecto> — prueba "ls" para ver los disponibles.',
       openDone: (url: string) => `Abriendo ${url} en una pestaña nueva...`,
       openNotFound: (q: string) => `open: ${q}: proyecto desconocido. Prueba "ls".`,
@@ -454,12 +494,21 @@ export const translations = {
     footer: {
       name: '川代 光典',
       role: 'フルスタック(バックエンド/データ)デベロッパー · ドミニカ共和国・コンスタンサ',
+      downloadCv: '履歴書をダウンロード',
     },
     proyectos: {
       title: 'プロジェクト',
       subtitle: '最新から順に並んだすべてのプロジェクト。',
       mostRecent: '最新',
       items: {
+        agrobalance: {
+          name: 'AgroBalance',
+          desc: '農業生産者向けの農業技術・財務管理システム。ケーススタディ。',
+        },
+        lubesync: {
+          name: 'LubeSyncRD',
+          desc: '整備工場向けの顧客サービス・運営管理プラットフォーム。ケーススタディ。',
+        },
         tokenizer: {
           name: 'トークナイザー & レンマタイザー',
           desc: 'スペイン語の自然言語処理:テキストをトークンに分割し、おおよその基本形に還元します。',
@@ -551,6 +600,9 @@ export const translations = {
         '  weather       - サーバー実在地のライブ天気。',
         '  open [名前]   - プロジェクトを新しいタブで開く。',
         '  matrix        - 白いウサギを追え。',
+        '  typing        - タイピング速度テスト(WPMと正確度)。',
+        '  guestbook     - ゲストブックを読む・署名する。',
+        '  fortune       - 疑似ランダムな格言。',
         '  print resume  - 印刷用の履歴書を開く(印刷またはPDF保存)。',
       ],
       casualTransition: 'グローバル状態を同期中... Business UIへ遷移します。',
@@ -582,6 +634,14 @@ export const translations = {
       printBlocked: '[ERROR] ポップアップがブロックされました。このサイトのポップアップを許可して再試行してください。',
       catMissingArg: 'cat: ファイルオペランドがありません。"ls" で利用可能なファイルを確認してください。',
       catNotFound: (file: string) => `cat: ${file}: そのようなファイルやディレクトリはありません`,
+      sudoDenied: (user: string) => `${user} は sudoers ファイルに存在しません。この件は報告されます。`,
+      rmDrama: [
+        'rm: /home/mk/projects に降下中...',
+        'rm: /var/lib/dreams に降下中...',
+        '[ABORTADO] 防衛本能が作動しました。',
+        'おしいですね。この件は /dev/null に報告されます。🍓',
+      ],
+      sshWelcome: ['kawashiro.dev へようこそ — 制限付きゲストシェル。', '"exit" で切断します。'],
       openUsage: '使い方: open <プロジェクト> — "ls" で利用可能な一覧を確認。',
       openDone: (url: string) => `${url} を新しいタブで開いています...`,
       openNotFound: (q: string) => `open: ${q}: 不明なプロジェクト。"ls" を試してください。`,

@@ -1,13 +1,15 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // Configuración del ecosistema Dual-Mode.
 // - React: islas interactivas (client:load) para la Terminal UI.
 // - Tailwind v4: motor CSS-first cargado como plugin de Vite (@import "tailwindcss").
 export default defineConfig({
-  integrations: [react()],
+  site: 'https://kawashiro.dev',
+  integrations: [react(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
     server: {

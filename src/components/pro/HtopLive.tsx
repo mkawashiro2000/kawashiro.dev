@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
+// Sparkline ASCII: mapea 0-100% a bloques de altura creciente
+const SPARK_GLYPHS = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
+const sparkline = (values: number[]) =>
+  values.map((v) => SPARK_GLYPHS[Math.min(7, Math.floor((v / 100) * 8))]).join('');
 
 export const HtopLive: React.FC = () => {
   const [metrics, setMetrics] = useState({
@@ -9,6 +14,9 @@ export const HtopLive: React.FC = () => {
     soc_temp: null as number | null,
   });
   const [error, setError] = useState<string | null>(null);
+  // Historial de CPU (~últimos 60s a 1.5s por muestra)
+  const cpuHistory = useRef<number[]>([]);
+  const [, forceTick] = useState(0);
 
   useEffect(() => {
     // Conexión unidireccional al backend mediante ruta relativa.
@@ -25,6 +33,8 @@ export const HtopLive: React.FC = () => {
       eventSource.addEventListener('telemetry', (event) => {
         try {
           const data = JSON.parse((event as MessageEvent).data);
+          cpuHistory.current = [...cpuHistory.current, data.cpu_usage].slice(-40);
+          forceTick((n) => n + 1);
           setMetrics({
             cpu: data.cpu_usage,
             ram_percent: data.ram_usage,
@@ -94,6 +104,14 @@ export const HtopLive: React.FC = () => {
           <div>{renderAsciiBar(metrics.ram_percent)}</div>
         </div>
       </div>
+      {cpuHistory.current.length > 1 && (
+        <div className="mt-3 text-xs">
+          <span className="opacity-70">CPU 60s </span>
+          <span className="tracking-tighter" style={{ color: 'var(--color-text-accent, #94e2d5)' }}>
+            {sparkline(cpuHistory.current)}
+          </span>
+        </div>
+      )}
       <div className="mt-3 text-xs opacity-70">
         {metrics.soc_temp !== null && (
           <span className={metrics.soc_temp > 70 ? 'text-red-500' : metrics.soc_temp > 60 ? 'text-yellow-400' : ''}>

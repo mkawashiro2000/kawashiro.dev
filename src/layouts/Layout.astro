@@ -11,6 +11,32 @@ const {
 
 const SITE_URL = 'https://kawashiro.dev';
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+
+// Datos estructurados: tarjeta de persona para buscadores
+const personSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Mitsunori Kawashiro',
+  url: SITE_URL,
+  image: `${SITE_URL}/og-image.png`,
+  jobTitle: 'Full Stack (Back-end/Data) Developer',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Constanza',
+    addressRegion: 'La Vega',
+    addressCountry: 'DO',
+  },
+  email: 'mailto:mkawashiro01@gmail.com',
+  sameAs: [
+    'https://github.com/mkawashiro2000',
+    'https://www.instagram.com/kawashiro.dev',
+  ],
+  knowsAbout: ['Python', 'TypeScript', 'Data Science', 'FastAPI', 'React', 'Docker', 'PostgreSQL'],
+});
+
+// Fuentes autoalojadas: sin llamadas a Google Fonts (privacidad + TTFB)
+import '@fontsource-variable/fredoka';
+import '@fontsource-variable/hanken-grotesk';
 import '../styles/global.css';
 ---
 
@@ -22,6 +48,8 @@ import '../styles/global.css';
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#11111b" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
 
@@ -41,13 +69,8 @@ import '../styles/global.css';
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
 
-    {/* Tipografía: Fredoch (display redondeada) + Hanken Grotesk (cuerpo) */}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap"
-    />
+    {/* Datos estructurados (Person) para buscadores */}
+    <script type="application/ld+json" set:html={personSchema} />
 
     {/* Script crítico de bloqueo: Sincroniza el DOM con Zustand localStorage antes del renderizado */}
     <script is:inline>

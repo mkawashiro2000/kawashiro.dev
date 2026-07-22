@@ -26,7 +26,7 @@ interface ResumeCopy {
   projects: Project[];
 }
 
-const COPY: Record<Locale, ResumeCopy> = {
+export const COPY: Record<Locale, ResumeCopy> = {
   en: {
     role: 'Full Stack (Back-end/Data) Developer',
     location: 'La Vega, Constanza, Dominican Republic',
