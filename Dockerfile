@@ -4,7 +4,7 @@
 # Etapa 1: Compilación de las islas de Astro/React (payload estático).
 # Node 22 es requerido por Astro 7 (>=22.12.0).
 # ---------------------------------------------------------------------------
-FROM node:22-slim AS builder
+FROM node:26-slim AS builder
 WORKDIR /app
 
 # Instalación determinista a partir del lockfile para builds reproducibles.
