@@ -110,13 +110,14 @@ export const BusinessUI: React.FC = () => {
       logo: '/img/proyectos/lubesync.webp',
     },
     {
-      category: t.cards.tokenizer.category,
-      title: t.cards.tokenizer.title,
-      desc: t.cards.tokenizer.desc,
+      category: t.cards.kampit.category,
+      title: 'Kampit',
+      desc: t.cards.kampit.desc,
       bg: 'var(--color-babyblue)',
       fg: darkGreen,
       col: '13 / 27',
-      href: '/proyectos/tokenizer-lemmatizador',
+      href: 'https://kampit.mkawashiro01.workers.dev',
+      logo: '/img/proyectos/kampit.webp',
     },
   ];
 

@@ -25,6 +25,10 @@ export const translations = {
         category: 'AgriTech · Management',
         desc: 'Comprehensive agrotechnological and financial management system, operated from your computer or phone to guarantee the stability and total confidentiality of your information, meticulously designed to professionalize and transform modern agricultural production. By fusing technological innovation with traditional field practices, this robust platform gives producers a unified environment with precise, real-time control over every agronomic process — optimizing crop yields, planning resource use, and maximizing operational efficiency. At the same time, its powerful administrative core translates everything that happens on the land into precise, actionable economic metrics, enabling rigorous analysis of operating costs, budgets, and profit margins — ensuring that every strategic and technical decision made in the field is reflected directly, securely, and positively in the farmer\'s pocket, consolidating a truly competitive, sustainable, and profitable agribusiness.',
       },
+      kampit: {
+        category: 'E-commerce · Rentals',
+        desc: 'Camping gear rental platform: pick your dates, build your kit, and confirm via WhatsApp in three frictionless steps. Tents, camping equipment and everything you need for the outdoors, with real-time availability per date range.',
+      },
       lubesync: {
         category: 'SaaS · Management',
         desc: 'Comprehensive management platform for auto shops, designed to centralize and optimize every key area of your business in a single, highly efficient digital tool. By unifying detailed real-time tracking of every service order, automated reminders that keep communication with your customers flowing, and full control of daily operations, this solution transforms how your team works. Through an intuitive interface you can drastically reduce administrative workload, minimize coordination errors, and guarantee a transparent workflow — not only increasing your shop\'s profitability and productivity, but also raising quality standards, customer satisfaction, and loyalty by centralizing all your operational needs in one place.',
@@ -241,6 +245,10 @@ export const translations = {
         category: 'AgriTech · Gestión',
         desc: 'Sistema integral de gestión agrotecnológica y financiera, operado desde la computadora o celular para garantizar la estabilidad y total confidencialidad de su información, ha sido meticulosamente diseñado con el objetivo de profesionalizar y transformar el panorama de la producción agrícola moderna. Al fusionar la innovación tecnológica con las prácticas de campo tradicionales, esta robusta plataforma proporciona al productor un entorno unificado que le otorga un control milimétrico y en tiempo real sobre todos los procesos agronómicos, permitiendo optimizar el rendimiento de los cultivos, planificar el uso de recursos y maximizar la eficiencia operativa. Simultáneamente, su potente núcleo administrativo traduce toda la actividad de la tierra en métricas económicas precisas y accionables, facilitando un análisis riguroso de los costos operativos, presupuestos y márgenes de ganancia, asegurando así que cada decisión estratégica y técnica tomada en el campo se refleje de manera directa, segura y positiva en el bolsillo del agricultor, consolidando una agroempresa verdaderamente competitiva, sostenible y rentable.',
       },
+      kampit: {
+        category: 'E-commerce · Alquileres',
+        desc: 'Plataforma de renta de equipo de campamento: elige tus fechas, arma tu kit y confirma por WhatsApp en tres pasos sin fricción. Carpas, equipo de camping y todo lo necesario para la aventura, con disponibilidad en tiempo real por rango de fechas.',
+      },
       lubesync: {
         category: 'SaaS · Gestión',
         desc: 'Plataforma integral de gestión para talleres, está diseñada para centralizar y optimizar todas las áreas clave de su negocio en una sola herramienta digital de alta eficiencia. Al unificar el seguimiento detallado de cada orden de servicio en tiempo real, la emisión automatizada de recordatorios para mantener una comunicación fluida con sus usuarios y el control absoluto de la operación diaria, esta solución le permite transformar la dinámica de trabajo de su equipo. A través de una interfaz intuitiva, usted podrá reducir drásticamente la carga administrativa, minimizar los errores de coordinación y garantizar un flujo de trabajo transparente, logrando así no solo incrementar la rentabilidad y productividad de su taller, sino también elevar significativamente los estándares de calidad, la satisfacción y la fidelización de sus clientes al centralizar todas sus necesidades operativas en un solo lugar.',
@@ -456,6 +464,10 @@ export const translations = {
       agrobalance: {
         category: 'アグリテック・管理',
         desc: 'パソコンやスマートフォンから操作でき、情報の安定性と完全な機密性を保証する総合的な農業技術・財務管理システム。現代の農業生産を専門化・変革することを目指して緻密に設計されています。技術革新と伝統的な農作業の実践を融合し、生産者にすべての農学的プロセスをリアルタイムで精密に管理できる統合環境を提供。作物の収量最適化、資源計画、業務効率の最大化を実現します。同時に、強力な管理コアが農地での活動を正確で実用的な経済指標に変換し、運営コスト・予算・利益率の厳密な分析を支援。畑での戦略的・技術的な意思決定が、直接的かつ安全に農家の収益へ反映され、真に競争力があり持続可能で収益性の高いアグリビジネスを実現します。',
+      },
+      kampit: {
+        category: 'Eコマース・レンタル',
+        desc: 'キャンプ用品レンタルプラットフォーム:日程を選び、キットを組み、WhatsAppで確認 — 摩擦のない3ステップ。テントやキャンプ用品など、アウトドアに必要なすべてを日付範囲ごとのリアルタイム在庫で提供。',
       },
       lubesync: {
         category: 'SaaS・管理',
