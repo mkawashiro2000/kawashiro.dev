@@ -54,6 +54,12 @@ services:
     container_name: kawashiro_zero_trust
     restart: unless-stopped
     command: tunnel --no-autoupdate run
+    # DNS explícito: el host resuelve vía un resolver en 127.0.0.1 que no
+    # existe dentro del contenedor; sin esto cloudflared no puede resolver
+    # los SRV de argotunnel.com y el túnel muere en el arranque.
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
     depends_on:
