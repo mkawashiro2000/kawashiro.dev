@@ -218,23 +218,24 @@ export function openPrintableResume(locale: Locale): boolean {
 <title>Mitsunori Kawashiro — Resume</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1a1a1a; padding: 44px 52px; max-width: 780px; margin: 0 auto; line-height: 1.5; }
-  h1 { font-size: 25px; letter-spacing: 0.04em; }
-  .role { font-size: 14px; color: #444; margin-top: 2px; }
-  .loc { font-size: 13px; color: #666; margin-top: 2px; }
-  .contact-line { font-size: 12.5px; color: #444; margin-top: 6px; }
-  hr { border: none; border-top: 1.5px solid #1a1a1a; margin: 16px 0; }
-  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; margin: 18px 0 8px; color: #1a1a1a; border-bottom: 1px solid #ccc; padding-bottom: 3px; }
-  p, td, li { font-size: 12.5px; }
+  @page { size: letter; margin: 0; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1a1a1a; padding: 30px 40px; max-width: 780px; margin: 0 auto; line-height: 1.32; }
+  h1 { font-size: 21px; letter-spacing: 0.04em; }
+  .role { font-size: 12.5px; color: #444; margin-top: 1px; }
+  .loc { font-size: 11.5px; color: #666; margin-top: 1px; }
+  .contact-line { font-size: 11px; color: #444; margin-top: 4px; }
+  hr { border: none; border-top: 1.5px solid #1a1a1a; margin: 10px 0; }
+  h2 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em; margin: 10px 0 5px; color: #1a1a1a; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
+  p, td, li { font-size: 10.5px; }
   table { border-collapse: collapse; width: 100%; }
-  td { padding: 3px 0; vertical-align: top; }
-  td.k { font-weight: 600; width: 190px; padding-right: 12px; }
-  .proj { margin-bottom: 12px; }
-  .proj-head { font-size: 13px; margin-bottom: 4px; }
+  td { padding: 1.5px 0; vertical-align: top; }
+  td.k { font-weight: 600; width: 165px; padding-right: 10px; }
+  .proj { margin-bottom: 7px; }
+  .proj-head { font-size: 11px; margin-bottom: 2px; }
   .url { color: #555; }
-  ul { padding-left: 18px; }
-  li { margin-bottom: 3px; color: #333; }
-  @media print { body { padding: 20px 28px; } }
+  ul { padding-left: 16px; }
+  li { margin-bottom: 1.5px; color: #333; }
+  @media print { body { padding: 26px 36px; } }
 </style>
 </head>
 <body>
