@@ -100,6 +100,8 @@ services:
       - WATCHTOWER_CLEANUP=true
       # Un chequeo diario es suficiente para un túnel
       - WATCHTOWER_POLL_INTERVAL=86400
+      # La imagen de watchtower negocia una API antigua; el daemon moderno exige >=1.40
+      - DOCKER_API_VERSION=1.44
     networks:
       - zero_trust_net
 
