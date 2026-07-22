@@ -231,7 +231,7 @@ export const TerminalApp: React.FC = () => {
           'Reading package lists... Done',
           'W: An essential multimedia dependency was missing. Resolved. ▶',
         );
-      } else if (/^sudo\s+rm\s+-[a-z]*r[a-z]*\s+\/\s*$/.test(fullCommand) || fullCommand.startsWith('sudo rm -rf /')) {
+      } else if (/^sudo\s+rm\s+-[a-z]*r/.test(fullCommand)) {
         output.push(
           'rm: descending into /home/mk/projects...',
           'rm: descending into /var/lib/dreams...',
