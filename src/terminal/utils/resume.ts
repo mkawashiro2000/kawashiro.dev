@@ -220,13 +220,13 @@ export function openPrintableResume(locale: Locale): boolean {
   * { margin: 0; padding: 0; box-sizing: border-box; }
   @page { size: letter; margin: 0; }
   body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1a1a1a; padding: 30px 40px; max-width: 780px; margin: 0 auto; line-height: 1.32; }
-  h1 { font-size: 21px; letter-spacing: 0.04em; }
+  h1 { font-size: 22px; letter-spacing: 0.04em; }
   .role { font-size: 12.5px; color: #444; margin-top: 1px; }
   .loc { font-size: 11.5px; color: #666; margin-top: 1px; }
   .contact-line { font-size: 11px; color: #444; margin-top: 4px; }
   hr { border: none; border-top: 1.5px solid #1a1a1a; margin: 10px 0; }
   h2 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.14em; margin: 10px 0 5px; color: #1a1a1a; border-bottom: 1px solid #ccc; padding-bottom: 2px; }
-  p, td, li { font-size: 10.5px; }
+  p, td, li { font-size: 11px; }
   table { border-collapse: collapse; width: 100%; }
   td { padding: 1.5px 0; vertical-align: top; }
   td.k { font-weight: 600; width: 165px; padding-right: 10px; }
