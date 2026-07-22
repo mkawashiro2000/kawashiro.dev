@@ -3,9 +3,23 @@ import { useAppStore } from '../../store/useAppStore';
 import { getTranslation } from '../../i18n/translations';
 import { Trie } from '../../terminal/utils/trie';
 import { HtopLive } from './HtopLive';
+import { NeofetchLive } from './NeofetchLive';
+import { WeatherLive } from './WeatherLive';
+import { MatrixRain } from './MatrixRain';
+import { CodeBlock } from './CodeBlock';
 import { printResumeToThermal } from '../../terminal/utils/webusb';
 import { openPrintableResume } from '../../terminal/utils/resume';
-import { listProjects, catProject, PROJECT_FILES } from '../../terminal/utils/projects';
+import { listProjects, catProject, resolveOpenTarget, PROJECT_FILES } from '../../terminal/utils/projects';
+
+// Secuencia de arranque estilo systemd: puro teatro, pero teatro de calidad
+const BOOT_SEQUENCE = [
+  '[  OK  ] Reached target Basic System.',
+  '[  OK  ] Mounted /dev/projects (virtual filesystem).',
+  '[  OK  ] Started Telemetry Daemon (SSE, BCM2711).',
+  '[  OK  ] Registered Cloudflare Tunnel (4 edge connections).',
+  '[  OK  ] Started Guest Shell on tty1.',
+  '',
+];
 
 export const TerminalApp: React.FC = () => {
   const [input, setInput] = useState('');
@@ -13,14 +27,51 @@ export const TerminalApp: React.FC = () => {
   const t = getTranslation(locale).terminal;
 
   // El historial soporta texto estricto y nodos de React para HtopLive
-  const [history, setHistory] = useState<(string | React.ReactNode)[]>(t.boot);
+  const [history, setHistory] = useState<(string | React.ReactNode)[]>([]);
 
   const [historyPointer, setHistoryPointer] = useState<number>(-1);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [matrixActive, setMatrixActive] = useState(false);
+  const [sessionUser, setSessionUser] = useState<'mk' | 'guest'>('mk');
   const commandArchive = useRef<string[]>([]);
   const terminalEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const toggleMode = useAppStore((state) => state.toggleMode);
+
+  // --- Efecto máquina de escribir: cola de líneas que se vuelcan una a una ---
+  const lineQueue = useRef<(string | React.ReactNode)[]>([]);
+  const draining = useRef(false);
+  const drainQueue = () => {
+    if (draining.current) return;
+    draining.current = true;
+    const step = () => {
+      const next = lineQueue.current.shift();
+      if (next === undefined) {
+        draining.current = false;
+        return;
+      }
+      setHistory((prev) => [...prev, next]);
+      // Los nodos React (htop, neofetch...) entran al instante; el texto, cadencioso
+      setTimeout(step, typeof next === 'string' ? 26 : 0);
+    };
+    step();
+  };
+  const queueLines = (lines: (string | React.ReactNode)[]) => {
+    lineQueue.current.push(...lines);
+    drainQueue();
+  };
+
+  // --- Secuencia de boot animada (una sola vez por montaje) ---
+  const booted = useRef(false);
+  useEffect(() => {
+    if (booted.current) return;
+    booted.current = true;
+    const bootLines = [...BOOT_SEQUENCE, ...t.boot];
+    bootLines.forEach((line, i) => {
+      setTimeout(() => setHistory((prev) => [...prev, line]), 90 + i * 110);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 🔴 Cerrar: salir del Modo PRO y volver a Business UI
   const handleClose = () => {
@@ -62,25 +113,44 @@ export const TerminalApp: React.FC = () => {
     teal: '#94e2d5',
   };
 
-  // Prompt realista: mk@kawashiro:~$
-  const Prompt = () => (
+  // Prompt realista: mk@kawashiro:~$ (o guest@ durante la sesión ssh simulada)
+  const Prompt = ({ user = sessionUser }: { user?: 'mk' | 'guest' }) => (
     <>
-      <span style={{ color: C.green }}>mk@kawashiro</span>
+      <span style={{ color: user === 'guest' ? C.yellow : C.green }}>{user}@kawashiro</span>
       <span style={{ color: C.faint }}>:</span>
       <span style={{ color: C.blue }}>~</span>
       <span style={{ color: C.mauve }}> $ </span>
     </>
   );
 
+  // Eco del comando: prefijo interno "$ " (mk) o "$G " (guest) para congelar
+  // el prompt del usuario que lo ejecutó al re-renderizar el historial
+  const promptEcho = (cmd: string) => `${sessionUser === 'guest' ? '$G ' : '$ '}${cmd}`;
+
   // Inicialización estricta del árbol Trie con todo el léxico permitido
   const commandTrie = useMemo(() => {
     const trie = new Trie();
-    ['help', 'clear', 'casual', 'about', 'neofetch', 'htop', 'print resume', 'ls'].forEach(cmd => trie.insert(cmd));
+    ['help', 'clear', 'casual', 'about', 'neofetch', 'htop', 'print resume', 'ls', 'weather', 'matrix', 'open', 'exit'].forEach(cmd => trie.insert(cmd));
     PROJECT_FILES.forEach(f => trie.insert(`cat ${f.filename}`));
     return trie;
   }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Atajos de terminal real: Ctrl+L limpia, Ctrl+C cancela la línea
+    if (e.ctrlKey && (e.key === 'l' || e.key === 'L')) {
+      e.preventDefault();
+      lineQueue.current = [];
+      setHistory([]);
+      return;
+    }
+    if (e.ctrlKey && (e.key === 'c' || e.key === 'C')) {
+      e.preventDefault();
+      const echo = promptEcho(`${input}^C`);
+      setHistory((prev) => [...prev, echo]);
+      setInput('');
+      setHistoryPointer(-1);
+      return;
+    }
     if (e.key === 'Tab') {
       e.preventDefault();
       const currentInput = input.trim().toLowerCase();
@@ -91,7 +161,7 @@ export const TerminalApp: React.FC = () => {
       if (completions.length === 1) {
         setInput(completions[0]);
       } else if (completions.length > 1) {
-        setHistory(prev => [...prev, `$ ${input}`, completions.join('    ')]);
+        setHistory(prev => [...prev, promptEcho(input), completions.join('    ')]);
       }
     } 
     else if (e.key === 'ArrowUp') {
@@ -130,54 +200,111 @@ export const TerminalApp: React.FC = () => {
     const args = tokens.slice(1);
     const fullCommand = commandLine.toLowerCase();
 
-    let output: (string | React.ReactNode)[] = [`$ ${commandLine}`];
+    // Eco inmediato del comando; la salida entra con cadencia de typewriter
+    setHistory((prev) => [...prev, promptEcho(commandLine)]);
+    setInput('');
+
+    const output: (string | React.ReactNode)[] = [];
 
     if (fullCommand === 'print resume usb') {
-       // Ruta de hardware: impresora térmica ESC/POS vía WebUSB (easter egg)
-       output.push(t.printInit, t.printWaiting);
-
-       // Sincronizamos el historial actual antes de despachar la promesa de hardware
-       setHistory([...history, ...output]);
-       setInput('');
-
-       // Invocamos la utilidad WebUSB pasando una función callback
-       printResumeToThermal((msg) => {
-         setHistory(prev => [...prev, msg]);
-       });
-       return;
+      // Ruta de hardware: impresora térmica ESC/POS vía WebUSB (easter egg)
+      queueLines([t.printInit, t.printWaiting]);
+      printResumeToThermal((msg) => {
+        setHistory((prev) => [...prev, msg]);
+      });
+      return;
     } else if (fullCommand === 'print resume') {
-       // Ruta universal: CV renderizado + diálogo de impresión del navegador
-       output.push(t.printOpening);
-       const opened = openPrintableResume(locale);
-       output.push(opened ? t.printDone : t.printBlocked);
+      // Ruta universal: CV renderizado + diálogo de impresión del navegador
+      output.push(t.printOpening);
+      const opened = openPrintableResume(locale);
+      output.push(opened ? t.printDone : t.printBlocked);
+    } else if (baseCommand === 'sudo') {
+      // Easter egg obligatorio: todo dev lo intenta tarde o temprano
+      if (/^sudo\s+rm\s+-[a-z]*r[a-z]*\s+\/\s*$/.test(fullCommand) || fullCommand.startsWith('sudo rm -rf /')) {
+        output.push(
+          'rm: descending into /home/mk/projects...',
+          'rm: descending into /var/lib/dreams...',
+          '[ABORTADO] Protective instincts engaged.',
+          'Nice try. This incident will be reported to /dev/null. 🍓',
+        );
+      } else {
+        output.push(`${sessionUser} is not in the sudoers file. This incident will be reported.`);
+      }
+    } else if (baseCommand === 'ssh') {
+      // Sesión simulada: handshake teatral y prompt de invitado
+      if (sessionUser === 'guest') {
+        output.push('ssh: already connected as guest. Type "exit" first.');
+      } else {
+        output.push(
+          'Resolving kawashiro.dev... 104.21.82.199',
+          'Negotiating cipher (chacha20-poly1305@openssh.com)...',
+          "guest@kawashiro.dev's password: ********",
+          '',
+          'Welcome to kawashiro.dev — restricted guest shell.',
+          'Type "exit" to disconnect.',
+        );
+        setTimeout(() => setSessionUser('guest'), 400);
+      }
     } else {
       switch (baseCommand) {
         case 'help':
           output.push(...t.helpLines);
           break;
         case 'clear':
+          lineQueue.current = [];
           setHistory([]);
-          setInput('');
           return;
         case 'casual':
-          output.push(t.casualTransition);
-          setHistory([...history, ...output]);
+          queueLines([t.casualTransition]);
           setTimeout(() => {
             document.documentElement.classList.remove('pro-theme');
             toggleMode();
           }, 500);
-          setInput('');
           return;
+        case 'exit':
+          if (sessionUser === 'guest') {
+            output.push('Connection to kawashiro.dev closed.');
+            setSessionUser('mk');
+          } else {
+            // exit como mk = salir de la terminal (igual que casual)
+            queueLines([t.casualTransition]);
+            setTimeout(() => {
+              document.documentElement.classList.remove('pro-theme');
+              toggleMode();
+            }, 500);
+            return;
+          }
+          break;
         case 'about':
           output.push(...t.aboutLines);
           break;
         case 'neofetch':
-          output.push(...t.neofetchLines);
+          output.push(<NeofetchLive key={`nf-${Date.now()}`} />);
           break;
         case 'htop':
           output.push(t.htopOpening);
           output.push(<HtopLive key={`htop-${Date.now()}`} />);
           break;
+        case 'weather':
+          output.push(<WeatherLive key={`w-${Date.now()}`} />);
+          break;
+        case 'matrix':
+          setMatrixActive(true);
+          return;
+        case 'open': {
+          if (args.length === 0) {
+            output.push(t.openUsage);
+            break;
+          }
+          const target = resolveOpenTarget(args.join(' '));
+          if (target) {
+            window.open(target.url, '_blank', 'noopener');
+            output.push(t.openDone(target.url));
+          } else {
+            output.push(t.openNotFound(args.join(' ')));
+          }
+          break;
+        }
         case 'ls':
           output.push(...listProjects());
           break;
@@ -186,9 +313,10 @@ export const TerminalApp: React.FC = () => {
             output.push(t.catMissingArg);
             break;
           }
-          const fileLines = catProject(args[0], locale);
-          if (fileLines) {
-            output.push(...fileLines);
+          const file = catProject(args[0], locale);
+          if (file) {
+            output.push(...file.meta);
+            output.push(<CodeBlock key={`code-${Date.now()}`} lines={file.code} />);
           } else {
             output.push(t.catNotFound(args.join(' ')));
           }
@@ -199,8 +327,7 @@ export const TerminalApp: React.FC = () => {
       }
     }
 
-    setHistory([...history, ...output, '']);
-    setInput('');
+    queueLines([...output, '']);
   };
 
   useEffect(() => {
@@ -209,9 +336,10 @@ export const TerminalApp: React.FC = () => {
 
   // Color de las líneas de salida según su naturaleza (errores en rojo, etc.)
   const lineColor = (line: string): string => {
-    if (/^(cat:|sys:|.*no encontrado|.*No existe)/i.test(line)) return C.red;
-    if (/^\[OK\]|completada|activos/i.test(line)) return C.green;
+    if (/^(cat:|sys:|ssh:|rm:|.*no encontrado|.*No existe)/i.test(line)) return C.red;
+    if (/^\[\s*OK\s*\]|completada|activos/i.test(line)) return C.green;
     if (/^\[ERROR\]|\[ABORTADO\]/i.test(line)) return C.red;
+    if (/is not in the sudoers file/.test(line)) return C.red;
     if (/^-{3,}|^={3,}/.test(line)) return C.faint;
     return C.text;
   };
@@ -222,6 +350,17 @@ export const TerminalApp: React.FC = () => {
       className="relative w-full h-[100dvh] overflow-hidden"
       style={{ backgroundColor: C.crust }}
     >
+      {/* Lluvia matrix a pantalla completa: cualquier tecla la disuelve */}
+      {matrixActive && (
+        <MatrixRain
+          onExit={() => {
+            setMatrixActive(false);
+            queueLines(['[  OK  ] Reality restored.', '']);
+            setTimeout(() => inputRef.current?.focus(), 50);
+          }}
+        />
+      )}
+
       {/* Píldora del dock cuando la ventana está minimizada */}
       {isMinimized && (
         <button
@@ -297,10 +436,10 @@ export const TerminalApp: React.FC = () => {
           {history.map((line, index) => (
             <div key={index} className="min-h-[1.25rem] whitespace-pre-wrap break-words">
               {typeof line === 'string' ? (
-                line.startsWith('$ ') ? (
+                line.startsWith('$ ') || line.startsWith('$G ') ? (
                   <span>
-                    <Prompt />
-                    <span style={{ color: C.text }}>{line.slice(2)}</span>
+                    <Prompt user={line.startsWith('$G ') ? 'guest' : 'mk'} />
+                    <span style={{ color: C.text }}>{line.slice(line.startsWith('$G ') ? 3 : 2)}</span>
                   </span>
                 ) : (
                   <span style={{ color: lineColor(line) }}>{line}</span>

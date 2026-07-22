@@ -141,17 +141,32 @@ export function listProjects(): string[] {
   return [`total ${PROJECT_FILES.length}`, ...rows];
 }
 
-/** Contenido de `cat <archivo>`: ficha + extracto de código. */
-export function catProject(filename: string, locale: Locale): string[] | null {
+/** Contenido de `cat <archivo>`: ficha (texto) + extracto de código (para CodeBlock). */
+export function catProject(
+  filename: string,
+  locale: Locale,
+): { meta: string[]; code: string[] } | null {
   const file = PROJECT_FILES.find((f) => f.filename === filename);
   if (!file) return null;
 
-  const lines = [
+  const meta = [
     `# ${file.filename}`,
     file.desc[locale] ?? file.desc.en,
     `Stack: ${file.stack}`,
   ];
-  if (file.url) lines.push(`URL: https://${file.url}`);
-  lines.push('', '```', ...file.code, '```');
-  return lines;
+  if (file.url) meta.push(`URL: https://${file.url}`);
+  return { meta, code: file.code };
+}
+
+/** Resuelve el destino de `open <nombre>`: por nombre de proyecto o archivo. */
+export function resolveOpenTarget(query: string): { name: string; url: string } | null {
+  const q = query.toLowerCase();
+  for (const f of PROJECT_FILES) {
+    if (!f.url) continue;
+    const stem = f.filename.replace(/\.[a-z]+$/, '');
+    if (q === f.filename || q === stem || stem.includes(q) || q.includes(stem.split('-')[0])) {
+      return { name: stem, url: `https://${f.url}` };
+    }
+  }
+  return null;
 }

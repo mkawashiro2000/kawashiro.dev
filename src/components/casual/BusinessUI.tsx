@@ -44,6 +44,7 @@ type Card = {
   onClick?: () => void;
   href?: string;
   logo?: string;
+  badge?: string; // etiqueta llamativa (ej. "live" en la tarjeta de la terminal)
 };
 
 export const BusinessUI: React.FC = () => {
@@ -79,6 +80,7 @@ export const BusinessUI: React.FC = () => {
       fg: beige,
       col: '15 / 27',
       onClick: handleTransition,
+      badge: t.cards.terminalPro.badge,
     },
     {
       category: t.cards.lubesync.category,
@@ -118,11 +120,22 @@ export const BusinessUI: React.FC = () => {
   const renderCard = (c: Card, i: number) => {
     const inner = (
       <>
-        <span
-          className="text-[13px] font-semibold uppercase tracking-[0.2em] opacity-80"
-          style={{ color: c.fg }}
-        >
-          {c.category}
+        <span className="flex items-center gap-3">
+          <span
+            className="text-[13px] font-semibold uppercase tracking-[0.2em] opacity-80"
+            style={{ color: c.fg }}
+          >
+            {c.category}
+          </span>
+          {c.badge && (
+            <span
+              className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.15em] rounded-full px-2.5 py-1"
+              style={{ color: c.bg, backgroundColor: c.fg }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: '#4ade80' }} />
+              {c.badge}
+            </span>
+          )}
         </span>
         <div className="mt-auto pt-10">
           {c.logo ? (

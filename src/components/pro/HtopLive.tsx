@@ -5,7 +5,8 @@ export const HtopLive: React.FC = () => {
     cpu: 0,
     ram_percent: 0,
     ram_mb: 0,
-    uptime: '0h 0m'
+    uptime: '0h 0m',
+    soc_temp: null as number | null,
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -29,6 +30,7 @@ export const HtopLive: React.FC = () => {
             ram_percent: data.ram_usage,
             ram_mb: data.ram_used_mb,
             uptime: data.uptime,
+            soc_temp: data.soc_temp ?? null,
           });
           // Con datos frescos, cualquier aviso de reconexión queda obsoleto
           setError(null);
@@ -73,7 +75,7 @@ export const HtopLive: React.FC = () => {
 
   return (
     <div className="py-2 border border-dashed border-[var(--color-text-muted)] p-4 my-2 bg-black bg-opacity-20 rounded">
-      <div className="text-[var(--color-text-accent)] font-bold mb-2">EDGE NODE HEALTH (BCM2712 - ARM64)</div>
+      <div className="text-[var(--color-text-accent)] font-bold mb-2">EDGE NODE HEALTH (BCM2711 - ARM64)</div>
       {error && <div className="text-red-500 font-bold mb-2">{error}</div>}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -93,6 +95,12 @@ export const HtopLive: React.FC = () => {
         </div>
       </div>
       <div className="mt-3 text-xs opacity-70">
+        {metrics.soc_temp !== null && (
+          <span className={metrics.soc_temp > 70 ? 'text-red-500' : metrics.soc_temp > 60 ? 'text-yellow-400' : ''}>
+            SoC: {metrics.soc_temp}°C
+          </span>
+        )}
+        {metrics.soc_temp !== null && ' · '}
         Uptime del microservicio: {metrics.uptime}
       </div>
     </div>
