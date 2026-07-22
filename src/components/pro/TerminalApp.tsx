@@ -4,7 +4,6 @@ import { getTranslation } from '../../i18n/translations';
 import { Trie } from '../../terminal/utils/trie';
 import { HtopLive } from './HtopLive';
 import { printResumeToThermal } from '../../terminal/utils/webusb';
-import { DgiiSignerMock } from './DgiiSignerMock';
 
 export const TerminalApp: React.FC = () => {
   const [input, setInput] = useState('');
@@ -74,7 +73,7 @@ export const TerminalApp: React.FC = () => {
   // Inicialización estricta del árbol Trie con todo el léxico permitido
   const commandTrie = useMemo(() => {
     const trie = new Trie();
-    ['help', 'clear', 'casual', 'about', 'neofetch', 'htop', 'print resume', 'cat dgii-xml-signer.md'].forEach(cmd => trie.insert(cmd));
+    ['help', 'clear', 'casual', 'about', 'neofetch', 'htop', 'print resume'].forEach(cmd => trie.insert(cmd));
     return trie;
   }, []);
 
@@ -169,16 +168,6 @@ export const TerminalApp: React.FC = () => {
         case 'htop':
           output.push(t.htopOpening);
           output.push(<HtopLive key={`htop-${Date.now()}`} />);
-          break;
-        case 'cat':
-          if (args[0] === 'dgii-xml-signer.md') {
-            output.push(t.catReading);
-            output.push(<DgiiSignerMock key={`dgii-${Date.now()}`} />);
-          } else if (args.length === 0) {
-            output.push(t.catMissingArg);
-          } else {
-            output.push(t.catNotFound(args.join(' ')));
-          }
           break;
         default:
           output.push(t.commandNotFound(baseCommand));
