@@ -3,15 +3,16 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Instalar dependencias del sistema requeridas para compilar psutil en arquitectura ARM64
-RUN apt-get update && \
-    apt-get install -y gcc python3-dev && \
-    rm -rf /var/lib/apt/lists/*
-
+# Sin toolchain de compilación: psutil 5.9.8 publica wheels manylinux aarch64,
+# así que la imagen final no necesita gcc (menos peso, menos superficie).
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+
+# Principio de mínimo privilegio: el servicio corre como usuario sin shell
+RUN useradd --system --no-create-home --shell /usr/sbin/nologin edgeapi
+USER edgeapi
 
 # Exponer el puerto del microservicio
 EXPOSE 8000

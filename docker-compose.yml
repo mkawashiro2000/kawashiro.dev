@@ -38,6 +38,13 @@ services:
     environment:
       # Zona horaria fijada para logs coherentes en República Dominicana
       - TZ=America/Santo_Domingo
+    # Autocuración: si /health deja de responder, Docker reinicia el servicio
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
     networks:
       - zero_trust_net
     logging:

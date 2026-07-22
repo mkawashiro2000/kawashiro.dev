@@ -1,9 +1,16 @@
 ---
 interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description = 'Full Stack (Back-end/Data) Developer. Data, analytics and web apps, served from a self-hosted Raspberry Pi in Constanza, Dominican Republic.',
+} = Astro.props;
+
+const SITE_URL = 'https://kawashiro.dev';
+const canonical = new URL(Astro.url.pathname, SITE_URL).href;
 import '../styles/global.css';
 ---
 
@@ -12,9 +19,27 @@ import '../styles/global.css';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
+    {/* SEO + social link previews (WhatsApp, X, LinkedIn...) */}
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mitsunori Kawashiro" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${SITE_URL}/og-image.png`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="1200" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
 
     {/* Tipografía: Fredoch (display redondeada) + Hanken Grotesk (cuerpo) */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />

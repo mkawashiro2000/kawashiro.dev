@@ -1,6 +1,8 @@
 import asyncio
 import json
+import platform
 import re
+import urllib.request
 import psutil
 import time
 from fastapi import FastAPI, Request
@@ -22,6 +24,36 @@ app.add_middleware(
 
 # Almacenar el tiempo de arranque del proceso
 BOOT_TIME = time.time()
+
+
+def soc_temperature() -> float | None:
+    """Temperatura del SoC en °C leída del árbol térmico del kernel (host compartido)."""
+    try:
+        with open("/sys/class/thermal/thermal_zone0/temp") as f:
+            return round(int(f.read().strip()) / 1000, 1)
+    except (OSError, ValueError):
+        return None
+
+
+def _format_duration(seconds: float) -> str:
+    days, remainder = divmod(int(seconds), 86400)
+    hours, remainder = divmod(remainder, 3600)
+    minutes, _ = divmod(remainder, 60)
+    if days:
+        return f"{days}d {hours}h {minutes}m"
+    return f"{hours}h {minutes}m"
+
+
+def _pi_model() -> str:
+    """Modelo del hardware desde /proc/cpuinfo (visible en el contenedor: kernel compartido)."""
+    try:
+        with open("/proc/cpuinfo") as f:
+            for line in f:
+                if line.startswith("Model"):
+                    return line.split(":", 1)[1].strip()
+    except OSError:
+        pass
+    return "ARM64 host"
 
 async def hardware_telemetry_generator(request: Request):
     """
@@ -46,6 +78,7 @@ async def hardware_telemetry_generator(request: Request):
                 "ram_usage": psutil.virtual_memory().percent,
                 "ram_used_mb": round(psutil.virtual_memory().used / (1024 * 1024)),
                 "uptime": f"{int(hours)}h {int(minutes)}m",
+                "soc_temp": soc_temperature(),
             }),
         }
         
@@ -59,6 +92,63 @@ async def stream_telemetry(request: Request):
 @app.get("/health")
 async def health_check():
     return {"status": "operational", "layer": "edge-api"}
+
+
+@app.get("/api/v1/sysinfo")
+async def system_info():
+    """Snapshot estático del host real para el comando `neofetch` de la terminal."""
+    mem = psutil.virtual_memory()
+    return {
+        "model": _pi_model(),
+        "kernel": f"Linux {platform.release()} {platform.machine()}",
+        "host_uptime": _format_duration(time.time() - psutil.boot_time()),
+        "service_uptime": _format_duration(time.time() - BOOT_TIME),
+        "mem_used_mb": round(mem.used / (1024 * 1024)),
+        "mem_total_mb": round(mem.total / (1024 * 1024)),
+        "cpu_count": psutil.cpu_count(),
+        "soc_temp": soc_temperature(),
+        "load_avg": round(psutil.getloadavg()[0], 2),
+    }
+
+
+# --- Clima real de Constanza (Open-Meteo, sin API key) --------------------
+CONSTANZA_LAT, CONSTANZA_LON = 18.909, -70.617
+_weather_cache: dict = {"ts": 0.0, "data": None}
+WEATHER_TTL = 600  # 10 minutos: Open-Meteo agradece no ser martillado
+
+
+def _fetch_weather() -> dict:
+    url = (
+        "https://api.open-meteo.com/v1/forecast"
+        f"?latitude={CONSTANZA_LAT}&longitude={CONSTANZA_LON}"
+        "&current=temperature_2m,relative_humidity_2m,apparent_temperature,"
+        "weather_code,wind_speed_10m&timezone=America%2FSanto_Domingo"
+    )
+    with urllib.request.urlopen(url, timeout=8) as resp:
+        return json.loads(resp.read())
+
+
+@app.get("/api/v1/weather")
+async def weather():
+    """Clima actual en Constanza para el comando `weather`, con caché de 10 min."""
+    now = time.time()
+    if _weather_cache["data"] is None or now - _weather_cache["ts"] > WEATHER_TTL:
+        try:
+            raw = await asyncio.to_thread(_fetch_weather)
+            cur = raw["current"]
+            _weather_cache["data"] = {
+                "temp_c": cur["temperature_2m"],
+                "feels_like_c": cur["apparent_temperature"],
+                "humidity": cur["relative_humidity_2m"],
+                "wind_kmh": cur["wind_speed_10m"],
+                "weather_code": cur["weather_code"],
+                "location": "Constanza, Dominican Republic",
+            }
+            _weather_cache["ts"] = now
+        except Exception:
+            if _weather_cache["data"] is None:
+                return {"error": "weather-unavailable"}
+    return _weather_cache["data"]
 
 
 class SentimentRequest(BaseModel):
