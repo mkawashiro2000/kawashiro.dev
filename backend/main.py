@@ -1,4 +1,5 @@
 import asyncio
+import json
 import re
 import psutil
 import time
@@ -38,12 +39,14 @@ async def hardware_telemetry_generator(request: Request):
         
         yield {
             "event": "telemetry",
-            "data": {
+            # json.dumps es imprescindible: sse-starlette haría str() del dict,
+            # produciendo comillas simples que JSON.parse rechaza en el navegador.
+            "data": json.dumps({
                 "cpu_usage": psutil.cpu_percent(interval=None),
                 "ram_usage": psutil.virtual_memory().percent,
                 "ram_used_mb": round(psutil.virtual_memory().used / (1024 * 1024)),
                 "uptime": f"{int(hours)}h {int(minutes)}m",
-            }
+            }),
         }
         
         # Frecuencia de actualización: 1.5 segundos para equilibrar fluidez visual y carga térmica
