@@ -241,7 +241,7 @@ export function openPrintableResume(locale: Locale): boolean {
   <h1>MITSUNORI KAWASHIRO</h1>
   <div class="role">${c.role}</div>
   <div class="loc">${c.location}</div>
-  <div class="contact-line">kawashiro.dev &nbsp;|&nbsp; contact@kawashiro.dev &nbsp;|&nbsp; github.com/kawashiro-dev</div>
+  <div class="contact-line">kawashiro.dev &nbsp;|&nbsp; mkawashiro01@gmail.com &nbsp;|&nbsp; +1 (829) 958-9614 &nbsp;|&nbsp; github.com/mkawashiro2000</div>
   <hr />
   <h2>${c.profileLabel}</h2>
   <p>${c.profile}</p>

@@ -16,9 +16,9 @@ const GithubMark = () => (
     <path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.39 1.24-3.23-.13-.3-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.92 1.23 3.23 0 4.62-2.81 5.64-5.49 5.94.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 24 12.5C24 5.87 18.63.5 12 .5Z" />
   </svg>
 );
-const XMark = () => (
+const InstagramMark = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5" aria-hidden="true">
-    <path d="M18.9 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.65h2.039L6.486 3.24H4.298Z" />
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069Zm0-2.163C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0Zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324ZM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881Z" />
   </svg>
 );
 const WhatsappMark = () => (
@@ -109,10 +109,10 @@ export const BusinessUI: React.FC = () => {
   ];
 
   const socials = [
-    { label: 'GitHub', icon: <GithubMark />, href: 'https://github.com/kawashiro-dev' },
-    { label: 'X (Twitter)', icon: <XMark />, href: 'https://x.com/kawashiro_dev' },
-    { label: 'WhatsApp', icon: <WhatsappMark />, href: 'https://wa.me/14848347133' },
-    { label: 'Email', icon: <MailMark />, href: 'mailto:contact@kawashiro.dev' },
+    { label: 'GitHub', icon: <GithubMark />, href: 'https://github.com/mkawashiro2000' },
+    { label: 'Instagram', icon: <InstagramMark />, href: 'https://www.instagram.com/kawashiro.dev' },
+    { label: 'WhatsApp', icon: <WhatsappMark />, href: 'https://wa.me/18299589614' },
+    { label: 'Email', icon: <MailMark />, href: 'mailto:mkawashiro01@gmail.com' },
   ];
 
   const renderCard = (c: Card, i: number) => {
@@ -177,7 +177,7 @@ export const BusinessUI: React.FC = () => {
         <div className="flex items-center gap-4 sm:gap-6 text-sm font-medium">
           <a href="/proyectos" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.projects}</a>
           <a href="/futuros-proyectos" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.futureProjects}</a>
-          <a href="mailto:contact@kawashiro.dev" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.contact}</a>
+          <a href="mailto:mkawashiro01@gmail.com" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.contact}</a>
           <LanguageSwitcher />
           <button
             onClick={handleTransition}
@@ -264,7 +264,7 @@ export const BusinessUI: React.FC = () => {
       {/* MEGA CTA */}
       <section className="max-w-[1300px] mx-auto px-6 sm:px-8 py-28 sm:py-40 text-center">
         <a
-          href="mailto:contact@kawashiro.dev"
+          href="mailto:mkawashiro01@gmail.com"
           className="group inline-flex font-display font-semibold text-[clamp(3rem,12vw,11rem)] leading-none tracking-tight transition-transform hover:scale-[1.02]"
           style={{ color: green }}
         >

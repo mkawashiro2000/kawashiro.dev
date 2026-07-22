@@ -163,7 +163,7 @@ export const translations = {
         'Location: Constanza, Dom. Rep.',
         'Core: Python, TypeScript, Node.js, Astro, PostgreSQL.',
         'Data Science: NumPy, Pandas, Scikit-learn, TensorFlow.',
-        'Contact: contact@kawashiro.dev',
+        'Contact: mkawashiro01@gmail.com',
       ],
       neofetchLines: [
         'mk@kawashiro.dev',
@@ -348,7 +348,7 @@ export const translations = {
         'Ubicación: Constanza, Rep. Dom.',
         'Core: Python, TypeScript, Node.js, Astro, PostgreSQL.',
         'Data Science: NumPy, Pandas, Scikit-learn, TensorFlow.',
-        'Contacto: contact@kawashiro.dev',
+        'Contacto: mkawashiro01@gmail.com',
       ],
       neofetchLines: [
         'mk@kawashiro.dev',
@@ -533,7 +533,7 @@ export const translations = {
         '所在地: ドミニカ共和国・コンスタンサ',
         'コア技術: Python, TypeScript, Node.js, Astro, PostgreSQL.',
         'データサイエンス: NumPy, Pandas, Scikit-learn, TensorFlow.',
-        '連絡先: contact@kawashiro.dev',
+        '連絡先: mkawashiro01@gmail.com',
       ],
       neofetchLines: [
         'mk@kawashiro.dev',
