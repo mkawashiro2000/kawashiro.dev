@@ -1,5 +1,5 @@
 # Base minimalista para mitigar superficie de ataque y peso
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 WORKDIR /app
 
