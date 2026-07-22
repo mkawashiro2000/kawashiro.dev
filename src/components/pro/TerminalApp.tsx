@@ -4,6 +4,7 @@ import { getTranslation } from '../../i18n/translations';
 import { Trie } from '../../terminal/utils/trie';
 import { HtopLive } from './HtopLive';
 import { printResumeToThermal } from '../../terminal/utils/webusb';
+import { openPrintableResume } from '../../terminal/utils/resume';
 
 export const TerminalApp: React.FC = () => {
   const [input, setInput] = useState('');
@@ -129,7 +130,8 @@ export const TerminalApp: React.FC = () => {
 
     let output: (string | React.ReactNode)[] = [`$ ${commandLine}`];
 
-    if (fullCommand === 'print resume') {
+    if (fullCommand === 'print resume usb') {
+       // Ruta de hardware: impresora térmica ESC/POS vía WebUSB (easter egg)
        output.push(t.printInit, t.printWaiting);
 
        // Sincronizamos el historial actual antes de despachar la promesa de hardware
@@ -141,6 +143,11 @@ export const TerminalApp: React.FC = () => {
          setHistory(prev => [...prev, msg]);
        });
        return;
+    } else if (fullCommand === 'print resume') {
+       // Ruta universal: CV renderizado + diálogo de impresión del navegador
+       output.push(t.printOpening);
+       const opened = openPrintableResume(locale);
+       output.push(opened ? t.printDone : t.printBlocked);
     } else {
       switch (baseCommand) {
         case 'help':
