@@ -47,16 +47,16 @@ services:
         max-file: "3"
 
   # 3. El Agente Perimetral de Cloudflare (Zero Trust).
-  #    DESCOMENTAR al recuperar el dominio y generar un nuevo TUNNEL_TOKEN.
-  #    Con el proxy /api de nginx, el túnel solo necesita apuntar a frontend:80.
-  # cloudflared:
-  #   image: cloudflare/cloudflared:latest
-  #   container_name: kawashiro_zero_trust
-  #   restart: unless-stopped
-  #   command: tunnel run
-  #   environment:
-  #     - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
-  #   depends_on:
-  #     - frontend
-  #   networks:
-  #     - zero_trust_net
+  #    Túnel "kawashiroserver-pi": kawashiro.dev -> frontend:80 (proxy /api incluido).
+  #    El token vive en .env (CLOUDFLARE_TUNNEL_TOKEN), fuera del repo.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: kawashiro_zero_trust
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - frontend
+    networks:
+      - zero_trust_net
