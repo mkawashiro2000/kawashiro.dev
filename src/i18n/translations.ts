@@ -37,6 +37,9 @@ export const translations = {
         category: 'FinTech · Management',
         desc: 'Advanced loan and collections management system designed specifically to modernize and shield the financial operations of micro-lending businesses, offering a centralized environment that automates client portfolio handling, flat-rate amortization schedules, rigorous payment tracking, cash-register closes, and dynamic receipt generation in HTML and PDF formats. To guarantee maximum privacy, security, and autonomy for the lender, the solution is deployed through a direct local installation on the buyer\'s machines of choice — enabling up to two computers per license — and includes an optional automated backup scheme to an external server for $200 pesos per month to protect the data against any technical eventuality. The service model is also structured to adapt to business growth, granting an initial package of five free post-installation modifications to ensure a perfect fit with the workflow, while keeping the flexibility to perform in-depth maintenance or develop new specialized features under independent quotes — giving the client a robust, scalable tool with total control over their daily operation.',
       },
+      perfectFeed: {
+        category: 'Automation · RSS',
+      },
       terminalPro: {
         category: 'System · Interactive',
         title: 'Terminal PRO',
@@ -76,6 +79,7 @@ export const translations = {
       title: 'Projects',
       subtitle: 'All projects, from the most recent to the oldest.',
       mostRecent: 'Most recent',
+      sourceCode: 'Open source on GitHub',
       items: {
         cajalocal: {
           name: 'CajaLocal',
@@ -84,6 +88,10 @@ export const translations = {
         kampit: {
           name: 'Kampit',
           desc: 'Camping gear rental platform with real-time availability and WhatsApp checkout. Case study.',
+        },
+        perfectFeed: {
+          name: 'Perfect Feed',
+          desc: 'Daily news digest that pulls programming, Formula 1, data science and economics feeds, translates and summarizes them into Spanish with a local AI model, and publishes them alongside the day\'s USD and EUR rates in the Dominican Republic. Static site with its own RSS feed — open source.',
         },
         agrobalance: {
           name: 'AgroBalance',
@@ -269,6 +277,9 @@ export const translations = {
         category: 'FinTech · Gestión',
         desc: 'Avanzado sistema de gestión de préstamos y cobros diseñado específicamente para modernizar y blindar las operaciones financieras de los negocios de microcréditos, ofreciendo un entorno centralizado que automatiza el manejo de la cartera de clientes, la creación de tablas de amortización a tasa fija, el riguroso seguimiento de pagos, los cierres de caja y la generación dinámica de recibos en formatos HTML y PDF. Para garantizar la máxima privacidad, seguridad y autonomía del prestamista, esta solución se despliega mediante una instalación local directa en los equipos de preferencia del comprador —permitiendo la habilitación de un máximo de dos ordenadores por licencia adquirida—, e incluye la opción de activar un esquema de respaldos automatizados hacia un servidor externo por un costo de $200 pesos mensuales para proteger la información ante cualquier eventualidad técnica. Asimismo, el modelo de servicio está estructurado para adaptarse al crecimiento del negocio, otorgando un paquete inicial de cinco modificaciones gratuitas posteriores a la instalación para asegurar un acople perfecto a su flujo de trabajo, manteniendo la flexibilidad de ejecutar mantenimientos a profundidad o desarrollar nuevas funcionalidades especializadas bajo cotizaciones independientes, otorgándole así al cliente una herramienta robusta, escalable y con control total sobre su operación diaria.',
       },
+      perfectFeed: {
+        category: 'Automatización · RSS',
+      },
       terminalPro: {
         category: 'Sistema · Interactivo',
         title: 'Terminal PRO',
@@ -308,6 +319,7 @@ export const translations = {
       title: 'Proyectos',
       subtitle: 'Todos los proyectos, del más reciente al más antiguo.',
       mostRecent: 'Más reciente',
+      sourceCode: 'Código abierto en GitHub',
       items: {
         cajalocal: {
           name: 'CajaLocal',
@@ -316,6 +328,10 @@ export const translations = {
         kampit: {
           name: 'Kampit',
           desc: 'Plataforma de renta de equipo de campamento con disponibilidad en tiempo real y confirmación por WhatsApp. Case study.',
+        },
+        perfectFeed: {
+          name: 'Perfect Feed',
+          desc: 'Boletín diario de noticias que recoge feeds de programación, Fórmula 1, data science y economía, los traduce y resume al español con un modelo de IA local, y los publica junto a las tasas del dólar y el euro en República Dominicana. Sitio estático con su propio feed RSS — código abierto.',
         },
         agrobalance: {
           name: 'AgroBalance',
@@ -501,6 +517,9 @@ export const translations = {
         category: 'フィンテック・管理',
         desc: 'マイクロレンディング事業の財務オペレーションを近代化し保護するために特別に設計された、高度な貸付・回収管理システム。顧客ポートフォリオの管理、固定金利の償還スケジュール作成、厳密な支払い追跡、レジ締め、HTML/PDF形式の領収書の動的生成を一元的な環境で自動化します。貸し手のプライバシー、セキュリティ、自律性を最大限保証するため、購入者が選んだ機器への直接ローカルインストールで展開され(1ライセンスにつき最大2台まで有効化可能)、技術的な不測の事態から情報を守るための外部サーバーへの自動バックアップ(月額$200ペソ)をオプションで利用できます。さらに、サービスモデルは事業の成長に適応できるよう設計されており、ワークフローへの完璧な適合を保証するインストール後5回の無料修正パッケージを提供。詳細なメンテナンスや新たな専門機能の開発は個別見積もりで柔軟に対応し、堅牢でスケーラブル、日々のオペレーションを完全に掌握できるツールをクライアントに提供します。',
       },
+      perfectFeed: {
+        category: '自動化・RSS',
+      },
       terminalPro: {
         category: 'システム・インタラクティブ',
         title: 'ターミナル PRO',
@@ -540,6 +559,7 @@ export const translations = {
       title: 'プロジェクト',
       subtitle: '最新から順に並んだすべてのプロジェクト。',
       mostRecent: '最新',
+      sourceCode: 'GitHubでオープンソース',
       items: {
         cajalocal: {
           name: 'CajaLocal',
@@ -548,6 +568,10 @@ export const translations = {
         kampit: {
           name: 'Kampit',
           desc: 'リアルタイム在庫とWhatsApp確認を備えたキャンプ用品レンタルプラットフォーム。ケーススタディ。',
+        },
+        perfectFeed: {
+          name: 'Perfect Feed',
+          desc: 'プログラミング、F1、データサイエンス、経済のフィードを収集し、ローカルAIモデルでスペイン語に翻訳・要約して、ドミニカ共和国のドル・ユーロ相場とともに毎日公開するニュースダイジェスト。独自のRSSフィードを持つ静的サイト — オープンソース。',
         },
         agrobalance: {
           name: 'AgroBalance',
