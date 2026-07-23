@@ -1,0 +1,263 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { LoanSimulator } from '../components/cajalocal/LoanSimulator';
+
+// Página demo de CajaLocal: showcase visual de los módulos + simulador funcional.
+// Textos estáticos trilingües vía data-i18n (i18n.js); el simulador (isla React)
+// resuelve su propio idioma con el store.
+const NAVY = '#17385A';
+const BLUE = '#2494E2';
+
+const i18nData = {
+  en: {
+    back: '← Projects',
+    badge: 'Live product · installed on client PCs',
+    tagline: 'Loan & collections management system for micro-lending businesses.',
+    intro: 'A complete on-premise platform: portfolios, contracts, daily collections, cash register, asset financing with notarial guarantees, and WhatsApp automation. Below is a visual tour — and a fully working loan simulator.',
+    statsTitle: 'At a glance',
+    stats: [
+      ['14', 'modules'],
+      ['2%', 'daily late-fee, automated'],
+      ['Multi', 'company (single install)'],
+      ['1:30 AM', 'nightly encrypted backup'],
+    ],
+    modulesTitle: 'What you can do',
+    modules: [
+      ['📊', 'Dashboard', 'Portfolio KPIs: active capital, expected vs collected, delinquency, and cash on hand at a glance.'],
+      ['💰', 'Collections', "The day's due installments, one-tap payment registration, serialized so no payment ever exceeds the debt."],
+      ['📄', 'Contracts', 'Loan issuance with auto-generated amortization schedule and printable HTML/PDF contracts & receipts.'],
+      ['🏦', 'Cash register', 'Daily open/close with reconciliation; every movement linked to its contract or financing.'],
+      ['🚗', 'Asset financing', 'Guaranteed financing under DR Law 483: notarial promissory note, conditional sale, voluntary surrender.'],
+      ['⚙️', 'Multi-company setup', 'Company, lender and notary identity, granular per-user permissions, and WhatsApp QR pairing.'],
+    ],
+    simTitle: 'Try the loan simulator',
+    archTitle: 'Under the hood',
+    archIntro: 'Same architecture that runs on each client machine, fully containerized:',
+    arch: [
+      'React 19 SPA served by Nginx with a reverse proxy',
+      'Django 5 + DRF + JWT with full audit trail',
+      'PostgreSQL 16 · Redis 7 · Celery (nightly late-fees, reminders, CEO alerts)',
+      'Evolution API for WhatsApp · WeasyPrint for legal PDFs',
+    ],
+    techTitle: 'Technical highlights',
+    tech: [
+      'Nightly incremental late-fee audit via Celery Beat (2% daily on overdue installments).',
+      'Serialized payments with select_for_update — no double-spend, no payment exceeds the debt.',
+      'Versioned SQL schema (managed=False) applied idempotently on each client update.',
+      'Granular per-module and per-action permissions, mirrored between backend and frontend.',
+    ],
+    productTitle: 'Product model',
+    product: [
+      'Direct on-premise install on the buyer’s machines — up to two PCs per license.',
+      'Optional encrypted off-site backups for $200 pesos/month.',
+      'Five free post-install modifications; deeper work under independent quotes.',
+    ],
+    ctaTitle: 'Want a live walkthrough?',
+    ctaBtn: 'Message on WhatsApp',
+  },
+  es: {
+    back: '← Proyectos',
+    badge: 'Producto en producción · instalado en las PCs del cliente',
+    tagline: 'Sistema de gestión de préstamos y cobros para negocios de microcréditos.',
+    intro: 'Una plataforma completa on-premise: cartera, contratos, cobros diarios, caja, financiamiento de activos con garantía notarial y automatización por WhatsApp. Abajo un recorrido visual — y un simulador de préstamos totalmente funcional.',
+    statsTitle: 'De un vistazo',
+    stats: [
+      ['14', 'módulos'],
+      ['2%', 'mora diaria, automática'],
+      ['Multi', 'empresa (una sola instalación)'],
+      ['1:30 AM', 'respaldo cifrado nocturno'],
+    ],
+    modulesTitle: 'Lo que puedes hacer',
+    modules: [
+      ['📊', 'Dashboard', 'KPIs de cartera: capital activo, esperado vs cobrado, morosidad y efectivo en caja de un vistazo.'],
+      ['💰', 'Cobros', 'Las cuotas del día, registro de pago en un toque, serializado para que ningún pago exceda la deuda.'],
+      ['📄', 'Contratos', 'Emisión de préstamos con cronograma de amortización automático y contratos y recibos HTML/PDF imprimibles.'],
+      ['🏦', 'Caja', 'Apertura/cierre diario con arqueo; cada movimiento ligado a su contrato o financiamiento.'],
+      ['🚗', 'Financiamiento', 'Financiamiento con garantía Ley 483: pagaré notarial, venta condicional, entrega voluntaria.'],
+      ['⚙️', 'Config. multi-empresa', 'Identidad de empresa, prestamista y notario, permisos granulares por usuario y vinculación de WhatsApp por QR.'],
+    ],
+    simTitle: 'Prueba el simulador de préstamos',
+    archTitle: 'Cómo funciona por dentro',
+    archIntro: 'La misma arquitectura que corre en cada máquina cliente, totalmente contenerizada:',
+    arch: [
+      'SPA React 19 servida por Nginx con proxy inverso',
+      'Django 5 + DRF + JWT con auditoría completa',
+      'PostgreSQL 16 · Redis 7 · Celery (mora nocturna, recordatorios, alertas CEO)',
+      'Evolution API para WhatsApp · WeasyPrint para PDFs legales',
+    ],
+    techTitle: 'Decisiones técnicas destacadas',
+    tech: [
+      'Auditoría de mora incremental nocturna con Celery Beat (2% diario sobre cuotas vencidas).',
+      'Pagos serializados con select_for_update — sin doble cobro, ningún pago excede la deuda.',
+      'Esquema SQL versionado (managed=False) aplicado de forma idempotente en cada actualización del cliente.',
+      'Permisos granulares por módulo y por acción, espejados entre backend y frontend.',
+    ],
+    productTitle: 'Modelo de producto',
+    product: [
+      'Instalación on-premise directa en los equipos del comprador — hasta dos PCs por licencia.',
+      'Respaldos cifrados externos opcionales por $200 pesos/mes.',
+      'Cinco modificaciones gratuitas post-instalación; trabajos mayores bajo cotización independiente.',
+    ],
+    ctaTitle: '¿Quieres una demostración en vivo?',
+    ctaBtn: 'Escribir por WhatsApp',
+  },
+  ja: {
+    back: '← プロジェクト',
+    badge: '本番稼働中の製品 · クライアントPCにインストール',
+    tagline: 'マイクロレンディング事業者向けの貸付・回収管理システム。',
+    intro: '完全なオンプレミスプラットフォーム:ポートフォリオ、契約、日次回収、レジ、公正証書担保付き資産融資、WhatsApp自動化。以下はビジュアルツアー — そして完全に動作するローンシミュレーターです。',
+    statsTitle: '概要',
+    stats: [
+      ['14', 'モジュール'],
+      ['2%', '日次延滞金、自動'],
+      ['マルチ', '企業(単一インストール)'],
+      ['午前1:30', '毎晩の暗号化バックアップ'],
+    ],
+    modulesTitle: 'できること',
+    modules: [
+      ['📊', 'ダッシュボード', 'ポートフォリオKPI:稼働資本、予定対回収、延滞、手元現金を一目で。'],
+      ['💰', '回収', 'その日の支払い分をワンタップで登録。シリアライズされ、支払いが債務を超えることはありません。'],
+      ['📄', '契約', '償還スケジュールを自動生成するローン発行と、印刷可能なHTML/PDF契約書・領収書。'],
+      ['🏦', 'レジ', '日次の開閉と照合。すべての動きは契約または融資に紐付け。'],
+      ['🚗', '資産融資', 'ドミニカ共和国法483号に基づく担保付融資:公正証書約束手形、条件付売買、任意引渡し。'],
+      ['⚙️', 'マルチ企業設定', '企業・貸し手・公証人の identity、ユーザーごとの詳細な権限、WhatsApp QRペアリング。'],
+    ],
+    simTitle: 'ローンシミュレーターを試す',
+    archTitle: '内部の仕組み',
+    archIntro: '各クライアントマシンで動く、完全にコンテナ化された同じアーキテクチャ:',
+    arch: [
+      'Nginx がリバースプロキシで配信する React 19 SPA',
+      '完全な監査証跡を持つ Django 5 + DRF + JWT',
+      'PostgreSQL 16 · Redis 7 · Celery(夜間延滞金、リマインダー、CEOアラート)',
+      'WhatsApp 用 Evolution API · 法的 PDF 用 WeasyPrint',
+    ],
+    techTitle: '技術的ハイライト',
+    tech: [
+      'Celery Beat による夜間の増分延滞金監査(延滞分に日次2%)。',
+      'select_for_update によるシリアライズされた支払い — 二重支払いなし、債務を超える支払いなし。',
+      'バージョン管理された SQL スキーマ(managed=False)を各クライアント更新時に冪等に適用。',
+      'モジュール・アクションごとの詳細な権限を、バックエンドとフロントエンドで同期。',
+    ],
+    productTitle: '製品モデル',
+    product: [
+      '購入者のマシンへの直接オンプレミスインストール — 1ライセンスにつき最大2台。',
+      'オプションの外部暗号化バックアップ、月額$200ペソ。',
+      'インストール後5回の無料修正。より深い作業は個別見積もり。',
+    ],
+    ctaTitle: 'ライブデモをご希望ですか?',
+    ctaBtn: 'WhatsAppで連絡',
+  },
+};
+
+const t = i18nData.en;
+---
+
+<Layout
+  title="CajaLocal — Demo | Mitsunori Kawashiro"
+  description="Interactive demo of CajaLocal: loan & collections management for micro-lending. Visual module tour and a fully working loan simulator."
+>
+  <script type="application/json" id="i18n-data" set:html={JSON.stringify(i18nData)} />
+
+  <main class="min-h-screen w-full" style="color: var(--color-text-main);">
+    <div class="max-w-4xl mx-auto px-6 sm:px-8 py-12">
+      <div class="flex items-center justify-between mb-10">
+        <a href="/proyectos" data-i18n="back" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">{t.back}</a>
+        <div class="lang-switcher">
+          <button type="button" data-lang-btn="en" class="lang-pill">EN</button>
+          <button type="button" data-lang-btn="es" class="lang-pill">ES</button>
+          <button type="button" data-lang-btn="ja" class="lang-pill">JA</button>
+        </div>
+      </div>
+
+      {/* HERO */}
+      <span
+        data-i18n="badge"
+        class="inline-flex items-center gap-2 text-[0.72rem] font-bold uppercase tracking-wider rounded-full px-3 py-1.5"
+        style={`background: ${BLUE}1a; color: ${BLUE};`}
+      >
+        {t.badge}
+      </span>
+      <img src="/img/proyectos/cajalocal.webp" alt="CajaLocal" class="h-24 sm:h-28 w-auto object-contain object-left mt-6" />
+      <p data-i18n="tagline" class="mt-6 text-2xl sm:text-3xl font-display font-semibold max-w-2xl leading-tight">{t.tagline}</p>
+      <p data-i18n="intro" class="mt-4 text-lg opacity-75 max-w-3xl leading-relaxed">{t.intro}</p>
+
+      {/* STATS */}
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12">
+        {t.stats.map((s, i) => (
+          <div class="rounded-2xl p-5" style="background: var(--color-bg-secondary); border: 1px solid color-mix(in srgb, var(--color-text-muted) 18%, transparent);">
+            <div class="text-3xl font-display font-bold" style={`color: ${BLUE}`} data-i18n={`stats.${i}.0`}>{s[0]}</div>
+            <div class="text-sm opacity-70 mt-1" data-i18n={`stats.${i}.1`}>{s[1]}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* MÓDULOS */}
+      <h2 data-i18n="modulesTitle" class="font-display text-3xl font-semibold mt-16 mb-6">{t.modulesTitle}</h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        {t.modules.map((m, i) => (
+          <div class="rounded-2xl p-6 transition-transform hover:-translate-y-1" style="background: var(--color-bg-secondary); border: 1px solid color-mix(in srgb, var(--color-text-muted) 18%, transparent);">
+            <div class="text-3xl mb-3">{m[0]}</div>
+            <h3 class="font-display text-xl font-semibold mb-1.5" data-i18n={`modules.${i}.1`}>{m[1]}</h3>
+            <p class="text-sm opacity-75 leading-relaxed" data-i18n={`modules.${i}.2`}>{m[2]}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* SIMULADOR (isla React funcional) */}
+      <div class="mt-16 scroll-mt-8" id="simulador">
+        <LoanSimulator client:load />
+      </div>
+
+      {/* ARQUITECTURA */}
+      <h2 data-i18n="archTitle" class="font-display text-3xl font-semibold mt-16 mb-3">{t.archTitle}</h2>
+      <p data-i18n="archIntro" class="opacity-75 mb-5">{t.archIntro}</p>
+      <ul class="flex flex-col gap-2.5">
+        {t.arch.map((a, i) => (
+          <li class="flex gap-3 items-start">
+            <span class="shrink-0 mt-2 w-1.5 h-1.5 rounded-full" style={`background: ${BLUE}`}></span>
+            <span class="opacity-85 font-mono text-sm" data-i18n={`arch.${i}`}>{a}</span>
+          </li>
+        ))}
+      </ul>
+
+      {/* HIGHLIGHTS TÉCNICOS */}
+      <h2 data-i18n="techTitle" class="font-display text-3xl font-semibold mt-14 mb-5">{t.techTitle}</h2>
+      <ul class="flex flex-col gap-3">
+        {t.tech.map((x, i) => (
+          <li class="flex gap-3 items-start">
+            <span class="shrink-0 mt-1.5 w-2 h-2 rounded-full" style="background: var(--color-green500)"></span>
+            <span class="opacity-85" data-i18n={`tech.${i}`}>{x}</span>
+          </li>
+        ))}
+      </ul>
+
+      {/* MODELO DE PRODUCTO */}
+      <h2 data-i18n="productTitle" class="font-display text-3xl font-semibold mt-14 mb-5">{t.productTitle}</h2>
+      <ul class="flex flex-col gap-3">
+        {t.product.map((x, i) => (
+          <li class="flex gap-3 items-start">
+            <span class="shrink-0 mt-1.5 w-2 h-2 rounded-full" style="background: var(--color-green500)"></span>
+            <span class="opacity-85" data-i18n={`product.${i}`}>{x}</span>
+          </li>
+        ))}
+      </ul>
+
+      {/* CTA */}
+      <div class="mt-16 rounded-3xl p-8 sm:p-10 text-center" style={`background: ${NAVY};`}>
+        <h2 data-i18n="ctaTitle" class="font-display text-2xl sm:text-3xl font-semibold" style="color: #ffffff;">{t.ctaTitle}</h2>
+        <a
+          href="https://wa.me/18299589614"
+          target="_blank"
+          rel="noreferrer"
+          data-i18n="ctaBtn"
+          class="inline-block mt-5 px-7 py-3 rounded-full font-semibold transition-transform hover:scale-105"
+          style="background: #25D366; color: #0a3d1f;"
+        >
+          {t.ctaBtn}
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/i18n.js" defer></script>
+</Layout>

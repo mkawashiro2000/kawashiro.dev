@@ -108,6 +108,7 @@ export const BusinessUI: React.FC = () => {
       bg: 'var(--color-lilac)',
       fg: darkGreen,
       col: '15 / 27',
+      href: '/cajalocal',
       logo: '/img/proyectos/cajalocal.webp',
     },
     {
