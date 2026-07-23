@@ -101,9 +101,9 @@ export const COPY: Record<Locale, ResumeCopy> = {
         role: 'Lead Developer',
         url: 'agrobalancerd.com',
         bullets: [
-          'Arquitecturó y desarrolló un sistema integral de gestión agrotecnológica y financiera con frontend en React y backend en Python, diseñado para profesionalizar la producción agrícola.',
-          'Diseñó esquemas de bases de datos complejos que separan las métricas de parcelas de los datos de cultivo por temporada, habilitando un modelo de precios multinivel.',
-          'Implementó despliegues seguros y operados localmente que dan al productor control milimétrico y en tiempo real sobre ciclos de cultivo, contabilidad de costos y distribución de dividendos, traduciendo la operación de campo en métricas financieras accionables.',
+          'Arquitectura y desarrollo de un sistema integral de gestión agrotecnológica y financiera con frontend en React y backend en Python, diseñado para profesionalizar la producción agrícola.',
+          'Diseño de esquemas de bases de datos complejos que separan las métricas de parcelas de los datos de cultivo por temporada, habilitando un modelo de precios multinivel.',
+          'Implementación de despliegues seguros y operados localmente que dan al productor control milimétrico y en tiempo real sobre ciclos de cultivo, contabilidad de costos y distribución de dividendos, traduciendo la operación de campo en métricas financieras accionables.',
         ],
       },
       {
@@ -111,26 +111,26 @@ export const COPY: Record<Locale, ResumeCopy> = {
         role: 'Lead Developer',
         url: 'lubesyncrd.pages.dev',
         bullets: [
-          'Desarrolló una plataforma end-to-end de gestión de servicio al cliente y operaciones para talleres de reparación automotriz.',
-          'Centralizó la operación del taller integrando seguimiento de servicios en tiempo real, órdenes de trabajo dinámicas y un sistema automatizado de recordatorios a clientes para reducir cuellos de botella administrativos.',
-          'Optimizó la interfaz de usuario y la lógica del backend para garantizar un flujo de trabajo fluido, mejorando la retención de clientes y la transparencia operativa.',
+          'Desarrollo de una plataforma end-to-end de gestión de servicio al cliente y operaciones para talleres de reparación automotriz.',
+          'Centralización de la operación del taller mediante seguimiento de servicios en tiempo real, órdenes de trabajo dinámicas y un sistema automatizado de recordatorios a clientes que reduce cuellos de botella administrativos.',
+          'Optimización de la interfaz de usuario y la lógica del backend para garantizar un flujo de trabajo fluido, mejorando la retención de clientes y la transparencia operativa.',
         ],
       },
       {
         name: 'Sistema CRM de Micropréstamos (CajaLocal)',
         role: 'Full Stack Developer',
         bullets: [
-          'Desarrolló y desplegó un sistema automatizado de gestión de micropréstamos diseñado para agilizar las operaciones financieras de pequeños negocios, con seguimiento robusto de cartera de clientes, tablas de amortización a tasa fija y generación dinámica de recibos HTML/PDF.',
-          'Arquitecturó la aplicación para despliegue on-premise seguro y adaptado al hardware del cliente, incorporando respaldos automatizados hacia servidor externo para mayor integridad de los datos.',
-          'Provee al prestamista un entorno altamente personalizable y gestionado localmente, con control operativo total.',
+          'Desarrollo y despliegue de un sistema automatizado de gestión de micropréstamos que agiliza las operaciones financieras de pequeños negocios, con seguimiento robusto de cartera de clientes, tablas de amortización a tasa fija y generación dinámica de recibos HTML/PDF.',
+          'Arquitectura orientada a despliegue on-premise seguro y adaptado al hardware del cliente, con respaldos automatizados hacia servidor externo para mayor integridad de los datos.',
+          'Entorno altamente personalizable y gestionado localmente que le da al prestamista control operativo total.',
         ],
       },
       {
         name: 'Infraestructura Self-Hosted y Automatización',
         role: 'Administrador de Sistemas',
         bullets: [
-          'Configuró y mantuvo entornos de servidor locales desplegando aplicaciones contenerizadas vía Docker sobre Raspberry Pi OS Lite.',
-          'Desarrolló pipelines de datos automatizados y watchdogs de monitoreo de red a medida con Python, optimizando dependencias de red locales y asignación de recursos.',
+          'Configuración y mantenimiento de entornos de servidor locales con aplicaciones contenerizadas vía Docker sobre Raspberry Pi OS Lite.',
+          'Desarrollo de pipelines de datos automatizados y watchdogs de monitoreo de red a medida con Python, optimizando dependencias de red locales y asignación de recursos.',
         ],
       },
     ],
