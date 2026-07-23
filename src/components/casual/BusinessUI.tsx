@@ -53,6 +53,8 @@ export const BusinessUI: React.FC = () => {
   const locale = useAppStore((state) => state.locale);
   const t = getTranslation(locale);
 
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
   const handleTransition = () => {
     document.documentElement.classList.add('pro-theme');
     toggleMode();
@@ -205,7 +207,7 @@ export const BusinessUI: React.FC = () => {
         <a href="/" className="font-display text-2xl font-semibold tracking-tight" style={{ color: green }}>
           kawashiro<span className="opacity-50">.dev</span>
         </a>
-        <div className="flex items-center gap-4 sm:gap-6 text-sm font-medium">
+        <div className="flex items-center gap-3 sm:gap-6 text-sm font-medium">
           <a href="/proyectos" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.projects}</a>
           <a href="/futuros-proyectos" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.futureProjects}</a>
           <a href="/blog" className="hidden sm:inline hover:opacity-60 transition-opacity">Blog</a>
@@ -218,8 +220,35 @@ export const BusinessUI: React.FC = () => {
           >
             {t.nav.terminal} ↗
           </button>
+          {/* Hamburguesa: los enlaces del nav viven aquí en móvil */}
+          <button
+            type="button"
+            aria-label="Menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+            className="sm:hidden w-10 h-10 rounded-full flex flex-col items-center justify-center gap-[5px]"
+            style={{ backgroundColor: 'rgba(0,0,0,0.06)' }}
+          >
+            <span className="block h-0.5 rounded transition-transform" style={{ backgroundColor: green, width: 18, transform: menuOpen ? 'translateY(3.5px) rotate(45deg)' : undefined }} />
+            <span className="block h-0.5 rounded transition-transform" style={{ backgroundColor: green, width: 18, transform: menuOpen ? 'translateY(-3.5px) rotate(-45deg)' : undefined }} />
+          </button>
         </div>
       </nav>
+
+      {/* Menú móvil desplegable */}
+      {menuOpen && (
+        <div className="sm:hidden max-w-[1300px] mx-auto px-6 pb-4">
+          <div
+            className="rounded-3xl p-6 flex flex-col gap-4 text-base font-medium shadow-lg"
+            style={{ backgroundColor: 'rgba(0,0,0,0.05)' }}
+          >
+            <a href="/proyectos" onClick={() => setMenuOpen(false)} className="hover:opacity-60 transition-opacity">{t.nav.projects}</a>
+            <a href="/futuros-proyectos" onClick={() => setMenuOpen(false)} className="hover:opacity-60 transition-opacity">{t.nav.futureProjects}</a>
+            <a href="/blog" onClick={() => setMenuOpen(false)} className="hover:opacity-60 transition-opacity">Blog</a>
+            <a href="mailto:mkawashiro01@gmail.com" onClick={() => setMenuOpen(false)} className="hover:opacity-60 transition-opacity">{t.nav.contact}</a>
+          </div>
+        </div>
+      )}
 
       {/* HERO */}
       <header className="max-w-[1300px] mx-auto px-6 sm:px-8 pt-16 pb-10 sm:pt-28 sm:pb-16 text-center">
