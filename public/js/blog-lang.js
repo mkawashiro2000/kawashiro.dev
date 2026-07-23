@@ -9,15 +9,24 @@
   }
 
   function apply(locale) {
-    var blocks = document.querySelectorAll('[data-blog-lang]');
-    var hasLocale = false;
-    blocks.forEach(function (el) {
-      if (el.getAttribute('data-blog-lang') === locale) hasLocale = true;
+    // El fallback es POR POST: agrupamos los bloques por su contenedor para
+    // que un artículo escrito solo en español siga mostrándose cuando la
+    // página está en inglés (antes quedaba en blanco).
+    var groups = new Map();
+    document.querySelectorAll('[data-blog-lang]').forEach(function (el) {
+      var parent = el.parentElement;
+      if (!groups.has(parent)) groups.set(parent, []);
+      groups.get(parent).push(el);
     });
-    // Si un post no tiene el idioma pedido, cae a inglés
-    var effective = hasLocale ? locale : 'en';
-    blocks.forEach(function (el) {
-      el.style.display = el.getAttribute('data-blog-lang') === effective ? '' : 'none';
+
+    groups.forEach(function (blocks) {
+      var langs = blocks.map(function (b) { return b.getAttribute('data-blog-lang'); });
+      var effective = langs.indexOf(locale) !== -1
+        ? locale
+        : (langs.indexOf('en') !== -1 ? 'en' : langs[0]);
+      blocks.forEach(function (b) {
+        b.style.display = b.getAttribute('data-blog-lang') === effective ? '' : 'none';
+      });
     });
   }
 
