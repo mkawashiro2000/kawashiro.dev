@@ -1,0 +1,63 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { translations } from '../../i18n/translations';
+import { COPY } from '../../terminal/utils/resume';
+
+// Case study: CajaLocal. Descripción de la tarjeta + highlights del CV.
+const pick = (loc: 'en' | 'es' | 'ja') => {
+  const proj = COPY[loc].projects.find((p) => p.name.includes('CajaLocal'))!;
+  return {
+    back: translations[loc].tools.back,
+    category: translations[loc].cards.cajalocal.category,
+    desc: translations[loc].cards.cajalocal.desc,
+    bullets: proj.bullets,
+    highlights: loc === 'ja' ? 'ハイライト' : loc === 'es' ? 'Aspectos destacados' : 'Highlights',
+  };
+};
+
+const i18nData = { en: pick('en'), es: pick('es'), ja: pick('ja') };
+const t = i18nData.en;
+---
+
+<Layout
+  title="CajaLocal — Case Study | Mitsunori Kawashiro"
+  description="Loan and collections management system for micro-lending businesses. On-premise, automated backups, total operational control."
+>
+  <script type="application/json" id="i18n-data" set:html={JSON.stringify(i18nData)} />
+
+  <main class="min-h-screen w-full" style="color: var(--color-green500);">
+    <div class="max-w-3xl mx-auto px-6 sm:px-8 py-16">
+      <div class="flex items-center justify-between mb-2">
+        <a href="/proyectos" data-i18n="back" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">{t.back}</a>
+        <div class="lang-switcher">
+          <button type="button" data-lang-btn="en" class="lang-pill">EN</button>
+          <button type="button" data-lang-btn="es" class="lang-pill">ES</button>
+          <button type="button" data-lang-btn="ja" class="lang-pill">JA</button>
+        </div>
+      </div>
+
+      <span data-i18n="category" class="block mt-8 text-[13px] font-semibold uppercase tracking-[0.2em] opacity-70">
+        {t.category}
+      </span>
+      <img src="/img/proyectos/cajalocal.webp" alt="CajaLocal logo" class="h-24 w-auto object-contain object-left mt-4" />
+
+      <p data-i18n="desc" class="mt-8 text-lg leading-relaxed opacity-85">{t.desc}</p>
+
+      <h2 data-i18n="highlights" class="font-display text-2xl font-semibold mt-12 mb-4">{t.highlights}</h2>
+      <ul class="flex flex-col gap-3">
+        {t.bullets.map((b, i) => (
+          <li class="flex gap-3 text-base opacity-80">
+            <span class="shrink-0 mt-1.5 w-2 h-2 rounded-full" style="background: var(--color-green500)"></span>
+            <span data-i18n={`bullets.${i}`}>{b}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div class="mt-10">
+        <span class="text-sm opacity-60">React · Python · PostgreSQL · On-premise · Automated backups</span>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/i18n.js" defer></script>
+</Layout>

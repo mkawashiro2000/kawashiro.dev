@@ -77,6 +77,14 @@ export const translations = {
       subtitle: 'All projects, from the most recent to the oldest.',
       mostRecent: 'Most recent',
       items: {
+        cajalocal: {
+          name: 'CajaLocal',
+          desc: 'Loan and collections management system for micro-lending businesses. Case study.',
+        },
+        kampit: {
+          name: 'Kampit',
+          desc: 'Camping gear rental platform with real-time availability and WhatsApp checkout. Case study.',
+        },
         agrobalance: {
           name: 'AgroBalance',
           desc: 'Agrotechnological and financial management system for agricultural producers. Case study.',
@@ -301,6 +309,14 @@ export const translations = {
       subtitle: 'Todos los proyectos, del más reciente al más antiguo.',
       mostRecent: 'Más reciente',
       items: {
+        cajalocal: {
+          name: 'CajaLocal',
+          desc: 'Sistema de gestión de préstamos y cobros para negocios de microcréditos. Case study.',
+        },
+        kampit: {
+          name: 'Kampit',
+          desc: 'Plataforma de renta de equipo de campamento con disponibilidad en tiempo real y confirmación por WhatsApp. Case study.',
+        },
         agrobalance: {
           name: 'AgroBalance',
           desc: 'Sistema de gestión agrotecnológica y financiera para productores agrícolas. Case study.',
@@ -525,6 +541,14 @@ export const translations = {
       subtitle: '最新から順に並んだすべてのプロジェクト。',
       mostRecent: '最新',
       items: {
+        cajalocal: {
+          name: 'CajaLocal',
+          desc: 'マイクロレンディング事業者向けの貸付・回収管理システム。ケーススタディ。',
+        },
+        kampit: {
+          name: 'Kampit',
+          desc: 'リアルタイム在庫とWhatsApp確認を備えたキャンプ用品レンタルプラットフォーム。ケーススタディ。',
+        },
         agrobalance: {
           name: 'AgroBalance',
           desc: '農業生産者向けの農業技術・財務管理システム。ケーススタディ。',

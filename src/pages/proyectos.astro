@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { translations } from '../i18n/translations';
 
 type Project = {
-  key: 'agrobalance' | 'lubesync' | 'tokenizer' | 'sentiment' | 'wordCounter';
+  key: 'cajalocal' | 'kampit' | 'agrobalance' | 'lubesync' | 'tokenizer' | 'sentiment' | 'wordCounter';
   href: string;
   bg: string;
   category: string;
@@ -12,6 +12,8 @@ type Project = {
 // Orden: el primero del arreglo es el más reciente: los nuevos se añaden
 // al principio de esta lista y los anteriores van bajando automáticamente.
 const projects: Project[] = [
+  { key: 'cajalocal', href: '/proyectos/cajalocal', bg: 'var(--color-lilac)', category: 'FinTech · Management' },
+  { key: 'kampit', href: '/proyectos/kampit', bg: 'var(--color-babyblue)', category: 'E-commerce · Rentals' },
   { key: 'lubesync', href: '/proyectos/lubesyncrd', bg: 'var(--color-mint)', category: 'SaaS · Management' },
   { key: 'agrobalance', href: '/proyectos/agrobalance', bg: 'var(--color-yellow)', category: 'AgriTech · Management' },
   { key: 'tokenizer', href: '/proyectos/tokenizer-lemmatizador', bg: 'var(--color-babyblue)', category: 'Data Science · NLP' },

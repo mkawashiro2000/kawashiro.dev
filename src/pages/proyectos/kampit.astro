@@ -1,0 +1,58 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { translations } from '../../i18n/translations';
+
+// Case study: Kampit. La descripción vive en translations (fuente única).
+const pick = (loc: 'en' | 'es' | 'ja') => ({
+  back: translations[loc].tools.back,
+  category: translations[loc].cards.kampit.category,
+  desc: translations[loc].cards.kampit.desc,
+  visit: loc === 'ja' ? 'サイトを見る →' : loc === 'es' ? 'Visitar el sitio →' : 'Visit the site →',
+});
+
+const i18nData = { en: pick('en'), es: pick('es'), ja: pick('ja') };
+const t = i18nData.en;
+---
+
+<Layout
+  title="Kampit — Case Study | Mitsunori Kawashiro"
+  description="Camping gear rental platform: real-time availability, kit builder, and WhatsApp checkout. Next.js on Cloudflare Workers."
+>
+  <script type="application/json" id="i18n-data" set:html={JSON.stringify(i18nData)} />
+
+  <main class="min-h-screen w-full" style="color: var(--color-green500);">
+    <div class="max-w-3xl mx-auto px-6 sm:px-8 py-16">
+      <div class="flex items-center justify-between mb-2">
+        <a href="/proyectos" data-i18n="back" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">{t.back}</a>
+        <div class="lang-switcher">
+          <button type="button" data-lang-btn="en" class="lang-pill">EN</button>
+          <button type="button" data-lang-btn="es" class="lang-pill">ES</button>
+          <button type="button" data-lang-btn="ja" class="lang-pill">JA</button>
+        </div>
+      </div>
+
+      <span data-i18n="category" class="block mt-8 text-[13px] font-semibold uppercase tracking-[0.2em] opacity-70">
+        {t.category}
+      </span>
+      <img src="/img/proyectos/kampit.webp" alt="Kampit logo" class="h-20 w-auto object-contain object-left mt-4" />
+
+      <p data-i18n="desc" class="mt-8 text-lg leading-relaxed opacity-85">{t.desc}</p>
+
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+        <a
+          href="https://kampit.mkawashiro01.workers.dev"
+          target="_blank"
+          rel="noreferrer"
+          data-i18n="visit"
+          class="inline-block px-6 py-3 rounded-full font-semibold transition-transform hover:scale-105"
+          style="background: var(--color-green500); color: var(--color-beige);"
+        >
+          {t.visit}
+        </a>
+        <span class="text-sm opacity-60">Next.js · TypeScript · Cloudflare Workers</span>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/i18n.js" defer></script>
+</Layout>
