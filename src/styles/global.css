@@ -114,6 +114,17 @@ body {
 .star-twinkle { animation: twinkle 4s ease-in-out infinite; }
 .star-twinkle.delay { animation-delay: 1.2s; }
 
+/* Stretched link: el enlace del título cubre toda la tarjeta mediante un
+   pseudo-elemento, permitiendo que otros enlaces (ej. el chip de GitHub)
+   convivan encima con z-index mayor — sin anidar <a> dentro de <a>. */
+.stretched-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
 /* Bento: cada tarjeta define su span en el grid de 26 columnas (solo desktop) */
 @media (min-width: 1024px) {
   .bento-card { grid-column: var(--col); }
