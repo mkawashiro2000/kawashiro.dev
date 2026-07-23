@@ -1,11 +1,28 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { Code } from 'astro:components';
 import { translations } from '../../i18n/translations';
+import { PYTHON_SOURCE } from './sentiment-source';
+
+const SOURCE_UI = {
+  en: {
+    title: 'The engine behind it',
+    intro: 'Unlike the other tools on this site, this one does not run in your browser: the text travels to a FastAPI service on my Raspberry Pi. This is the actual Python running there — a lexicon-based approach, no language model involved.',
+  },
+  es: {
+    title: 'El motor detrás',
+    intro: 'A diferencia de las otras herramientas de este sitio, esta no corre en tu navegador: el texto viaja a un servicio FastAPI en mi Raspberry Pi. Este es el Python real que se ejecuta allí — un enfoque basado en diccionario léxico, sin modelos de lenguaje.',
+  },
+  ja: {
+    title: '裏側のエンジン',
+    intro: 'このサイトの他のツールと違い、これはブラウザでは動きません:テキストは Raspberry Pi 上の FastAPI サービスへ送られます。以下はそこで実際に動いている Python です — 言語モデルを使わない、辞書ベースのアプローチ。',
+  },
+};
 
 const i18nData = {
-  en: { back: translations.en.tools.back, ...translations.en.tools.sentiment },
-  es: { back: translations.es.tools.back, ...translations.es.tools.sentiment },
-  ja: { back: translations.ja.tools.back, ...translations.ja.tools.sentiment },
+  en: { back: translations.en.tools.back, ...translations.en.tools.sentiment, source: SOURCE_UI.en },
+  es: { back: translations.es.tools.back, ...translations.es.tools.sentiment, source: SOURCE_UI.es },
+  ja: { back: translations.ja.tools.back, ...translations.ja.tools.sentiment, source: SOURCE_UI.ja },
 };
 const t = i18nData.en;
 ---
@@ -78,6 +95,17 @@ const t = i18nData.en;
         <p id="total-note" class="text-sm opacity-50 mt-3"></p>
         <div id="words-detail" class="flex flex-wrap gap-2 mt-4"></div>
       </div>
+
+      {/* Código real del servicio que responde a esta herramienta */}
+      <section class="mt-16">
+        <h2 data-i18n="source.title" class="font-display text-2xl sm:text-3xl font-semibold mb-2">
+          {t.source.title}
+        </h2>
+        <p data-i18n="source.intro" class="opacity-70 mb-5 max-w-2xl">{t.source.intro}</p>
+        <div class="rounded-2xl overflow-hidden text-[0.82rem]">
+          <Code code={PYTHON_SOURCE} lang="python" theme="github-dark" />
+        </div>
+      </section>
     </div>
   </main>
 
