@@ -2,29 +2,43 @@
 import Layout from '../layouts/Layout.astro';
 import { translations } from '../i18n/translations';
 
+type Locale = 'en' | 'es' | 'ja';
 type Project = {
   key: 'cajalocal' | 'kampit' | 'agrobalance' | 'lubesync' | 'tokenizer' | 'sentiment' | 'wordCounter';
   href: string;
   bg: string;
-  category: string;
+  /** Clave dentro de translations[loc].cards para la categoría traducida */
+  categoryKey?: 'cajalocal' | 'kampit' | 'lubesync' | 'agrobalance';
 };
 
 // Orden: el primero del arreglo es el más reciente: los nuevos se añaden
 // al principio de esta lista y los anteriores van bajando automáticamente.
 const projects: Project[] = [
-  { key: 'cajalocal', href: '/cajalocal', bg: 'var(--color-lilac)', category: 'FinTech · Management' },
-  { key: 'kampit', href: '/proyectos/kampit', bg: 'var(--color-babyblue)', category: 'E-commerce · Rentals' },
-  { key: 'lubesync', href: '/proyectos/lubesyncrd', bg: 'var(--color-mint)', category: 'SaaS · Management' },
-  { key: 'agrobalance', href: '/proyectos/agrobalance', bg: 'var(--color-yellow)', category: 'AgriTech · Management' },
-  { key: 'tokenizer', href: '/proyectos/tokenizer-lemmatizador', bg: 'var(--color-babyblue)', category: 'Data Science · NLP' },
-  { key: 'sentiment', href: '/proyectos/detector-sentimientos', bg: 'var(--color-mint)', category: 'Data Science · NLP' },
-  { key: 'wordCounter', href: '/proyectos/contador-palabras', bg: 'var(--color-rust)', category: 'Data Science · NLP' },
+  { key: 'cajalocal', href: '/cajalocal', bg: 'var(--color-lilac)', categoryKey: 'cajalocal' },
+  { key: 'kampit', href: '/proyectos/kampit', bg: 'var(--color-babyblue)', categoryKey: 'kampit' },
+  { key: 'lubesync', href: '/proyectos/lubesyncrd', bg: 'var(--color-mint)', categoryKey: 'lubesync' },
+  { key: 'agrobalance', href: '/proyectos/agrobalance', bg: 'var(--color-yellow)', categoryKey: 'agrobalance' },
+  { key: 'tokenizer', href: '/proyectos/tokenizer-lemmatizador', bg: 'var(--color-babyblue)' },
+  { key: 'sentiment', href: '/proyectos/detector-sentimientos', bg: 'var(--color-mint)' },
+  { key: 'wordCounter', href: '/proyectos/contador-palabras', bg: 'var(--color-rust)' },
 ];
 
+// Las categorías viven en translations[loc].cards.*; las herramientas de NLP
+// comparten la del detector de sentimientos.
+const categoriesFor = (loc: Locale) =>
+  Object.fromEntries(
+    projects.map((p) => [
+      p.key,
+      p.categoryKey
+        ? translations[loc].cards[p.categoryKey].category
+        : translations[loc].cards.sentiment.category,
+    ]),
+  );
+
 const i18nData = {
-  en: { back: translations.en.tools.back, ...translations.en.proyectos },
-  es: { back: translations.es.tools.back, ...translations.es.proyectos },
-  ja: { back: translations.ja.tools.back, ...translations.ja.proyectos },
+  en: { back: translations.en.tools.back, ...translations.en.proyectos, categories: categoriesFor('en') },
+  es: { back: translations.es.tools.back, ...translations.es.proyectos, categories: categoriesFor('es') },
+  ja: { back: translations.ja.tools.back, ...translations.ja.proyectos, categories: categoriesFor('ja') },
 };
 const t = i18nData.en;
 ---
@@ -63,8 +77,8 @@ const t = i18nData.en;
               </span>
             )}
             <div class="flex-1">
-              <span class="text-[13px] font-semibold uppercase tracking-[0.2em] opacity-70">
-                {p.category}
+              <span data-i18n={`categories.${p.key}`} class="text-[13px] font-semibold uppercase tracking-[0.2em] opacity-70">
+                {t.categories[p.key]}
               </span>
               <h2 data-i18n={`items.${p.key}.name`} class="font-display text-2xl sm:text-3xl font-semibold mt-1">
                 {t.items[p.key].name}

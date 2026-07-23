@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useAppStore } from '../../store/useAppStore';
+import React, { useState, useEffect } from 'react';
+import { useAppStore, type Locale } from '../../store/useAppStore';
 import { proximaFechaLaborable } from './fechas';
 
 /**
@@ -135,7 +135,19 @@ const BLUE = '#2494E2';
 
 export const LoanSimulator: React.FC = () => {
   const locale = useAppStore((s) => s.locale);
+  const setLocale = useAppStore((s) => s.setLocale);
   const t = T[locale] ?? T.en;
+
+  // El selector EN/ES/JA de esta página es HTML estático (i18n.js): sin esto,
+  // la isla React no se enteraría del cambio y quedaría en el idioma de carga.
+  useEffect(() => {
+    const onLocaleChange = (e: Event) => {
+      const next = (e as CustomEvent<{ locale: Locale }>).detail?.locale;
+      if (next) setLocale(next);
+    };
+    document.addEventListener('kawashiro:localechange', onLocaleChange);
+    return () => document.removeEventListener('kawashiro:localechange', onLocaleChange);
+  }, [setLocale]);
 
   const [form, setForm] = useState({
     nombre: '',
