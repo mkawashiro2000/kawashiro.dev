@@ -76,6 +76,11 @@ import '../styles/global.css';
     <script is:inline>
       (function() {
         try {
+          // Tema: preferencia guardada o la del sistema, antes del primer paint
+          const saved = localStorage.getItem('kawashiro-theme');
+          const dark = saved === 'dark' || (saved !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) document.documentElement.classList.add('dark-theme');
+
           const storage = localStorage.getItem('kawashiro-dev-storage');
           if (storage) {
             const parsed = JSON.parse(storage);
@@ -95,5 +100,6 @@ import '../styles/global.css';
   </head>
   <body>
     <slot />
+    <script src="/js/theme.js" defer></script>
   </body>
 </html>

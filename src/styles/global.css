@@ -32,6 +32,43 @@
   --animate-crt-flicker: crt-flicker 0.15s infinite;
 }
 
+/* Tema oscuro: los mismos tonos de la marca, en versiones profundas.
+   Se activa con la clase .dark-theme en <html> (auto por prefers-color-scheme
+   o manual por el botón). Definido ANTES de .pro-theme para que la terminal
+   conserve su propia paleta cuando ambas clases coexisten. */
+.dark-theme {
+  --color-bg-primary: hsl(172, 35%, 8%);    /* Verde-azulado profundo (familia del logo) */
+  --color-bg-secondary: hsl(172, 28%, 11%);
+  --color-text-main: hsl(160, 38%, 84%);    /* Menta clara */
+  --color-text-muted: hsl(160, 14%, 62%);
+  --color-text-accent: hsl(165, 55%, 65%);
+
+  --color-green300: hsl(159, 20%, 24%);
+  --color-green400: hsl(160, 35%, 45%);
+  --color-green500: hsl(165, 50%, 63%);     /* Acento claro: botones, enlaces */
+  --color-green700: hsl(171, 12%, 68%);
+  --color-green800: hsl(159, 42%, 88%);     /* Texto de tarjetas: pasa a claro */
+  --color-beige: hsl(172, 35%, 10%);        /* "Beige" oscuro: texto sobre acentos */
+
+  /* Pasteles del bento en versión nocturna (mismo matiz, menos luz) */
+  --color-mint: hsl(172, 32%, 22%);
+  --color-lilac: hsl(227, 28%, 28%);
+  --color-rust: hsl(22, 38%, 27%);
+  --color-babyblue: hsl(206, 40%, 25%);
+  --color-pink: hsl(284, 26%, 29%);
+  --color-yellow: hsl(36, 45%, 28%);
+}
+
+/* Logos de proyectos (tintas oscuras sobre transparente): en modo oscuro les
+   damos una placa clara para que no se pierdan sobre las tarjetas nocturnas */
+.dark-theme .bento-card img,
+.dark-theme main img[src^="/img/proyectos/"] {
+  background: hsl(36, 31%, 92%);
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-sizing: content-box;
+}
+
 /* Mutación paramétrica para el Modo PRO (Terminal UI) mediante cascada pura */
 /* Paleta realista tipo terminal moderna (Catppuccin Mocha) */
 .pro-theme {
@@ -86,6 +123,25 @@ body {
   padding: 0.25rem;
   background: rgba(0, 0, 0, 0.06);
 }
+.dark-theme .lang-switcher {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Botón de tema (sol/luna), inyectado por theme.js en páginas estáticas */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+  background: rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s, background-color 0.2s;
+}
+.theme-toggle:hover { transform: scale(1.1); }
+.dark-theme .theme-toggle { background: rgba(255, 255, 255, 0.08); }
 .lang-pill {
   border-radius: 9999px;
   padding: 0.25rem 0.625rem;

@@ -55,6 +55,16 @@ export const BusinessUI: React.FC = () => {
 
   const [menuOpen, setMenuOpen] = React.useState(false);
 
+  // Tema oscuro: estado espejo de la clase en <html> (la fija theme.js/Layout)
+  const [isDark, setIsDark] = React.useState(false);
+  React.useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark-theme'));
+  }, []);
+  const toggleTheme = () => {
+    (window as unknown as { __kawashiroTheme?: { toggle: () => void } }).__kawashiroTheme?.toggle();
+    setIsDark(document.documentElement.classList.contains('dark-theme'));
+  };
+
   const handleTransition = () => {
     document.documentElement.classList.add('pro-theme');
     toggleMode();
@@ -212,6 +222,15 @@ export const BusinessUI: React.FC = () => {
           <a href="/blog" className="hidden sm:inline hover:opacity-60 transition-opacity">Blog</a>
           <a href="mailto:mkawashiro01@gmail.com" className="hidden sm:inline hover:opacity-60 transition-opacity">{t.nav.contact}</a>
           <LanguageSwitcher />
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+            className="w-9 h-9 rounded-full flex items-center justify-center text-sm transition-transform hover:scale-110"
+            style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)' }}
+          >
+            {isDark ? '☀️' : '🌙'}
+          </button>
           <button
             onClick={handleTransition}
             className="rounded-full px-5 py-2 font-semibold transition-transform hover:scale-105"
