@@ -59,6 +59,16 @@
   --color-yellow: hsl(36, 45%, 28%);
 }
 
+/* Etiquetas/chips con fondo blanco translúcido (tags del blog, skills,
+   badge "más reciente"): sobre tarjetas nocturnas ese blanco al 50-60%
+   ensucia el contraste. En oscuro pasan a una veladura clara sutil que
+   deja legible el texto claro heredado de la tarjeta. */
+.dark-theme .bg-white\/50,
+.dark-theme .bg-white\/60 {
+  background-color: rgba(255, 255, 255, 0.14);
+  color: var(--color-text-main);
+}
+
 /* Logos de proyectos (tintas oscuras sobre transparente): en modo oscuro les
    damos una placa clara para que no se pierdan sobre las tarjetas nocturnas */
 .dark-theme .bento-card img,
