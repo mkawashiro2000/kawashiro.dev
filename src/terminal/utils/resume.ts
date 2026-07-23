@@ -63,12 +63,12 @@ export const COPY: Record<Locale, ResumeCopy> = {
         ],
       },
       {
-        name: 'Dinero Rápido SGF',
+        name: 'Micro-lending CRM System (CajaLocal)',
         role: 'Full Stack Developer',
         bullets: [
-          'Built and deployed an automated micro-lending CRM application hosted on a self-managed server environment.',
-          'Programmed backend logic to accurately calculate flat-rate loan amortization schedules and automatically generate dynamically formatted HTML/PDF receipts.',
-          'Troubleshot and implemented server connectivity scripts to ensure continuous uptime and reliable payment tracking adjustments.',
+          'Developed and deployed an automated micro-lending management system engineered to streamline small business financial operations, featuring robust client portfolio tracking, fixed-rate amortization scheduling, and dynamic HTML/PDF receipt generation.',
+          'Architected the application for secure, on-premise deployment tailored to client hardware, incorporating automated off-site server backups for enhanced data integrity.',
+          'Provides lenders with a highly customizable, locally managed environment for total operational control.',
         ],
       },
       {
@@ -117,12 +117,12 @@ export const COPY: Record<Locale, ResumeCopy> = {
         ],
       },
       {
-        name: 'Dinero Rápido SGF',
+        name: 'Sistema CRM de Micropréstamos (CajaLocal)',
         role: 'Full Stack Developer',
         bullets: [
-          'Construyó y desplegó una aplicación CRM de micropréstamos automatizada, alojada en un entorno de servidor autogestionado.',
-          'Programó la lógica de backend para calcular con precisión tablas de amortización de préstamos a tasa fija y generar automáticamente recibos HTML/PDF con formato dinámico.',
-          'Diagnosticó e implementó scripts de conectividad del servidor para asegurar uptime continuo y ajustes confiables en el seguimiento de pagos.',
+          'Desarrolló y desplegó un sistema automatizado de gestión de micropréstamos diseñado para agilizar las operaciones financieras de pequeños negocios, con seguimiento robusto de cartera de clientes, tablas de amortización a tasa fija y generación dinámica de recibos HTML/PDF.',
+          'Arquitecturó la aplicación para despliegue on-premise seguro y adaptado al hardware del cliente, incorporando respaldos automatizados hacia servidor externo para mayor integridad de los datos.',
+          'Provee al prestamista un entorno altamente personalizable y gestionado localmente, con control operativo total.',
         ],
       },
       {
@@ -171,12 +171,12 @@ export const COPY: Record<Locale, ResumeCopy> = {
         ],
       },
       {
-        name: 'Dinero Rápido SGF',
+        name: 'マイクロレンディングCRMシステム (CajaLocal)',
         role: 'フルスタック開発者',
         bullets: [
-          'セルフマネージドなサーバー環境にホストされた、自動化マイクロレンディングCRMアプリケーションを構築・デプロイ。',
-          '固定金利ローンの償還スケジュールを正確に計算し、動的にフォーマットされたHTML/PDF領収書を自動生成するバックエンドロジックを実装。',
-          'サーバー接続スクリプトのトラブルシュートと実装により、継続的な稼働と信頼性の高い支払い追跡を確保。',
+          '小規模事業の財務オペレーションを効率化する自動マイクロレンディング管理システムを開発・デプロイ。堅牢な顧客ポートフォリオ追跡、固定金利の償還スケジュール、HTML/PDF領収書の動的生成を搭載。',
+          'クライアントのハードウェアに合わせたセキュアなオンプレミス展開として設計し、データ完全性を高める外部サーバーへの自動バックアップを組み込み。',
+          '高度にカスタマイズ可能でローカル管理された環境を貸し手に提供し、完全な運用管理を実現。',
         ],
       },
       {
