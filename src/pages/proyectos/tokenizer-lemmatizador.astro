@@ -1,11 +1,28 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { Code } from 'astro:components';
 import { translations } from '../../i18n/translations';
+import { PYTHON_SOURCE } from './tokenizer-source';
+
+const SOURCE_UI = {
+  en: {
+    title: 'The original script',
+    intro: 'This tool is a faithful port of a Python CLI I wrote first: same suffix list, same order, same rules. The browser version just adds the colored pills.',
+  },
+  es: {
+    title: 'El script original',
+    intro: 'Esta herramienta es un port fiel de una CLI en Python que escribí primero: misma lista de sufijos, mismo orden, mismas reglas. La versión del navegador solo añade las píldoras de color.',
+  },
+  ja: {
+    title: '元のスクリプト',
+    intro: 'このツールは、最初に書いた Python の CLI を忠実に移植したものです:同じ接尾辞リスト、同じ順序、同じルール。ブラウザ版は色付きのピルを追加しただけです。',
+  },
+};
 
 const i18nData = {
-  en: { back: translations.en.tools.back, ...translations.en.tools.tokenizer },
-  es: { back: translations.es.tools.back, ...translations.es.tools.tokenizer },
-  ja: { back: translations.ja.tools.back, ...translations.ja.tools.tokenizer },
+  en: { back: translations.en.tools.back, ...translations.en.tools.tokenizer, source: SOURCE_UI.en },
+  es: { back: translations.es.tools.back, ...translations.es.tools.tokenizer, source: SOURCE_UI.es },
+  ja: { back: translations.ja.tools.back, ...translations.ja.tools.tokenizer, source: SOURCE_UI.ja },
 };
 const t = i18nData.en;
 ---
@@ -52,6 +69,17 @@ const t = i18nData.en;
         <span data-i18n="lemmasLabel" class="text-sm font-semibold uppercase tracking-widest opacity-70">{t.lemmasLabel}</span>
         <div id="lemmas" class="flex flex-wrap gap-2 mt-4"></div>
       </div>
+
+      {/* Código fuente original (la CLI en Python que inspiró la herramienta) */}
+      <section class="mt-16">
+        <h2 data-i18n="source.title" class="font-display text-2xl sm:text-3xl font-semibold mb-2">
+          {t.source.title}
+        </h2>
+        <p data-i18n="source.intro" class="opacity-70 mb-5 max-w-2xl">{t.source.intro}</p>
+        <div class="rounded-2xl overflow-hidden text-[0.82rem]">
+          <Code code={PYTHON_SOURCE} lang="python" theme="github-dark" />
+        </div>
+      </section>
     </div>
   </main>
 
@@ -63,33 +91,36 @@ const t = i18nData.en;
   const tokensEl = document.getElementById('tokens')!;
   const lemmasEl = document.getElementById('lemmas')!;
 
+  // Port fiel de NLPProcesadorEsp (Python) — ver el código original más abajo.
+  // Orden importante: los sufijos largos van primero para que 'ábamos' gane
+  // sobre 'amos' y 'iendo' sobre 'en'.
+  const SUFIJOS = [
+    'ábamos', 'áramos', 'iéramos', 'arían', 'erían', 'irían',
+    'mente', 'ando', 'iendo', 'aron', 'eron', 'aban', 'arán', 'erán', 'irán',
+    'amos', 'emos', 'imos', 'aba', 'ada', 'ida', 'ado', 'ido', 'ara', 'era',
+    'iré', 'aré', 'ar', 'er', 'ir', 'an', 'en', 'as', 'es',
+  ];
+
   function tokenize(text: string): string[] {
-    // Separa palabras y signos de puntuación como tokens independientes
-    return text.match(/[a-zà-ÿ]+|[0-9]+|[^\sa-zà-ÿ0-9]/gi) || [];
+    // Equivalente a re.findall(r'\w+|[^\w\s]', texto): el \w de Python abarca
+    // Unicode, así que aquí usamos clases \p{...} con el flag 'u'.
+    return text.match(/[\p{L}\p{N}_]+|[^\p{L}\p{N}\s_]/gu) || [];
   }
 
-  // Lematizador heurístico: reglas de sufijos comunes del español (simplificado)
   function lemmatize(word: string): string {
     let w = word.toLowerCase();
-    if (!/^[a-zà-ÿ]+$/.test(w) || w.length < 4) return w;
 
-    const rules: [RegExp, string][] = [
-      [/ándose$|iéndose$/, ''],
-      [/ando$|iendo$/, 'ar'],
-      [/aciones$/, 'ación'],
-      [/amente$/, ''],
-      [/[aei]ría$|[aei]rían$/, 'r'],
-      [/aron$|ieron$/, 'ar'],
-      [/aba$|ábamos$/, 'ar'],
-      [/(ar|er|ir)ía$/, '$1'],
-      [/es$/, ''],
-      [/s$/, ''],
-      [/as$|os$/, 'o'],
-    ];
+    // isalpha() + longitud mínima: números y signos quedan intactos
+    if (!/^\p{L}+$/u.test(w) || w.length <= 3) return w;
 
-    for (const [pattern, replacement] of rules) {
-      if (pattern.test(w)) {
-        return w.replace(pattern, replacement);
+    // Plural primero: 'es' antes que 's'
+    if (w.endsWith('es') && w.length > 4) w = w.slice(0, -2);
+    else if (w.endsWith('s') && w.length > 3) w = w.slice(0, -1);
+
+    // Primer sufijo que deje una raíz de al menos 2 caracteres
+    for (const suf of SUFIJOS) {
+      if (w.endsWith(suf) && w.length - suf.length >= 2) {
+        return w.slice(0, -suf.length);
       }
     }
     return w;
@@ -111,7 +142,7 @@ const t = i18nData.en;
     const colors = ['var(--color-mint)', 'var(--color-babyblue)', 'var(--color-lilac)', 'var(--color-yellow)'];
     tokens.forEach((t, i) => tokensEl.appendChild(pill(t, colors[i % colors.length])));
 
-    const words = tokens.filter((t) => /^[a-zà-ÿ]+$/i.test(t));
+    const words = tokens.filter((t) => /^\p{L}+$/u.test(t));
     words.forEach((w, i) => lemmasEl.appendChild(pill(`${w} → ${lemmatize(w)}`, colors[i % colors.length])));
   }
 
