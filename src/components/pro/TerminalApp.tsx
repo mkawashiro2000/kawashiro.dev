@@ -415,9 +415,17 @@ export const TerminalApp: React.FC = () => {
     runCommand(input);
   };
 
+  // Autoscroll del contenedor (no de la página): scrollIntoView desplazaba el
+  // viewport completo en iOS y hacía brincar la pantalla con cada línea.
+  const scrollBodyRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const el = scrollBodyRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [history]);
+
+  // En pantallas táctiles, tocar para scrollear no debe invocar el teclado
+  const isCoarsePointer = () =>
+    typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
   // Color de las líneas de salida según su naturaleza (errores en rojo, etc.)
   const lineColor = (line: string): string => {
@@ -431,7 +439,11 @@ export const TerminalApp: React.FC = () => {
 
   return (
     <div
-      onClick={() => inputRef.current?.focus()}
+      onClick={() => {
+        // Desktop: clic en cualquier lugar enfoca la línea de comandos.
+        // Móvil: solo el toque directo sobre el input abre el teclado.
+        if (!isCoarsePointer()) inputRef.current?.focus();
+      }}
       className="relative w-full h-[100dvh] overflow-hidden"
       style={{ backgroundColor: C.crust }}
     >
@@ -510,16 +522,20 @@ export const TerminalApp: React.FC = () => {
               <span className="opacity-0 group-hover:opacity-100 transition-opacity">⤢</span>
             </button>
           </div>
-          <div className="flex-1 text-center text-xs tracking-wide" style={{ color: C.faint }}>
-            mk@kawashiro.dev — -zsh — 132×34
+          <div className="flex-1 text-center text-xs tracking-wide truncate px-2" style={{ color: C.faint }}>
+            mk@kawashiro.dev — -zsh<span className="hidden sm:inline"> — 132×34</span>
           </div>
           <div className="w-14" />
         </div>
 
         {/* Cuerpo de la terminal */}
-        <div className="flex-1 overflow-y-auto px-5 py-4 leading-relaxed" style={{ color: C.text }}>
+        <div
+          ref={scrollBodyRef}
+          className="flex-1 overflow-y-auto overscroll-contain px-3 sm:px-5 py-4 leading-relaxed text-[12px] sm:text-sm"
+          style={{ color: C.text }}
+        >
           {history.map((line, index) => (
-            <div key={index} className="min-h-[1.25rem] whitespace-pre-wrap break-words">
+            <div key={index} className="min-h-[1.25rem] whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
               {typeof line === 'string' ? (
                 line.startsWith('$ ') || line.startsWith('$G ') ? (
                   <span>
@@ -563,7 +579,7 @@ export const TerminalApp: React.FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="flex-1 bg-transparent border-none outline-none font-mono focus:ring-0 p-0"
+              className="flex-1 bg-transparent border-none outline-none font-mono focus:ring-0 p-0 text-[16px] sm:text-sm"
               style={{ color: C.text, caretColor: C.text }}
               autoFocus
               autoComplete="off"
