@@ -1,11 +1,28 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { Code } from 'astro:components';
 import { translations } from '../../i18n/translations';
+import { PYTHON_SOURCE } from './word-counter-source';
+
+const SOURCE_UI = {
+  en: {
+    title: 'Run it on your own machine',
+    intro: 'The same analysis, written in Python as an interactive CLI. Copy it into a .py file and run it — no dependencies beyond the standard library. Both versions were checked against each other and return identical counts.',
+  },
+  es: {
+    title: 'Ejecútalo en tu computadora',
+    intro: 'El mismo análisis, escrito en Python como una CLI interactiva. Cópialo en un archivo .py y ejecútalo — sin dependencias más allá de la librería estándar. Ambas versiones fueron contrastadas y devuelven conteos idénticos.',
+  },
+  ja: {
+    title: '自分のパソコンで実行する',
+    intro: '同じ解析を、対話型 CLI として Python で書いたもの。.py ファイルにコピーして実行するだけ — 標準ライブラリ以外の依存はありません。両バージョンは照合済みで、同一の結果を返します。',
+  },
+};
 
 const i18nData = {
-  en: { back: translations.en.tools.back, ...translations.en.tools.wordCounter },
-  es: { back: translations.es.tools.back, ...translations.es.tools.wordCounter },
-  ja: { back: translations.ja.tools.back, ...translations.ja.tools.wordCounter },
+  en: { back: translations.en.tools.back, ...translations.en.tools.wordCounter, source: SOURCE_UI.en },
+  es: { back: translations.es.tools.back, ...translations.es.tools.wordCounter, source: SOURCE_UI.es },
+  ja: { back: translations.ja.tools.back, ...translations.ja.tools.wordCounter, source: SOURCE_UI.ja },
 };
 const t = i18nData.en;
 ---
@@ -58,6 +75,17 @@ const t = i18nData.en;
           <p data-i18n="stats.special" class="text-sm font-medium uppercase tracking-widest opacity-70 mt-1">{t.stats.special}</p>
         </div>
       </div>
+
+      {/* Versión Python equivalente, lista para copiar y ejecutar */}
+      <section class="mt-16">
+        <h2 data-i18n="source.title" class="font-display text-2xl sm:text-3xl font-semibold mb-2">
+          {t.source.title}
+        </h2>
+        <p data-i18n="source.intro" class="opacity-70 mb-5 max-w-2xl">{t.source.intro}</p>
+        <div class="rounded-2xl overflow-hidden text-[0.82rem]">
+          <Code code={PYTHON_SOURCE} lang="python" theme="github-dark" />
+        </div>
+      </section>
     </div>
   </main>
 
