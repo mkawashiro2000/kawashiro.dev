@@ -2,32 +2,75 @@
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
 
+// Cada post existe en en/es/ja; renderizamos los tres y un script cliente
+// muestra solo el idioma activo (coherente con el resto del sitio).
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+  const all = await getCollection('blog');
+  const bySlug = new Map<string, typeof all>();
+  for (const post of all) {
+    const slug = post.id.split('/')[0];
+    if (!bySlug.has(slug)) bySlug.set(slug, []);
+    bySlug.get(slug)!.push(post);
+  }
+  return [...bySlug.entries()].map(([slug, versions]) => ({
+    params: { slug },
+    props: { versions },
+  }));
 }
 
-const { post } = Astro.props;
-const { Content } = await render(post);
+const { versions } = Astro.props;
+const byLang = Object.fromEntries(versions.map((v) => [v.id.split('/')[1], v]));
+const order = ['en', 'es', 'ja'] as const;
+
+const rendered = [];
+for (const lang of order) {
+  if (byLang[lang]) {
+    const { Content } = await render(byLang[lang]);
+    rendered.push({ lang, data: byLang[lang].data, Content });
+  }
+}
+
+const main = byLang.en ?? versions[0];
+const UI = {
+  en: { back: '← Blog' },
+  es: { back: '← Blog' },
+  ja: { back: '← ブログ' },
+};
 ---
 
-<Layout title={`${post.data.title} | Mitsunori Kawashiro`} description={post.data.description}>
+<Layout title={`${main.data.title} | Mitsunori Kawashiro`} description={main.data.description}>
+  <script type="application/json" id="i18n-data" set:html={JSON.stringify(UI)} />
+
   <main class="min-h-screen w-full" style="color: var(--color-green500);">
     <article class="max-w-3xl mx-auto px-6 sm:px-8 py-16">
-      <a href="/blog" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">← Blog</a>
+      <div class="flex items-center justify-between mb-2">
+        <a href="/blog" data-i18n="back" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">{UI.en.back}</a>
+        <div class="lang-switcher">
+          <button type="button" data-lang-btn="en" class="lang-pill">EN</button>
+          <button type="button" data-lang-btn="es" class="lang-pill">ES</button>
+          <button type="button" data-lang-btn="ja" class="lang-pill">JA</button>
+        </div>
+      </div>
 
       <time class="block mt-8 text-[13px] font-semibold uppercase tracking-[0.2em] opacity-70">
-        {post.data.pubDate.toISOString().slice(0, 10)}
+        {main.data.pubDate.toISOString().slice(0, 10)}
       </time>
-      <h1 class="font-display font-semibold text-3xl sm:text-5xl tracking-tight mt-2 mb-8 leading-tight">
-        {post.data.title}
-      </h1>
 
-      <div class="prose-blog">
-        <Content />
-      </div>
+      {rendered.map(({ lang, data, Content }) => (
+        <div data-blog-lang={lang} style={lang !== 'en' ? 'display:none' : ''}>
+          <h1 class="font-display font-semibold text-3xl sm:text-5xl tracking-tight mt-2 mb-8 leading-tight">
+            {data.title}
+          </h1>
+          <div class="prose-blog">
+            <Content />
+          </div>
+        </div>
+      ))}
     </article>
   </main>
+
+  <script src="/js/i18n.js" defer></script>
+  <script src="/js/blog-lang.js" defer></script>
 
   <style is:global>
     /* Tipografía del cuerpo del post, coherente con la paleta del sitio */

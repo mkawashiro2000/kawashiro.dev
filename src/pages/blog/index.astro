@@ -2,38 +2,72 @@
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('blog')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+// Los posts viven como <slug>/<lang>.md; agrupamos por slug y mostramos
+// solo el idioma activo (client-side, igual que el resto del sitio).
+const all = await getCollection('blog');
+const bySlug = new Map<string, typeof all>();
+for (const post of all) {
+  const slug = post.id.split('/')[0];
+  if (!bySlug.has(slug)) bySlug.set(slug, []);
+  bySlug.get(slug)!.push(post);
+}
+
+const groups = [...bySlug.entries()]
+  .map(([slug, versions]) => ({
+    slug,
+    versions: Object.fromEntries(versions.map((v) => [v.id.split('/')[1], v.data])),
+    date: versions[0].data.pubDate,
+    tags: versions[0].data.tags,
+  }))
+  .sort((a, b) => b.date.valueOf() - a.date.valueOf());
+
+const UI = {
+  en: { back: '← Back', title: 'Blog', subtitle: 'Notes on self-hosting, data engineering, and running production software on a Raspberry Pi.' },
+  es: { back: '← Volver', title: 'Blog', subtitle: 'Notas sobre self-hosting, ingeniería de datos y software en producción sobre una Raspberry Pi.' },
+  ja: { back: '← 戻る', title: 'ブログ', subtitle: 'セルフホスティング、データエンジニアリング、Raspberry Pi 上の本番ソフトウェアについてのノート。' },
+};
 ---
 
 <Layout
   title="Blog | Mitsunori Kawashiro"
   description="Notes on self-hosting, data engineering and building things on a Raspberry Pi."
 >
+  <script type="application/json" id="i18n-data" set:html={JSON.stringify(UI)} />
+
   <main class="min-h-screen w-full" style="color: var(--color-green500);">
     <div class="max-w-3xl mx-auto px-6 sm:px-8 py-16">
-      <a href="/" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">← Back</a>
+      <div class="flex items-center justify-between mb-2">
+        <a href="/" data-i18n="back" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">{UI.en.back}</a>
+        <div class="lang-switcher">
+          <button type="button" data-lang-btn="en" class="lang-pill">EN</button>
+          <button type="button" data-lang-btn="es" class="lang-pill">ES</button>
+          <button type="button" data-lang-btn="ja" class="lang-pill">JA</button>
+        </div>
+      </div>
 
-      <h1 class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">Blog</h1>
-      <p class="text-lg opacity-70 mb-14 max-w-xl">
-        Notes on self-hosting, data engineering, and running production software on a Raspberry Pi.
-      </p>
+      <h1 data-i18n="title" class="font-display font-semibold text-4xl sm:text-6xl tracking-tight mt-6 mb-4">{UI.en.title}</h1>
+      <p data-i18n="subtitle" class="text-lg opacity-70 mb-14 max-w-xl">{UI.en.subtitle}</p>
 
       <div class="flex flex-col gap-5">
-        {posts.map((post) => (
+        {groups.map((g) => (
           <a
-            href={`/blog/${post.id}`}
+            href={`/blog/${g.slug}`}
             class="group rounded-[32px] p-8 sm:p-10 transition-transform hover:-translate-y-1"
             style="background: var(--color-babyblue)"
           >
             <time class="text-[13px] font-semibold uppercase tracking-[0.2em] opacity-70">
-              {post.data.pubDate.toISOString().slice(0, 10)}
+              {g.date.toISOString().slice(0, 10)}
             </time>
-            <h2 class="font-display text-2xl sm:text-3xl font-semibold mt-1">{post.data.title}</h2>
-            <p class="mt-2 text-base opacity-80 max-w-xl">{post.data.description}</p>
+            {(['en', 'es', 'ja'] as const).map((lang) => (
+              g.versions[lang] && (
+                <div data-blog-lang={lang} style={lang !== 'en' ? 'display:none' : ''}>
+                  <h2 class="font-display text-2xl sm:text-3xl font-semibold mt-1">{g.versions[lang].title}</h2>
+                  <p class="mt-2 text-base opacity-80 max-w-xl">{g.versions[lang].description}</p>
+                </div>
+              )
+            ))}
             <div class="mt-3 flex flex-wrap gap-2">
-              {post.data.tags.map((tag) => (
+              {g.tags.map((tag) => (
                 <span class="text-xs font-medium rounded-full px-3 py-1 bg-white/50">{tag}</span>
               ))}
             </div>
@@ -42,4 +76,7 @@ const posts = (await getCollection('blog')).sort(
       </div>
     </div>
   </main>
+
+  <script src="/js/i18n.js" defer></script>
+  <script src="/js/blog-lang.js" defer></script>
 </Layout>
