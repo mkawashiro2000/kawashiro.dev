@@ -4,8 +4,8 @@ import { PortfolioEcosystem } from '../components/shared/PortfolioEcosystem';
 ---
 
 <Layout title="Mitsunori Kawashiro | Dev Ecosystem">
-  <main class="min-h-screen w-full transition-colors duration-300">
+  <main id="main-content" class="min-h-screen w-full transition-colors duration-300">
     {/* Orquestador Cinemático y Lógico cargado en el cliente */}
-    <PortfolioEcosystem client:load />
+    <PortfolioEcosystem client:idle />
   </main>
 </Layout>

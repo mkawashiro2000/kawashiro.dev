@@ -226,3 +226,55 @@ body {
   80% { clip-path: polygon(0 75%, 100% 75%, 100% 75%, 0 75%); }
   100% { clip-path: polygon(0 90%, 100% 90%, 100% 90%, 0 90%); }
 }
+
+/* ─── Accesibilidad ──────────────────────────────────────────────────────── */
+
+/* Skip-link: primer tabulable de cada página, oculto hasta recibir foco.
+   Permite saltar el nav e ir directo al contenido con el teclado. */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 200;
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 0.75rem 0.75rem;
+  background: var(--color-green500);
+  color: var(--color-beige);
+  font-weight: 600;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* Foco visible y consistente para quien navega con teclado (no aparece con
+   el mouse gracias a :focus-visible). */
+:focus-visible {
+  outline: 2px solid var(--color-green500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.dark-theme :focus-visible,
+.pro-theme :focus-visible {
+  outline-color: var(--color-text-accent);
+}
+
+/* Respeta la preferencia del sistema de reducir movimiento: quien active
+   "reducir movimiento" (mareo vestibular, sensibilidad) recibe transiciones
+   casi instantáneas en lugar de las animaciones completas. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Efectos puramente decorativos: se desactivan del todo */
+  .star-twinkle,
+  .glitch-text::before,
+  .glitch-text::after {
+    animation: none !important;
+  }
+}

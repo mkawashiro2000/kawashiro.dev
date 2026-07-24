@@ -3,6 +3,7 @@ import { useAppStore, useHydratedLocale } from '../../store/useAppStore';
 import { getTranslation } from '../../i18n/translations';
 import { LanguageSwitcher } from '../shared/LanguageSwitcher';
 import { openPrintableResume } from '../../terminal/utils/resume';
+import { ContactForm } from './ContactForm';
 
 /* Estrella decorativa de 4 puntas (estilo Sean Halpin) */
 const Star: React.FC<{ className?: string }> = ({ className }) => (
@@ -356,15 +357,50 @@ export const BusinessUI: React.FC = () => {
         </div>
       </section>
 
-      {/* MEGA CTA */}
-      <section className="max-w-[1300px] mx-auto px-6 sm:px-8 py-28 sm:py-40 text-center">
-        <a
-          href="mailto:mkawashiro01@gmail.com"
-          className="group inline-flex font-display font-semibold text-[clamp(3rem,12vw,11rem)] leading-none tracking-tight transition-transform hover:scale-[1.02]"
+      {/* FRANJA TERMINAL — recupera su presencia visual fuera del grid */}
+      <section className="max-w-[1300px] mx-auto px-6 sm:px-8 pt-10">
+        <button
+          onClick={handleTransition}
+          className="group w-full text-left rounded-[32px] lg:rounded-[44px] p-8 sm:p-12 overflow-hidden relative transition-transform hover:-translate-y-1"
+          style={{ backgroundColor: '#11111b' }}
+        >
+          <div className="flex items-center gap-2 mb-6" aria-hidden="true">
+            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: '#ff5f57' }} />
+            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: '#febc2e' }} />
+            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: '#28c840' }} />
+          </div>
+          <div className="font-mono text-sm mb-4" style={{ color: '#6c7086' }}>
+            <span style={{ color: '#a6e3a1' }}>mk@kawashiro</span>
+            <span style={{ color: '#6c7086' }}>:</span>
+            <span style={{ color: '#89b4fa' }}>~</span>
+            <span style={{ color: '#cba6f7' }}> $ </span>
+            <span style={{ color: '#cdd6f4' }}>./launch</span>
+            <span className="inline-block w-2 h-4 ml-1 align-middle animate-pulse" style={{ backgroundColor: '#cdd6f4' }} />
+          </div>
+          <h2 className="font-display text-3xl sm:text-5xl font-semibold mb-3" style={{ color: '#cdd6f4' }}>
+            {t.cta.terminalTitle}
+          </h2>
+          <p className="max-w-xl text-base sm:text-lg mb-6" style={{ color: '#a6adc8' }}>
+            {t.cta.terminalDesc}
+          </p>
+          <span
+            className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold transition-transform group-hover:scale-105"
+            style={{ backgroundColor: '#a6e3a1', color: '#11111b' }}
+          >
+            {t.cta.terminalBtn} ↗
+          </span>
+        </button>
+      </section>
+
+      {/* MEGA CTA + formulario de contacto real */}
+      <section className="max-w-[1300px] mx-auto px-6 sm:px-8 py-24 sm:py-32 text-center">
+        <h2
+          className="font-display font-semibold text-[clamp(3rem,12vw,11rem)] leading-none tracking-tight mb-12"
           style={{ color: green }}
         >
-          <span className="transition-transform duration-500 group-hover:-translate-y-2">{t.cta.heading}</span>
-        </a>
+          {t.cta.heading}
+        </h2>
+        <ContactForm />
       </section>
 
       {/* FOOTER / COLOPHON */}

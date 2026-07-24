@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAppStore, type Locale } from '../../store/useAppStore';
-import { proximaFechaLaborable } from './fechas';
+import { calcularPrestamo, type Frecuencia } from './simulador';
 
 /**
  * LoanSimulator — simulador de préstamos funcional de CajaLocal, con la MISMA
@@ -8,8 +8,6 @@ import { proximaFechaLaborable } from './fechas';
  * cuota que cuadra el residuo, y vencimientos movidos a día laborable).
  * No guarda datos: todo el cálculo ocurre en el navegador.
  */
-
-type Frecuencia = 'DIARIA' | 'SEMANAL' | 'QUINCENAL' | 'MENSUAL';
 
 interface Cuota {
   numero: number;
@@ -121,14 +119,6 @@ const dop = (n: number) =>
     maximumFractionDigits: 0,
   }).format(n);
 
-const addMonths = (date: Date, n: number) => {
-  const diaOriginal = date.getDate();
-  const d = new Date(date.getFullYear(), date.getMonth() + n, 1);
-  const ultimoDia = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-  d.setDate(Math.min(diaOriginal, ultimoDia));
-  return d;
-};
-
 // Paleta del producto real (CajaLocal)
 const NAVY = '#17385A';
 const BLUE = '#2494E2';
@@ -162,48 +152,21 @@ export const LoanSimulator: React.FC = () => {
 
   const calcular = (e: React.FormEvent) => {
     e.preventDefault();
-    const monto = Math.round(parseFloat(form.capital));
-    const tasa = parseFloat(form.tasa) / 100;
-    const cantidad = parseInt(form.cuotas, 10);
-    if (!monto || !cantidad || cantidad < 1 || isNaN(tasa)) return;
-
-    const interesTotal = Math.round(monto * tasa);
-    const capitalBase = Math.round(monto / cantidad);
-    const interesBase = Math.round(interesTotal / cantidad);
-
-    let duracionMeses = cantidad;
-    if (form.frecuencia === 'DIARIA') duracionMeses = cantidad / 30;
-    else if (form.frecuencia === 'SEMANAL') duracionMeses = cantidad / 4;
-    else if (form.frecuencia === 'QUINCENAL') duracionMeses = cantidad / 2;
-    if (duracionMeses <= 0) duracionMeses = 1;
-    const tasaMensual = (parseFloat(form.tasa) / duracionMeses).toFixed(2);
-
-    const [y, m, d] = form.fecha.split('-').map((n) => parseInt(n, 10));
-    let fecha = new Date(y, m - 1, d);
-    const pad = (n: number) => (n < 10 ? '0' + n : '' + n);
-    const filas: Cuota[] = [];
-
-    for (let i = 1; i <= cantidad; i++) {
-      if (form.frecuencia === 'DIARIA') fecha.setDate(fecha.getDate() + 1);
-      else if (form.frecuencia === 'SEMANAL') fecha.setDate(fecha.getDate() + 7);
-      else if (form.frecuencia === 'QUINCENAL') fecha.setDate(fecha.getDate() + 15);
-      else fecha = addMonths(fecha, 1);
-
-      const fc = proximaFechaLaborable(fecha);
-      const esUltima = i === cantidad;
-      const capital = esUltima ? monto - capitalBase * (cantidad - 1) : capitalBase;
-      const interes = esUltima ? interesTotal - interesBase * (cantidad - 1) : interesBase;
-      filas.push({
-        numero: i,
-        vencimiento: `${pad(fc.getDate())}/${pad(fc.getMonth() + 1)}/${fc.getFullYear()}`,
-        capital,
-        interes,
-        total: capital + interes,
-      });
-    }
-
-    setCronograma(filas);
-    setResumen({ capitalTotal: monto, interesTotal, granTotal: monto + interesTotal, tasaMensual });
+    const r = calcularPrestamo(
+      parseFloat(form.capital),
+      parseFloat(form.tasa),
+      parseInt(form.cuotas, 10),
+      form.frecuencia,
+      form.fecha,
+    );
+    if (!r) return;
+    setCronograma(r.cronograma);
+    setResumen({
+      capitalTotal: r.capitalTotal,
+      interesTotal: r.interesTotal,
+      granTotal: r.granTotal,
+      tasaMensual: r.tasaMensual,
+    });
   };
 
   const field = 'w-full rounded-lg px-3 py-2.5 text-sm outline-none border transition-colors';

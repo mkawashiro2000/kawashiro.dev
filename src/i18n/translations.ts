@@ -69,6 +69,9 @@ export const translations = {
     },
     cta: {
       heading: "Let's talk?",
+      terminalTitle: 'Curious? Open the terminal.',
+      terminalDesc: 'A real interactive shell: live server telemetry, weather from where the Pi lives, a guestbook, and a few easter eggs.',
+      terminalBtn: 'Launch terminal',
     },
     footer: {
       name: 'Mitsunori Kawashiro',

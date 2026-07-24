@@ -2,15 +2,19 @@
 interface Props {
   title: string;
   description?: string;
+  /** Ruta absoluta de la imagen social; por defecto la og-image general */
+  ogImage?: string;
 }
 
 const {
   title,
   description = 'Full Stack (Back-end/Data) Developer. Data, analytics and web apps, served from a self-hosted Raspberry Pi in Constanza, Dominican Republic.',
+  ogImage = '/og-image.webp',
 } = Astro.props;
 
 const SITE_URL = 'https://kawashiro.dev';
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+const ogImageUrl = new URL(ogImage, SITE_URL).href;
 
 // Datos estructurados: tarjeta de persona para buscadores
 const personSchema = JSON.stringify({
@@ -58,18 +62,19 @@ import '../styles/global.css';
     {/* SEO + social link previews (WhatsApp, X, LinkedIn...) */}
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title="Blog RSS" href={`${SITE_URL}/rss.xml`} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Mitsunori Kawashiro" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={`${SITE_URL}/og-image.webp`} />
+    <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={`${SITE_URL}/og-image.webp`} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     {/* Datos estructurados (Person) para buscadores */}
     <script type="application/ld+json" set:html={personSchema} />
@@ -101,6 +106,7 @@ import '../styles/global.css';
     </script>
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <slot />
     <script src="/js/theme.js" defer></script>
   </body>

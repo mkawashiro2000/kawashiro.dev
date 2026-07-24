@@ -158,7 +158,7 @@ const t = i18nData.en;
 >
   <script type="application/json" id="i18n-data" set:html={JSON.stringify(i18nData)} />
 
-  <main class="min-h-screen w-full" style="color: var(--color-text-main);">
+  <main id="main-content" class="min-h-screen w-full" style="color: var(--color-text-main);">
     <div class="max-w-4xl mx-auto px-6 sm:px-8 py-12">
       <div class="flex items-center justify-between mb-10">
         <a href="/proyectos" data-i18n="back" class="text-sm font-medium opacity-60 hover:opacity-100 transition-opacity">{t.back}</a>
@@ -205,7 +205,7 @@ const t = i18nData.en;
 
       {/* SIMULADOR (isla React funcional) */}
       <div class="mt-16 scroll-mt-8" id="simulador">
-        <LoanSimulator client:load />
+        <LoanSimulator client:visible />
       </div>
 
       {/* ARQUITECTURA */}
