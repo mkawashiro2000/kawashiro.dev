@@ -99,7 +99,7 @@ export const BusinessUI: React.FC = () => {
       fg: darkGreen,
       col: '1 / 15',
       href: 'https://agrobalancerd.com',
-      logo: '/img/proyectos/agrobalance.png',
+      logo: '/img/proyectos/agrobalance.webp',
     },
     {
       category: t.cards.cajalocal.category,
