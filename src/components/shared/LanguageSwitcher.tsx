@@ -1,9 +1,9 @@
 import React from 'react';
-import { useAppStore, type Locale } from '../../store/useAppStore';
+import { useAppStore, useHydratedLocale, type Locale } from '../../store/useAppStore';
 import { LOCALES } from '../../i18n/translations';
 
 export const LanguageSwitcher: React.FC<{ dark?: boolean }> = ({ dark }) => {
-  const locale = useAppStore((state) => state.locale);
+  const locale = useHydratedLocale();
   const setLocale = useAppStore((state) => state.setLocale);
 
   return (

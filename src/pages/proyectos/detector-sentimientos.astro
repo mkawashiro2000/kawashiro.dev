@@ -47,8 +47,12 @@ const t = i18nData.en;
       <p data-i18n="subtitle" class="text-lg opacity-70 mb-2 max-w-xl">
         {t.subtitle}
       </p>
-      <p data-i18n="note" class="text-sm opacity-50 mb-10 max-w-xl">
-        {t.note}
+      <p
+        class="flex items-start gap-2.5 text-sm mb-10 max-w-xl rounded-2xl px-4 py-3"
+        style="background: color-mix(in srgb, var(--color-yellow) 45%, transparent); border: 1px solid color-mix(in srgb, var(--color-text-muted) 25%, transparent);"
+      >
+        <span aria-hidden="true">💡</span>
+        <span data-i18n="note" class="opacity-80">{t.note}</span>
       </p>
 
       <textarea

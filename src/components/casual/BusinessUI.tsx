@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAppStore } from '../../store/useAppStore';
+import { useAppStore, useHydratedLocale } from '../../store/useAppStore';
 import { getTranslation } from '../../i18n/translations';
 import { LanguageSwitcher } from '../shared/LanguageSwitcher';
 import { openPrintableResume } from '../../terminal/utils/resume';
@@ -50,8 +50,14 @@ type Card = {
 
 export const BusinessUI: React.FC = () => {
   const toggleMode = useAppStore((state) => state.toggleMode);
-  const locale = useAppStore((state) => state.locale);
+  const locale = useHydratedLocale();
   const t = getTranslation(locale);
+
+  // El HTML se sirve con lang="en"; al conocer el idioma real lo corregimos
+  // para lectores de pantalla y buscadores.
+  React.useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   const [menuOpen, setMenuOpen] = React.useState(false);
 

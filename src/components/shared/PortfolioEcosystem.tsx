@@ -1,18 +1,15 @@
 import React from 'react';
 import { LazyMotion, domAnimation, m, AnimatePresence } from 'framer-motion';
-import { useAppStore } from '../../store/useAppStore';
+import { useHydratedProMode } from '../../store/useAppStore';
 import { TerminalApp } from '../pro/TerminalApp';
 import { BusinessUI } from '../casual/BusinessUI';
 
 export const PortfolioEcosystem: React.FC = () => {
-  const isProMode = useAppStore((state) => state.isProMode);
-  const _hasHydrated = useAppStore((state) => state._hasHydrated);
-
-  // Evitar Mismatches de Hidratación: No renderizamos la geometría compleja 
-  // hasta que Zustand haya leído el localStorage en el montaje del cliente.
-  if (!_hasHydrated) {
-    return <div className="min-h-screen w-full" />;
-  }
+  // useHydratedProMode devuelve false durante el render inicial, de modo que
+  // el HTML generado en build contiene la Business UI completa (indexable por
+  // buscadores) y el cliente hidrata sobre ella sin mismatch. Antes se devolvía
+  // un <div> vacío y la página principal no tenía contenido para rastreadores.
+  const isProMode = useHydratedProMode();
 
   // Parámetros físicos del resorte (Oscilador Armónico Amortiguado)
   const springPhysics = {

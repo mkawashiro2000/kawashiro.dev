@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Marca k.dev: círculo beige + "k" en verde profundo. Vectorial para
+       verse nítido en cualquier densidad de pantalla. -->
+  <circle cx="50" cy="50" r="50" fill="#EAE5DE"/>
+  <path fill="#00544A" d="M28 22c0-3 1-4 5-4s5 1 5 4v22l10-10c2-2 4-2 6 0l3 3c2 2 2 4 0 6l-9 8 11 10c2 2 2 4 0 6l-3 3c-2 2-4 2-6 0L38 58v14c0 3-1 4-5 4s-5-1-5-4z"/>
+  <circle cx="72" cy="72" r="6" fill="#7BA396"/>
+</svg>

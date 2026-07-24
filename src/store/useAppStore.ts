@@ -1,3 +1,4 @@
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -47,3 +48,32 @@ export const useAppStore = create<AppState>()(
     }
   )
 );
+
+/**
+ * El HTML se genera en build con los valores por defecto (inglés, modo casual).
+ * Para que el primer render del cliente coincida exactamente con ese HTML —y no
+ * haya errores de hidratación— estos hooks devuelven el valor por defecto hasta
+ * que el componente monta, y solo entonces exponen el estado persistido.
+ *
+ * Se usa useLayoutEffect (no useEffect) a propósito: corre antes del primer
+ * pintado, así el visitante con idioma guardado nunca ve un parpadeo en inglés.
+ */
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
+function useMounted(): boolean {
+  const [mounted, setMounted] = useState(false);
+  useIsoLayoutEffect(() => setMounted(true), []);
+  return mounted;
+}
+
+/** Idioma real tras montar; 'en' durante el render que debe calcar al HTML. */
+export function useHydratedLocale(): Locale {
+  const locale = useAppStore((s) => s.locale);
+  return useMounted() ? locale : 'en';
+}
+
+/** Modo PRO real tras montar; false durante el render que calca al HTML. */
+export function useHydratedProMode(): boolean {
+  const isProMode = useAppStore((s) => s.isProMode);
+  return useMounted() ? isProMode : false;
+}
